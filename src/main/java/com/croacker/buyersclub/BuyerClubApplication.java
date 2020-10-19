@@ -1,4 +1,4 @@
-package com.croacker.buyerclub;
+package com.croacker.buyersclub;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
