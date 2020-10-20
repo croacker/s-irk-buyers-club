@@ -1,14 +1,11 @@
-package com.croacker.buyersclub.domain;
+package com.croacker.buyersclub.service.dto.shop;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Id;
 
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 /**
@@ -18,39 +15,41 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class Shop {
-    @Id
+@Schema(description = "Магазин")
+public class ShopDto {
+    /**
+     * Идентификатор.
+     */
+    @Schema(description = "Идентификатор", example = "1")
     private Long id;
 
     /**
      * Наименование.
      */
+    @Schema(description = "Наименование", example = "Наименование")
     private String name;
 
     /**
      * Адрес.
      */
+    @Schema(description = "Адрес", example = "г.Город,ул.Улица, д.Д.")
     private String address;
-
-    /**
-     * Организация.
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id")
-    private Organization organization;
 
     /**
      * Создан.
      */
+    @Schema(description = "Создан")
     private LocalDateTime createdAt;
 
     /**
      * Обновлен.
      */
+    @Schema(description = "Обновлен")
     private LocalDateTime updatedAt;
 
     /**
      * Пометка на удаление.
      */
+    @Schema(description = "Пометка на удаление", example = "false")
     private Boolean deleted = false;
 }

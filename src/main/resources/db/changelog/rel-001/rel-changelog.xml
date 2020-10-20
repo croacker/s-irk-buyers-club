@@ -7,4 +7,9 @@
     <include file="changelog/01-create-table-organization.xml" relativeToChangelogFile="true"/>
     <include file="changelog/02-create-table-shop.xml" relativeToChangelogFile="true"/>
     <include file="changelog/03-create-table-cashier.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/04-create-table-product-group.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/05-create-table-product.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/06-create-table-product-price.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/07-create-table-check.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/08-create-table-check-line.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
