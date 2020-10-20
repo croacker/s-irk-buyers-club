@@ -43,5 +43,5 @@ public class CheckLineDto {
      * Пометка на удаление.
      */
     @Schema(description = "Пометка на удаление", example = "false")
-    private Boolean deleted = false;
+    private Boolean deleted;
 }

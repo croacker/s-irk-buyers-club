@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Id;
 
+import javax.persistence.Id;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,7 +19,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
+@Entity
 public class Product {
+
     @Id
     private Long id;
 
@@ -47,5 +50,5 @@ public class Product {
     /**
      * Пометка на удаление.
      */
-    private Boolean deleted = false;
+    private Boolean deleted;
 }

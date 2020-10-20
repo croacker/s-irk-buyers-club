@@ -1,0 +1,16 @@
+embedded:
+  postgresql:
+    docker-image: postgres:12-alpine
+    host: localhost
+    port: 5432
+    schema: buyers
+    database: buyers
+    user: buyers
+    password: buyers
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/buyers
+    username: buyers
+    password: buyers

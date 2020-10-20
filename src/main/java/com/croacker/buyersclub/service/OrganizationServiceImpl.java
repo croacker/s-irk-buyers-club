@@ -13,13 +13,14 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 @Slf4j
-public class OrganizationServiceImpl implements OrganizationService{
+public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepo repo;
 
@@ -41,14 +42,18 @@ public class OrganizationServiceImpl implements OrganizationService{
 
     @Override
     public OrganizationDto save(AddOrganizationDto dto) {
-        var organization = addToOrganizationMapper.map(dto);
+        var organization = addToOrganizationMapper.map(dto)
+                .setCreatedAt(LocalDateTime.now())
+                .setUpdatedAt(LocalDateTime.now())
+                .setDeleted(false);
         organization = repo.save(organization);
         return toDtoMapper.map(organization);
     }
 
     @Override
     public OrganizationDto update(OrganizationDto dto) {
-        var organization = toOrganizationMapper.map(dto);
+        var organization = toOrganizationMapper.map(dto)
+                .setUpdatedAt(LocalDateTime.now());
         organization = repo.save(organization);
         return toDtoMapper.map(organization);
     }
@@ -56,7 +61,8 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Override
     public OrganizationDto delete(Long id) {
         return repo.findById(id).map(organization -> {
-            organization.setDeleted(true);
+            organization.setUpdatedAt(LocalDateTime.now())
+                    .setDeleted(true);
             organization = repo.save(organization);
             return toDtoMapper.map(organization);
         }).orElse(null);

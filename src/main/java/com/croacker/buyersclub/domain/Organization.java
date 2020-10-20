@@ -4,8 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Id;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
 /**
@@ -15,8 +19,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
+@Entity
 public class Organization {
     @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -32,6 +38,7 @@ public class Organization {
     /**
      * Создан.
      */
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     /**
@@ -42,5 +49,5 @@ public class Organization {
     /**
      * Пометка на удаление.
      */
-    private Boolean deleted = false;
+    private Boolean deleted;
 }
