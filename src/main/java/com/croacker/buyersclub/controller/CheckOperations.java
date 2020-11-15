@@ -19,7 +19,7 @@ import java.util.List;
 @Tag(name = "Check", description = "Кассиры")
 public interface CheckOperations {
 
-    @Operation(operationId = "listPhotos", summary = "Список чеков")
+    @Operation(operationId = "listChecks", summary = "Список чеков")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Чеки",
                     content = {@Content(mediaType = "application/json",
@@ -34,7 +34,7 @@ public interface CheckOperations {
                                          @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
                                          @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction);
 
-    @Operation(operationId = "list", summary = "Получить чек по идентификатору")
+    @Operation(operationId = "getCheck", summary = "Получить чек по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Чек",
                     content = {@Content(mediaType = "application/json",
@@ -46,7 +46,7 @@ public interface CheckOperations {
     @GetMapping(path = "/{id}")
     Mono<CheckDto> getCheck(@PathVariable Long id);
 
-    @Operation(operationId = "deletePhoto", summary = "Добавить чек",
+    @Operation(operationId = "createCheck", summary = "Добавить чек",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Чек",
@@ -60,7 +60,7 @@ public interface CheckOperations {
     @PostMapping
     Mono<CheckDto> createCheck(@RequestBody AddCheckDto dto);
 
-    @Operation(operationId = "deletePhoto", summary = "Обновить чек",
+    @Operation(operationId = "updateCheck", summary = "Обновить чек",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Чек",
@@ -74,7 +74,7 @@ public interface CheckOperations {
     @PutMapping
     Mono<CheckDto> updateCheck(@RequestBody CheckDto dto);
 
-    @Operation(operationId = "list", summary = "Удалить чек по идентификатору")
+    @Operation(operationId = "deleteCheck", summary = "Удалить чек по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Чек",
                     content = {@Content(mediaType = "application/json",

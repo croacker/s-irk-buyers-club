@@ -19,7 +19,7 @@ import java.util.List;
 @Tag(name = "Organization", description = "Организации")
 public interface OrganizationOperations {
 
-    @Operation(operationId = "listPhotos", summary = "Список Организаций")
+    @Operation(operationId = "listOrganizations", summary = "Список Организаций")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Организации",
                     content = {@Content(mediaType = "application/json",
@@ -34,7 +34,7 @@ public interface OrganizationOperations {
                                               @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
                                               @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction);
 
-    @Operation(operationId = "list", summary = "Получить Организацию по идентификатору")
+    @Operation(operationId = "getOrganization", summary = "Получить Организацию по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Организация",
                     content = {@Content(mediaType = "application/json",
@@ -46,7 +46,7 @@ public interface OrganizationOperations {
     @GetMapping(path = "/{id}")
     Mono<OrganizationDto> getOrganization(@PathVariable Long id);
 
-    @Operation(operationId = "deletePhoto", summary = "Добавить Организацию",
+    @Operation(operationId = "createOrganization", summary = "Добавить Организацию",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Организация",
@@ -60,7 +60,7 @@ public interface OrganizationOperations {
     @PostMapping
     Mono<OrganizationDto> createOrganization(@RequestBody AddOrganizationDto dto);
 
-    @Operation(operationId = "deletePhoto", summary = "Обновить Организацию",
+    @Operation(operationId = "updateOrganization", summary = "Обновить Организацию",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Организация",
@@ -74,7 +74,7 @@ public interface OrganizationOperations {
     @PutMapping
     Mono<OrganizationDto> updateOrganization(@RequestBody OrganizationDto dto);
 
-    @Operation(operationId = "list", summary = "Удалить Организацию по идентификатору")
+    @Operation(operationId = "deleteOrganization", summary = "Удалить Организацию по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Организация",
                     content = {@Content(mediaType = "application/json",
