@@ -33,6 +33,12 @@
             <column name="check_date" type="timestamp">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
             <column name="deleted" type="bool" defaultValue="false">
                 <constraints nullable="false"/>
             </column>

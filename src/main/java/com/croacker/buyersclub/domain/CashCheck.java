@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Entity
-public class Check {
+public class CashCheck {
     @Id
     private Long id;
 

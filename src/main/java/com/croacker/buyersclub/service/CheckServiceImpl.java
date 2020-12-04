@@ -1,14 +1,11 @@
 package com.croacker.buyersclub.service;
 
 import com.croacker.buyersclub.repo.CheckRepo;
-import com.croacker.buyersclub.service.dto.check.AddCheckDto;
-import com.croacker.buyersclub.service.dto.check.CheckDto;
-import com.croacker.buyersclub.service.mapper.cashier.AddDtoToCashierMapper;
-import com.croacker.buyersclub.service.mapper.cashier.CashierToDtoMapper;
-import com.croacker.buyersclub.service.mapper.cashier.DtoToCashierMapper;
-import com.croacker.buyersclub.service.mapper.check.AddDtoToCheckMapper;
-import com.croacker.buyersclub.service.mapper.check.CheckToDtoMapper;
-import com.croacker.buyersclub.service.mapper.check.DtoToCheckMapper;
+import com.croacker.buyersclub.service.dto.check.AddCashCheckDto;
+import com.croacker.buyersclub.service.dto.check.CashCheckDto;
+import com.croacker.buyersclub.service.mapper.check.AddDtoToCashCheckMapper;
+import com.croacker.buyersclub.service.mapper.check.CashCheckToDtoMapper;
+import com.croacker.buyersclub.service.mapper.check.DtoToCashCheckMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -28,24 +25,24 @@ public class CheckServiceImpl implements CheckService{
 
     private final CheckRepo repo;
 
-    private final CheckToDtoMapper toDtoMapper;
+    private final CashCheckToDtoMapper toDtoMapper;
 
-    private final DtoToCheckMapper toEntityMapper;
+    private final DtoToCashCheckMapper toEntityMapper;
 
-    private final AddDtoToCheckMapper addToEntityMapper;
+    private final AddDtoToCashCheckMapper addToEntityMapper;
 
     @Override
-    public List<CheckDto> findAll(Pageable pageable) {
+    public List<CashCheckDto> findAll(Pageable pageable) {
         return repo.findByDeletedIsFalse(pageable).stream().map(toDtoMapper).collect(Collectors.toList());
     }
 
     @Override
-    public CheckDto findOne(Long id) {
+    public CashCheckDto findOne(Long id) {
         return repo.findById(id).map(toDtoMapper).orElse(null);
     }
 
     @Override
-    public CheckDto save(AddCheckDto dto) {
+    public CashCheckDto save(AddCashCheckDto dto) {
         var check = addToEntityMapper.map(dto)
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now())
@@ -55,7 +52,7 @@ public class CheckServiceImpl implements CheckService{
     }
 
     @Override
-    public CheckDto update(CheckDto dto) {
+    public CashCheckDto update(CashCheckDto dto) {
         var check = toEntityMapper.map(dto)
                 .setUpdatedAt(LocalDateTime.now());
         check = repo.save(check);
@@ -63,7 +60,7 @@ public class CheckServiceImpl implements CheckService{
     }
 
     @Override
-    public CheckDto delete(Long id) {
+    public CashCheckDto delete(Long id) {
         return null;
     }
 }

@@ -5,17 +5,16 @@ spring:
   profiles: dev
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    hibernate
-    ddl-auto=update
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
 
   datasource:
-    url: jdbc:h2:mem:buyers
+    url: jdbc:h2:file:./data/buyers
     driverClassName: org.h2.Driver
     username: buyers
     password: buyers
   liquibase:
-    url: jdbc:h2:mem:buyers
-#    username: ${DB_USERNAME:buyers}
-#    password: ${DB_USERNAME:buyers}
+    url: jdbc:h2:file:./data/buyers
     change-log: classpath:db/changelog/changelog-master.xml
     enabled: true
