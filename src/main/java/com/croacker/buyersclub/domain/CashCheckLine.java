@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.time.LocalDateTime;
 
 /**
  * Чек, строка.
@@ -20,7 +19,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Entity
-public class CheckLine {
+public class CashCheckLine {
     @Id
     private Long id;
 
@@ -29,7 +28,7 @@ public class CheckLine {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "check_id")
-    private Check check;
+    private CashCheck cashCheck;
 
     /**
      * Товар.

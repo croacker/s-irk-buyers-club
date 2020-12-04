@@ -1,18 +1,16 @@
 package com.croacker.buyersclub.service.mapper.check;
 
-import com.croacker.buyersclub.domain.Check;
-import com.croacker.buyersclub.service.dto.check.CheckDto;
+import com.croacker.buyersclub.domain.CashCheck;
+import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.mapper.Mapper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
-public class CheckToDtoMapper implements Mapper<Check, CheckDto> {
+public class CashCheckToDtoMapper implements Mapper<CashCheck, CashCheckDto> {
 
     @Override
-    public CheckDto map(Check input) {
-        return new CheckDto()
+    public CashCheckDto map(CashCheck input) {
+        return new CashCheckDto()
                 .setKktRegId(input.getKktRegId())
                 .setFiscalDriveNumber(input.getFiscalDriveNumber())
                 .setFiscalDocumentNumber(input.getFiscalDocumentNumber())

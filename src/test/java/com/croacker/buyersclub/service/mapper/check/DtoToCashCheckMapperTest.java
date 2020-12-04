@@ -2,8 +2,8 @@ package com.croacker.buyersclub.service.mapper.check;
 
 
 import com.croacker.buyersclub.TestConfiguration;
-import com.croacker.buyersclub.domain.Check;
-import com.croacker.buyersclub.service.dto.check.AddCheckDto;
+import com.croacker.buyersclub.domain.CashCheck;
+import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,15 +17,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfiguration.class})
-public class AddDtoToCheckMapperTest {
+public class DtoToCashCheckMapperTest {
 
-    private AddDtoToCheckMapper mapper;
+    private DtoToCashCheckMapper mapper;
 
-    private final static LocalDateTime NOW = LocalDateTime.now();
+    private static final LocalDateTime NOW = LocalDateTime.now();
 
     @BeforeEach
     void setUp() {
-        mapper = new AddDtoToCheckMapper();
+        mapper = new DtoToCashCheckMapper();
     }
 
     @Test
@@ -42,26 +42,29 @@ public class AddDtoToCheckMapperTest {
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
-    private Check createEntity() {
-        return new Check()
+    private CashCheck createEntity() {
+        return new CashCheck()
                 .setKktRegId("test_kkt_reg_id")
                 .setFiscalDriveNumber("test_fiscal_drive_number")
                 .setFiscalDocumentNumber("test_fiscal_document_number")
                 .setTotalSum(5)
                 .setCashSum(3)
                 .setEcashSum(2)
-                .setCheckDate(NOW);
+                .setCheckDate(NOW)
+                .setDeleted(false);
     }
 
-    private AddCheckDto createDto() {
-        return new AddCheckDto()
+    private CashCheckDto createDto() {
+        return new CashCheckDto()
+                .setId(0L)
                 .setKktRegId("test_kkt_reg_id")
                 .setFiscalDriveNumber("test_fiscal_drive_number")
                 .setFiscalDocumentNumber("test_fiscal_document_number")
                 .setTotalSum(5)
                 .setCashSum(3)
                 .setEcashSum(2)
-                .setCheckDate(NOW);
+                .setCheckDate(NOW)
+                .setDeleted(false);
     }
 
 }

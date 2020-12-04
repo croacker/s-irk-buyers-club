@@ -1,7 +1,7 @@
 package com.croacker.buyersclub.service;
 
-import com.croacker.buyersclub.service.dto.check.AddCheckDto;
-import com.croacker.buyersclub.service.dto.check.CheckDto;
+import com.croacker.buyersclub.service.dto.check.AddCashCheckDto;
+import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -11,14 +11,14 @@ import java.util.List;
  */
 public interface CheckService {
 
-    List<CheckDto> findAll(Pageable pageable);
+    List<CashCheckDto> findAll(Pageable pageable);
 
-    CheckDto findOne(Long id);
+    CashCheckDto findOne(Long id);
 
-    CheckDto save(AddCheckDto dto);
+    CashCheckDto save(AddCashCheckDto dto);
 
-    CheckDto update(CheckDto dto);
+    CashCheckDto update(CashCheckDto dto);
 
-    CheckDto delete(Long id);
+    CashCheckDto delete(Long id);
 
 }
