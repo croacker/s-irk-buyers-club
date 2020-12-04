@@ -1,0 +1,21 @@
+server:
+  port: ${APP_PORT:8080}
+
+spring:
+  profiles: dev
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate
+    ddl-auto=update
+
+  datasource:
+    url: jdbc:h2:mem:buyers
+    driverClassName: org.h2.Driver
+    username: buyers
+    password: buyers
+  liquibase:
+    url: jdbc:h2:mem:buyers
+#    username: ${DB_USERNAME:buyers}
+#    password: ${DB_USERNAME:buyers}
+    change-log: classpath:db/changelog/changelog-master.xml
+    enabled: true
