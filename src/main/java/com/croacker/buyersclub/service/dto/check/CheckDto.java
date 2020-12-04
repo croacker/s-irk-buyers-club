@@ -71,6 +71,18 @@ public class CheckDto {
     private LocalDateTime checkDate;
 
     /**
+     * Создан.
+     */
+    @Schema(description = "Создан")
+    private LocalDateTime createdAt;
+
+    /**
+     * Обновлен.
+     */
+    @Schema(description = "Обновлен")
+    private LocalDateTime updatedAt;
+
+    /**
      * Пометка на удаление.
      */
     @Schema(description = "Пометка на удаление", example = "false")

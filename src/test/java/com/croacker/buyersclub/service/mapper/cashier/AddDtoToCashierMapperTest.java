@@ -27,11 +27,11 @@ public class AddDtoToCashierMapperTest {
     @Test
     void shouldMapDto() {
         //given
-        var dto = createDto();
+        var given = createDto();
         var expected = createEntity();
 
         // when
-        var actual = mapper.map(dto);
+        var actual = mapper.map(given);
 
         // then
         assertTrue(new ReflectionEquals(expected).matches(actual),

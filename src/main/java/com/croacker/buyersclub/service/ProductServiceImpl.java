@@ -1,12 +1,8 @@
 package com.croacker.buyersclub.service;
 
-import com.croacker.buyersclub.repo.OrganizationRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
 import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
-import com.croacker.buyersclub.service.mapper.organization.AddDtoToOrganizationMapper;
-import com.croacker.buyersclub.service.mapper.organization.DtoToOrganizationMapper;
-import com.croacker.buyersclub.service.mapper.organization.OrganizationToDtoMapper;
 import com.croacker.buyersclub.service.mapper.product.AddDtoToProductMapper;
 import com.croacker.buyersclub.service.mapper.product.DtoToProductMapper;
 import com.croacker.buyersclub.service.mapper.product.ProductToDtoMapper;
@@ -29,9 +25,9 @@ public class ProductServiceImpl implements ProductService{
 
     private final ProductToDtoMapper toDtoMapper;
 
-    private final DtoToProductMapper toProductMapper;
+    private final DtoToProductMapper toEntityMapper;
 
-    private final AddDtoToProductMapper addToProductMapper;
+    private final AddDtoToProductMapper addToEntityMapper;
 
     @Override
     public List<ProductDto> findAll(Pageable pageable) {
@@ -45,7 +41,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDto save(AddProductDto dto) {
-        var product = addToProductMapper.map(dto)
+        var product = addToEntityMapper.map(dto)
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now())
                 .setDeleted(false);
@@ -55,7 +51,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDto update(ProductDto dto) {
-        var product = toProductMapper.map(dto)
+        var product = toEntityMapper.map(dto)
                 .setUpdatedAt(LocalDateTime.now());
         product = repo.save(product);
         return toDtoMapper.map(product);

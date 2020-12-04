@@ -1,9 +1,12 @@
-package com.croacker.buyersclub.service.mapper.cashier;
+package com.croacker.buyersclub.service.mapper.organization;
 
 
 import com.croacker.buyersclub.TestConfiguration;
-import com.croacker.buyersclub.domain.Cashier;
-import com.croacker.buyersclub.service.dto.cashier.CashierDto;
+import com.croacker.buyersclub.domain.Organization;
+import com.croacker.buyersclub.domain.Product;
+import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
+import com.croacker.buyersclub.service.dto.product.ProductDto;
+import com.croacker.buyersclub.service.mapper.product.DtoToProductMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,13 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfiguration.class})
-public class DtoToCashierMapperTest {
+public class DtoToOrganizationMapperTest {
 
-    private DtoToCashierMapper mapper;
+    private DtoToOrganizationMapper mapper;
 
     @BeforeEach
     void setUp() {
-        mapper = new DtoToCashierMapper();
+        mapper = new DtoToOrganizationMapper();
     }
 
     @Test
@@ -38,17 +41,19 @@ public class DtoToCashierMapperTest {
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
-    private Cashier createEntity() {
-        return new Cashier()
+    private Organization createEntity() {
+        return new Organization()
                 .setId(0L)
-                .setName("test_cashier")
+                .setName("test_organization")
+                .setInn("test_inn")
                 .setDeleted(false);
     }
 
-    private CashierDto createDto() {
-        return new CashierDto()
+    private OrganizationDto createDto() {
+        return new OrganizationDto()
                 .setId(0L)
-                .setName("test_cashier")
+                .setName("test_organization")
+                .setInn("test_inn")
                 .setDeleted(false);
     }
 

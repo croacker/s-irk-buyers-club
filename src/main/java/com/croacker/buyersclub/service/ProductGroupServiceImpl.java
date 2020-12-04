@@ -1,14 +1,8 @@
 package com.croacker.buyersclub.service;
 
 import com.croacker.buyersclub.repo.ProductGroupRepo;
-import com.croacker.buyersclub.repo.ProductRepo;
-import com.croacker.buyersclub.service.dto.product.AddProductDto;
-import com.croacker.buyersclub.service.dto.product.ProductDto;
 import com.croacker.buyersclub.service.dto.productgroup.AddProductGroupDto;
 import com.croacker.buyersclub.service.dto.productgroup.ProductGroupDto;
-import com.croacker.buyersclub.service.mapper.product.AddDtoToProductMapper;
-import com.croacker.buyersclub.service.mapper.product.DtoToProductMapper;
-import com.croacker.buyersclub.service.mapper.product.ProductToDtoMapper;
 import com.croacker.buyersclub.service.mapper.productgroup.AddDtoToProductGroupMapper;
 import com.croacker.buyersclub.service.mapper.productgroup.DtoToProductGroupMapper;
 import com.croacker.buyersclub.service.mapper.productgroup.ProductGroupToDtoMapper;
@@ -31,9 +25,9 @@ public class ProductGroupServiceImpl implements ProductGroupService{
 
     private final ProductGroupToDtoMapper toDtoMapper;
 
-    private final DtoToProductGroupMapper toProductMapper;
+    private final DtoToProductGroupMapper toEntityMapper;
 
-    private final AddDtoToProductGroupMapper addToProductMapper;
+    private final AddDtoToProductGroupMapper addToEntityMapper;
 
     @Override
     public List<ProductGroupDto> findAll(Pageable pageable) {
@@ -47,7 +41,7 @@ public class ProductGroupServiceImpl implements ProductGroupService{
 
     @Override
     public ProductGroupDto save(AddProductGroupDto dto) {
-        var product = addToProductMapper.map(dto)
+        var product = addToEntityMapper.map(dto)
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now())
                 .setDeleted(false);
@@ -57,7 +51,7 @@ public class ProductGroupServiceImpl implements ProductGroupService{
 
     @Override
     public ProductGroupDto update(ProductGroupDto dto) {
-        var product = toProductMapper.map(dto)
+        var product = toEntityMapper.map(dto)
                 .setUpdatedAt(LocalDateTime.now());
         product = repo.save(product);
         return toDtoMapper.map(product);

@@ -12,7 +12,8 @@ public class DtoToProductMapper implements Mapper<ProductDto, Product> {
     public Product map(ProductDto input) {
         return new Product()
                 .setId(input.getId())
-                .setName(input.getName());
+                .setName(input.getName())
+                .setDeleted(input.getDeleted());
     }
 
 }

@@ -1,9 +1,9 @@
-package com.croacker.buyersclub.service.mapper.cashier;
+package com.croacker.buyersclub.service.mapper.productgroup;
 
 
 import com.croacker.buyersclub.TestConfiguration;
-import com.croacker.buyersclub.domain.Cashier;
-import com.croacker.buyersclub.service.dto.cashier.CashierDto;
+import com.croacker.buyersclub.domain.ProductGroup;
+import com.croacker.buyersclub.service.dto.productgroup.ProductGroupDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,13 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfiguration.class})
-public class DtoToCashierMapperTest {
+public class DtoToProductGroupMapperTest {
 
-    private DtoToCashierMapper mapper;
+    private DtoToProductGroupMapper mapper;
 
     @BeforeEach
     void setUp() {
-        mapper = new DtoToCashierMapper();
+        mapper = new DtoToProductGroupMapper();
     }
 
     @Test
@@ -38,17 +38,17 @@ public class DtoToCashierMapperTest {
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
-    private Cashier createEntity() {
-        return new Cashier()
+    private ProductGroup createEntity() {
+        return new ProductGroup()
                 .setId(0L)
-                .setName("test_cashier")
+                .setName("test_product_group")
                 .setDeleted(false);
     }
 
-    private CashierDto createDto() {
-        return new CashierDto()
+    private ProductGroupDto createDto() {
+        return new ProductGroupDto()
                 .setId(0L)
-                .setName("test_cashier")
+                .setName("test_product_group")
                 .setDeleted(false);
     }
 

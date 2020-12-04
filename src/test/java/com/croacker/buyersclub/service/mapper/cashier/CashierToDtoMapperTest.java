@@ -1,6 +1,5 @@
 package com.croacker.buyersclub.service.mapper.cashier;
 
-
 import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Cashier;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
@@ -11,24 +10,28 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfiguration.class})
-public class DtoToCashierMapperTest {
+class CashierToDtoMapperTest {
 
-    private DtoToCashierMapper mapper;
+    private CashierToDtoMapper mapper;
+
+    private final static LocalDateTime NOW = LocalDateTime.now();
 
     @BeforeEach
     void setUp() {
-        mapper = new DtoToCashierMapper();
+        mapper = new CashierToDtoMapper();
     }
 
     @Test
-    void shouldMapDto() {
+    void shouldMapEntity() {
         //given
-        var given = createDto();
-        var expected = createEntity();
+        var given = createEntity();
+        var expected = createDto();
 
         // when
         var actual = mapper.map(given);
@@ -42,6 +45,8 @@ public class DtoToCashierMapperTest {
         return new Cashier()
                 .setId(0L)
                 .setName("test_cashier")
+                .setCreatedAt(NOW)
+                .setUpdatedAt(NOW)
                 .setDeleted(false);
     }
 
@@ -49,7 +54,10 @@ public class DtoToCashierMapperTest {
         return new CashierDto()
                 .setId(0L)
                 .setName("test_cashier")
+                .setCreatedAt(NOW)
+                .setUpdatedAt(NOW)
                 .setDeleted(false);
     }
+
 
 }

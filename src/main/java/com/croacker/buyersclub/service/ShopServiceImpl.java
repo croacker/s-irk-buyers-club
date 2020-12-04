@@ -27,7 +27,7 @@ public class ShopServiceImpl implements ShopService{
 
     private final DtoToShopMapper toShopMapper;
 
-    private final AddDtoToShopMapper addToShopMapper;
+    private final AddDtoToShopMapper addToEntityMapper;
 
     @Override
     public List<ShopDto> findAll(Pageable pageable) {
@@ -41,7 +41,7 @@ public class ShopServiceImpl implements ShopService{
 
     @Override
     public ShopDto save(AddShopDto dto) {
-        var product = addToShopMapper.map(dto)
+        var product = addToEntityMapper.map(dto)
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now())
                 .setDeleted(false);

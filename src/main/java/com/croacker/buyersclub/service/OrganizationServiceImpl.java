@@ -10,8 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,9 +24,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationToDtoMapper toDtoMapper;
 
-    private final DtoToOrganizationMapper toOrganizationMapper;
+    private final DtoToOrganizationMapper toEntityMapper;
 
-    private final AddDtoToOrganizationMapper addToOrganizationMapper;
+    private final AddDtoToOrganizationMapper addToEntityMapper;
 
     @Override
     public List<OrganizationDto> findAll(Pageable pageable) {
@@ -42,7 +40,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public OrganizationDto save(AddOrganizationDto dto) {
-        var organization = addToOrganizationMapper.map(dto)
+        var organization = addToEntityMapper.map(dto)
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now())
                 .setDeleted(false);
@@ -52,7 +50,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public OrganizationDto update(OrganizationDto dto) {
-        var organization = toOrganizationMapper.map(dto)
+        var organization = toEntityMapper.map(dto)
                 .setUpdatedAt(LocalDateTime.now());
         organization = repo.save(organization);
         return toDtoMapper.map(organization);

@@ -67,6 +67,16 @@ public class Check {
     private LocalDateTime checkDate;
 
     /**
+     * Создан.
+     */
+    private LocalDateTime createdAt;
+
+    /**
+     * Обновлен.
+     */
+    private LocalDateTime updatedAt;
+
+    /**
      * Пометка на удаление.
      */
     private Boolean deleted;

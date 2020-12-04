@@ -1,9 +1,8 @@
-package com.croacker.buyersclub.service.mapper.cashier;
-
+package com.croacker.buyersclub.service.mapper.organization;
 
 import com.croacker.buyersclub.TestConfiguration;
-import com.croacker.buyersclub.domain.Cashier;
-import com.croacker.buyersclub.service.dto.cashier.CashierDto;
+import com.croacker.buyersclub.domain.Organization;
+import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,24 +10,28 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfiguration.class})
-public class DtoToCashierMapperTest {
+class OrganizationToDtoMapperTest {
 
-    private DtoToCashierMapper mapper;
+    private OrganizationToDtoMapper mapper;
+
+    private final static LocalDateTime NOW = LocalDateTime.now();
 
     @BeforeEach
     void setUp() {
-        mapper = new DtoToCashierMapper();
+        mapper = new OrganizationToDtoMapper();
     }
 
     @Test
-    void shouldMapDto() {
+    void shouldMapEntity() {
         //given
-        var given = createDto();
-        var expected = createEntity();
+        var given = createEntity();
+        var expected = createDto();
 
         // when
         var actual = mapper.map(given);
@@ -38,18 +41,25 @@ public class DtoToCashierMapperTest {
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
-    private Cashier createEntity() {
-        return new Cashier()
+    private Organization createEntity() {
+        return new Organization()
                 .setId(0L)
-                .setName("test_cashier")
+                .setName("test_organization")
+                .setInn("test_inn")
+                .setCreatedAt(NOW)
+                .setUpdatedAt(NOW)
                 .setDeleted(false);
     }
 
-    private CashierDto createDto() {
-        return new CashierDto()
+    private OrganizationDto createDto() {
+        return new OrganizationDto()
                 .setId(0L)
-                .setName("test_cashier")
+                .setName("test_organization")
+                .setInn("test_inn")
+                .setCreatedAt(NOW)
+                .setUpdatedAt(NOW)
                 .setDeleted(false);
     }
+
 
 }

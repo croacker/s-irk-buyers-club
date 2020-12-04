@@ -12,7 +12,8 @@ public class DtoToProductGroupMapper implements Mapper<ProductGroupDto, ProductG
     public ProductGroup map(ProductGroupDto input) {
         return new ProductGroup()
                 .setId(input.getId())
-                .setName(input.getName());
+                .setName(input.getName())
+                .setDeleted(input.getDeleted());
     }
 
 }
