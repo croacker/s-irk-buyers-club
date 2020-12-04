@@ -1,5 +1,6 @@
 package com.croacker.buyersclub.telegram;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -12,10 +13,11 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     final int RECONNECT_PAUSE =10000;
 
-    private String botUsername = "1309213897:AAHS_q52mRqaCn3FT33ETZrQZmd0Pl_eJZ0";
+    @Value("${app.telegram.token}")
+    private String botToken;
 
-    private String botToken = "telebot-irk-buers";
-
+    @Value("${app.telegram.username}")
+    private String botUsername;
 
     @Override
     public String getBotUsername() {

@@ -12,3 +12,8 @@ spring:
     password: ${DB_PASSWORD:buyers}
     change-log: classpath:db/changelog/changelog-master.xml
     enabled: true
+
+app:
+  telegram:
+    token: ${TELEGRAM_BOT_TOKEN:telegramToken}
+    username: ${TELEGRAM_BOT_USERNAME:telegramUsername}
