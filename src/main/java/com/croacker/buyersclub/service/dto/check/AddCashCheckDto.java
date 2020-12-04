@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Schema(description = "Чек, шапка")
-public class AddCheckDto {
+public class AddCashCheckDto {
     /**
      * Идентификатор.
      */
