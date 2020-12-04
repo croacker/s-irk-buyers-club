@@ -1,16 +1,16 @@
-package com.croacker.buyersclub.service.mapper.product;
+package com.croacker.buyersclub.service.mapper.cashier;
 
-import com.croacker.buyersclub.domain.Product;
-import com.croacker.buyersclub.service.dto.product.ProductDto;
+import com.croacker.buyersclub.domain.Cashier;
+import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.mapper.Mapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductToDtoMapper implements Mapper<Product, ProductDto> {
+public class CashierToDtoMapper implements Mapper<Cashier, CashierDto> {
 
     @Override
-    public ProductDto map(Product input) {
-        return new ProductDto()
+    public CashierDto map(Cashier input) {
+        return new CashierDto()
                 .setId(input.getId())
                 .setName(input.getName())
                 .setCreatedAt(input.getCreatedAt())

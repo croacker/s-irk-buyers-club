@@ -1,15 +1,17 @@
 package com.croacker.buyersclub.service;
 
-import com.croacker.buyersclub.repo.OrganizationRepo;
+import com.croacker.buyersclub.repo.ProductGroupRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
 import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
-import com.croacker.buyersclub.service.mapper.organization.AddDtoToOrganizationMapper;
-import com.croacker.buyersclub.service.mapper.organization.DtoToOrganizationMapper;
-import com.croacker.buyersclub.service.mapper.organization.OrganizationToDtoMapper;
+import com.croacker.buyersclub.service.dto.productgroup.AddProductGroupDto;
+import com.croacker.buyersclub.service.dto.productgroup.ProductGroupDto;
 import com.croacker.buyersclub.service.mapper.product.AddDtoToProductMapper;
 import com.croacker.buyersclub.service.mapper.product.DtoToProductMapper;
 import com.croacker.buyersclub.service.mapper.product.ProductToDtoMapper;
+import com.croacker.buyersclub.service.mapper.productgroup.AddDtoToProductGroupMapper;
+import com.croacker.buyersclub.service.mapper.productgroup.DtoToProductGroupMapper;
+import com.croacker.buyersclub.service.mapper.productgroup.ProductGroupToDtoMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -23,28 +25,28 @@ import java.util.stream.StreamSupport;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class ProductServiceImpl implements ProductService{
+public class ProductGroupServiceImpl implements ProductGroupService{
 
-    private final ProductRepo repo;
+    private final ProductGroupRepo repo;
 
-    private final ProductToDtoMapper toDtoMapper;
+    private final ProductGroupToDtoMapper toDtoMapper;
 
-    private final DtoToProductMapper toProductMapper;
+    private final DtoToProductGroupMapper toProductMapper;
 
-    private final AddDtoToProductMapper addToProductMapper;
+    private final AddDtoToProductGroupMapper addToProductMapper;
 
     @Override
-    public List<ProductDto> findAll(Pageable pageable) {
+    public List<ProductGroupDto> findAll(Pageable pageable) {
         return StreamSupport.stream(repo.findAll().spliterator(), false).map(toDtoMapper).collect(Collectors.toList());
     }
 
     @Override
-    public ProductDto findOne(Long id) {
+    public ProductGroupDto findOne(Long id) {
         return repo.findById(id).map(toDtoMapper).orElse(null);
     }
 
     @Override
-    public ProductDto save(AddProductDto dto) {
+    public ProductGroupDto save(AddProductGroupDto dto) {
         var product = addToProductMapper.map(dto)
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now())
@@ -54,7 +56,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductDto update(ProductDto dto) {
+    public ProductGroupDto update(ProductGroupDto dto) {
         var product = toProductMapper.map(dto)
                 .setUpdatedAt(LocalDateTime.now());
         product = repo.save(product);
@@ -62,7 +64,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductDto delete(Long id) {
+    public ProductGroupDto delete(Long id) {
         return repo.findById(id).map(organization -> {
             organization.setUpdatedAt(LocalDateTime.now())
                     .setDeleted(true);

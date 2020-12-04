@@ -1,6 +1,5 @@
 package com.croacker.buyersclub.service;
 
-import com.croacker.buyersclub.domain.Organization;
 import com.croacker.buyersclub.service.dto.organization.AddOrganizationDto;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
 import org.junit.jupiter.api.Order;
@@ -15,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @ActiveProfiles("integration-test")
-public class OrganizationServiceIntegrationTest {
+public class OrganizationServiceIT {
 
     @Autowired
     private OrganizationService service;

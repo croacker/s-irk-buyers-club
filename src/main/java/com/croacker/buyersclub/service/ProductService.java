@@ -1,7 +1,5 @@
 package com.croacker.buyersclub.service;
 
-import com.croacker.buyersclub.service.dto.organization.AddOrganizationDto;
-import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
 import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
 import org.springframework.data.domain.Pageable;
