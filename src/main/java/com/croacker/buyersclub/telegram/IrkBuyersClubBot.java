@@ -1,6 +1,7 @@
 package com.croacker.buyersclub.telegram;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
+import com.croacker.buyersclub.telegram.file.FileInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +20,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
 import java.io.Flushable;
@@ -94,6 +96,28 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         return sendMessage;
     }
 
+    private String processFile(String fileId) {
+        var url = "https://api.telegram.org/bot" + getBotToken() + "/getFile?file_id=" + fileId;
+        Mono<String> filePath = getFilePath(fileId);
+
+        filePath.map(path -> {
+                    System.out.println(path);
+                    getFile(path);
+                    return path;
+                }).subscribe();
+//                .onStatus(this::isErrorResponse, WebUtils::wrapResponseError)
+//                .bodyToMono(GetFileResponse.class)
+//                .retryWhen(backoff(cfg.getMaxAttempts(), ofMillis(cfg.getMinBackoffMs()))
+//                        .filter(WebUtils::isRetryException))
+//                .timeout(Duration.ofSeconds(cfg.getCommonTimeoutSec()))
+//                .onErrorMap(WebUtils::wrapException);
+        return StringUtils.EMPTY;
+    }
+
+    private Mono<> getFile(String filePath) {
+
+    }
+
     private Optional<String> getFileId(Message message) {
         Optional<String> result = Optional.empty();
         if (message.getDocument() != null) {
@@ -102,26 +126,13 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         return result;
     }
 
-    private String processFile(String fileId) {
+    private Mono<String> getFilePath(String fileId){
         var url = "https://api.telegram.org/bot" + getBotToken() + "/getFile?file_id=" + fileId;
-        Flux<DataBuffer> resu = client.get()
+        return client.get()
                 .uri(url)
                 .retrieve()
-                .bodyToFlux(DataBuffer.class);
-
-        resu.map(dataBuffer -> dataBuffer.asByteBuffer())
-                .map(byteBuffer -> {
-                    var s = new String(byteBuffer.array());
-                    System.out.println(s);
-                    return s;
-                }).subscribe(c -> DataBufferUtils.releaseConsumer());
-//                .onStatus(this::isErrorResponse, WebUtils::wrapResponseError)
-//                .bodyToMono(GetFileResponse.class)
-//                .retryWhen(backoff(cfg.getMaxAttempts(), ofMillis(cfg.getMinBackoffMs()))
-//                        .filter(WebUtils::isRetryException))
-//                .timeout(Duration.ofSeconds(cfg.getCommonTimeoutSec()))
-//                .onErrorMap(WebUtils::wrapException);
-        return StringUtils.EMPTY;
+                .bodyToMono(FileInfo.class)
+                .map(fileInfo -> fileInfo.getResult().getFilePath());
     }
 
     private boolean isErrorResponse(HttpStatus status){
