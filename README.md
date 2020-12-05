@@ -8,3 +8,7 @@ irk-buyers-club
 ## Переменные окружения
 * TELEGRAM_BOT_TOKEN - токен
 * TELEGRAM_BOT_USERNAME - имя бота
+
+
+## swagger-ui
+```http://localhost:8080/webjars/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config```
