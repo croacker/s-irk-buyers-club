@@ -41,20 +41,20 @@ public class ShopServiceImpl implements ShopService{
 
     @Override
     public ShopDto save(AddShopDto dto) {
-        var product = addToEntityMapper.map(dto)
+        var shop = addToEntityMapper.map(dto)
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now())
                 .setDeleted(false);
-        product = repo.save(product);
-        return toDtoMapper.map(product);
+        shop = repo.save(shop);
+        return toDtoMapper.map(shop);
     }
 
     @Override
     public ShopDto update(ShopDto dto) {
-        var product = toShopMapper.map(dto)
+        var shop = toShopMapper.map(dto)
                 .setUpdatedAt(LocalDateTime.now());
-        product = repo.save(product);
-        return toDtoMapper.map(product);
+        shop = repo.save(shop);
+        return toDtoMapper.map(shop);
     }
 
     @Override
