@@ -40,7 +40,7 @@ public class AddDtoToCashierMapperTest {
 
     private Cashier createEntity() {
         return new Cashier()
-                .setName("test_cashier1");
+                .setName("test_cashier");
     }
 
     private AddCashierDto createDto() {
