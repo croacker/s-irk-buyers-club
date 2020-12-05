@@ -1,7 +1,10 @@
 package com.croacker.buyersclub.telegram;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
+import com.croacker.buyersclub.service.ofd.OfdCheck;
 import com.croacker.buyersclub.telegram.file.FileInfo;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +28,8 @@ import reactor.core.publisher.Mono;
 import javax.annotation.PostConstruct;
 import java.io.Flushable;
 import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static java.time.Duration.ofMillis;
@@ -97,12 +102,11 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     }
 
     private String processFile(String fileId) {
-        var url = "https://api.telegram.org/bot" + getBotToken() + "/getFile?file_id=" + fileId;
         Mono<String> filePath = getFilePath(fileId);
 
         filePath.map(path -> {
                     System.out.println(path);
-                    getFile(path);
+                    getFile(path).subscribe();
                     return path;
                 }).subscribe();
 //                .onStatus(this::isErrorResponse, WebUtils::wrapResponseError)
@@ -114,8 +118,23 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         return StringUtils.EMPTY;
     }
 
-    private Mono<> getFile(String filePath) {
-
+    private Flux<List<OfdCheck>> getFile(String filePath) {
+        var url = "https://api.telegram.org/file/bot" + getBotToken() + "/" + filePath;
+        return client.get()
+                .uri(url)
+                .retrieve()
+                .bodyToFlux(String.class)
+                .map(str -> {// TODO если json отформатирован, он будет поступать построчно и не может быть десериализован
+                    List<OfdCheck> ofdChecks = Collections.EMPTY_LIST;
+                    var objectMapper = new ObjectMapper();
+                    try {
+                        ofdChecks = objectMapper.readValue(str, new TypeReference<>() {});
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(ofdChecks);
+                    return ofdChecks;
+                });
     }
 
     private Optional<String> getFileId(Message message) {
