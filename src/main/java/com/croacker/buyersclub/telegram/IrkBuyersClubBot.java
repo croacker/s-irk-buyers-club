@@ -1,8 +1,17 @@
 package com.croacker.buyersclub.telegram;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
+import com.croacker.buyersclub.service.ofd.OfdCheck;
+import com.croacker.buyersclub.telegram.file.FileInfo;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -12,16 +21,28 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
+import java.io.Flushable;
+import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static java.time.Duration.ofMillis;
 
 @Service
 @AllArgsConstructor
 public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
-    private final int RECONNECT_PAUSE =10000;
+    private final int RECONNECT_PAUSE = 10000;
 
     private final TelegramConfiguration configuration;
+
+    private final WebClient client;
 
     @Override
     public String getBotUsername() {
@@ -36,7 +57,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         try {
-            getFile(update.getMessage());
+            getFileId(update.getMessage()).ifPresent(this::processFile);
             execute(getHelpMessage(update.getMessage()));
         } catch (TelegramApiException e) {
             e.printStackTrace();
@@ -44,7 +65,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     }
 
     @PostConstruct
-    public void init(){
+    public void init() {
         botConnect();
     }
 
@@ -80,9 +101,60 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         return sendMessage;
     }
 
-    private void getFile(Message message){
-        if (message.getDocument() != null){
-            System.out.println(message.getDocument());
+    private String processFile(String fileId) {
+        Mono<String> filePath = getFilePath(fileId);
+
+        filePath.map(path -> {
+                    System.out.println(path);
+                    getFile(path).subscribe();
+                    return path;
+                }).subscribe();
+//                .onStatus(this::isErrorResponse, WebUtils::wrapResponseError)
+//                .bodyToMono(GetFileResponse.class)
+//                .retryWhen(backoff(cfg.getMaxAttempts(), ofMillis(cfg.getMinBackoffMs()))
+//                        .filter(WebUtils::isRetryException))
+//                .timeout(Duration.ofSeconds(cfg.getCommonTimeoutSec()))
+//                .onErrorMap(WebUtils::wrapException);
+        return StringUtils.EMPTY;
+    }
+
+    private Flux<List<OfdCheck>> getFile(String filePath) {
+        var url = "https://api.telegram.org/file/bot" + getBotToken() + "/" + filePath;
+        return client.get()
+                .uri(url)
+                .retrieve()
+                .bodyToFlux(String.class)
+                .map(str -> {// TODO если json отформатирован, он будет поступать построчно и не может быть десериализован
+                    List<OfdCheck> ofdChecks = Collections.EMPTY_LIST;
+                    var objectMapper = new ObjectMapper();
+                    try {
+                        ofdChecks = objectMapper.readValue(str, new TypeReference<>() {});
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(ofdChecks);
+                    return ofdChecks;
+                });
+    }
+
+    private Optional<String> getFileId(Message message) {
+        Optional<String> result = Optional.empty();
+        if (message.getDocument() != null) {
+            result = Optional.of(message.getDocument().getFileId());
         }
+        return result;
+    }
+
+    private Mono<String> getFilePath(String fileId){
+        var url = "https://api.telegram.org/bot" + getBotToken() + "/getFile?file_id=" + fileId;
+        return client.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(FileInfo.class)
+                .map(fileInfo -> fileInfo.getResult().getFilePath());
+    }
+
+    private boolean isErrorResponse(HttpStatus status){
+        return status.is4xxClientError() || status.is5xxServerError();
     }
 }
