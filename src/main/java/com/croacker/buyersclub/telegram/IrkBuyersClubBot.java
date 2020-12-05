@@ -1,6 +1,9 @@
 package com.croacker.buyersclub.telegram;
 
+import com.croacker.buyersclub.config.TelegramConfiguration;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -10,24 +13,24 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+import javax.annotation.PostConstruct;
+
+@Service
+@AllArgsConstructor
 public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
-    final int RECONNECT_PAUSE =10000;
+    private final int RECONNECT_PAUSE =10000;
 
-    @Value("${app.telegram.token}")
-    private String botToken;
-
-    @Value("${app.telegram.username}")
-    private String botUsername;
+    private final TelegramConfiguration configuration;
 
     @Override
     public String getBotUsername() {
-        return botUsername;
+        return configuration.getUsername();
     }
 
     @Override
     public String getBotToken() {
-        return botToken;
+        return configuration.getToken();
     }
 
     @Override
@@ -40,7 +43,12 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         }
     }
 
-    public void botConnect() {
+    @PostConstruct
+    public void init(){
+        botConnect();
+    }
+
+    private void botConnect() {
         TelegramBotsApi telegramBotsApi = null;
         try {
             telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
@@ -68,7 +76,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(String.valueOf(message.getChatId()));
         sendMessage.enableMarkdown(true);
-        sendMessage.setText("test_message");
+        sendMessage.setText("testmessage");
         return sendMessage;
     }
 
