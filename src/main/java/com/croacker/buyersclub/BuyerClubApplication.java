@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BuyerClubApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BuyerClubApplication.class, args);
 		new IrkBuyersClubBot().botConnect();
+		SpringApplication.run(BuyerClubApplication.class, args);
 	}
 
 }

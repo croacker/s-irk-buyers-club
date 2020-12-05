@@ -18,3 +18,8 @@ spring:
     url: jdbc:h2:file:./data/buyers
     change-log: classpath:db/changelog/changelog-master.xml
     enabled: true
+
+app:
+  telegram:
+    token: ${TELEGRAM_BOT_TOKEN:telegramToken}
+    username: ${TELEGRAM_BOT_USERNAME:telegramUsername}

@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
@@ -32,6 +33,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         try {
+            getFile(update.getMessage());
             execute(getHelpMessage(update.getMessage()));
         } catch (TelegramApiException e) {
             e.printStackTrace();
@@ -39,7 +41,12 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     }
 
     public void botConnect() {
-        TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
+        TelegramBotsApi telegramBotsApi = null;
+        try {
+            telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
         try {
             telegramBotsApi.registerBot(this);
             System.out.println("TelegramAPI started. Look for messages");
@@ -61,7 +68,13 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(String.valueOf(message.getChatId()));
         sendMessage.enableMarkdown(true);
-        sendMessage.setText("helpMessage");
+        sendMessage.setText("test_message");
         return sendMessage;
+    }
+
+    private void getFile(Message message){
+        if (message.getDocument() != null){
+            System.out.println(message.getDocument());
+        }
     }
 }
