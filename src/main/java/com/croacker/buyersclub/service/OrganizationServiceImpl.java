@@ -39,6 +39,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    public OrganizationDto findByInn(String inn) {
+        return repo.findByInn(inn).map(toDtoMapper).orElse(null);
+    }
+
+    @Override
     public OrganizationDto save(AddOrganizationDto dto) {
         var organization = addToEntityMapper.map(dto)
                 .setCreatedAt(LocalDateTime.now())
@@ -65,4 +70,5 @@ public class OrganizationServiceImpl implements OrganizationService {
             return toDtoMapper.map(organization);
         }).orElse(null);
     }
+
 }

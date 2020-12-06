@@ -1,7 +1,5 @@
 package com.croacker.buyersclub.service;
 
-import com.croacker.buyersclub.domain.Cashier;
-import com.croacker.buyersclub.domain.Product;
 import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.dto.organization.AddOrganizationDto;
@@ -38,24 +36,45 @@ public class OfdCheckServiceImpl implements OfdCheckService{
     }
 
     private OrganizationDto saveOrganization(OfdCheck ofdCheck){
-        var dto = new AddOrganizationDto().setName(ofdCheck.getUser()).setInn(ofdCheck.getUserInn());
-        return organizationService.save(dto);
+        var organization = organizationService.findByInn(ofdCheck.getUserInn());
+        if(organization == null) {
+            var dto = new AddOrganizationDto().setName(ofdCheck.getUser()).setInn(ofdCheck.getUserInn());
+            organization = organizationService.save(dto);
+        }
+        return organization;
     }
 
     private ShopDto saveShop(OfdCheck ofdCheck) {
-        var dto = new AddShopDto().setName(ofdCheck.getUser()).setAddress(ofdCheck.getRetailPlaceAddress());
-        return shopService.save(dto);
+        ShopDto shop = null;
+        if(ofdCheck.getRetailPlaceAddress() == null){
+            shop = shopService.findByName(ofdCheck.getUser());
+        }else{
+            shop = shopService.findByAddress(ofdCheck.getRetailPlaceAddress());
+        }
+        if (shop == null) {
+            var dto = new AddShopDto().setName(ofdCheck.getUser()).setAddress(ofdCheck.getRetailPlaceAddress());
+            shop = shopService.save(dto);
+        }
+        return shop;
     }
 
     private CashierDto saveCashier(OfdCheck ofdCheck) {
-        var dto = new AddCashierDto().setName(ofdCheck.getOperator());
-        return cashierService.save(dto);
+        var cashier = cashierService.findByName(ofdCheck.getOperator());
+        if(cashier == null){
+            var dto = new AddCashierDto().setName(ofdCheck.getOperator());
+            cashier = cashierService.save(dto);
+        }
+        return cashier;
     }
 
     private List<ProductDto> saveProducts(OfdCheck ofdCheck) {
         return ofdCheck.getItems().stream().map(item -> {
-            var dto = new AddProductDto().setName(item.getName());
-            return productService.save(dto);
+            var product = productService.findByName(item.getName());
+            if(product == null) {
+                var dto = new AddProductDto().setName(item.getName());
+                product = productService.save(dto);
+            }
+            return product;
         }).collect(Collectors.toList());
     }
 

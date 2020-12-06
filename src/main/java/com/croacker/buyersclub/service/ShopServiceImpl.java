@@ -40,6 +40,16 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
+    public ShopDto findByName(String name) {
+        return repo.findByName(name).map(toDtoMapper).orElse(null);
+    }
+
+    @Override
+    public ShopDto findByAddress(String address) {
+        return repo.findByAddress(address).map(toDtoMapper).orElse(null);
+    }
+
+    @Override
     public ShopDto save(AddShopDto dto) {
         var shop = addToEntityMapper.map(dto)
                 .setCreatedAt(LocalDateTime.now())

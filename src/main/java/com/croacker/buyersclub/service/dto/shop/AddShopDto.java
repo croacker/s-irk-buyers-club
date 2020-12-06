@@ -36,6 +36,12 @@ public class AddShopDto {
     private String address;
 
     /**
+     * Идентификатор организации.
+     */
+    @Schema(description = "Идентификатор организации", example = "1")
+    private Long organizationId;
+
+    /**
      * Создан.
      */
     @Schema(description = "Создан")

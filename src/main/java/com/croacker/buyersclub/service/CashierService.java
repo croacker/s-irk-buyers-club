@@ -15,10 +15,11 @@ public interface CashierService {
 
     CashierDto findOne(Long id);
 
+    CashierDto findByName(String name);
+
     CashierDto save(AddCashierDto dto);
 
     CashierDto update(CashierDto dto);
 
     CashierDto delete(Long id);
-
 }
