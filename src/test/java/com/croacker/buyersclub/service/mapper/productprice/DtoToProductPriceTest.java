@@ -1,9 +1,9 @@
-package com.croacker.buyersclub.service.mapper.organization;
-
+package com.croacker.buyersclub.service.mapper.productprice;
 
 import com.croacker.buyersclub.TestConfiguration;
-import com.croacker.buyersclub.domain.Organization;
-import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
+import com.croacker.buyersclub.domain.ProductPrice;
+import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
+import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,17 +11,21 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfiguration.class})
-public class DtoToOrganizationMapperTest {
+class DtoToProductPriceTest {
 
-    private DtoToOrganizationMapper mapper;
+    private DtoToProductPrice mapper;
+
+    private final static LocalDateTime NOW = LocalDateTime.now();
 
     @BeforeEach
     void setUp() {
-        mapper = new DtoToOrganizationMapper();
+        mapper = new DtoToProductPrice();
     }
 
     @Test
@@ -38,20 +42,18 @@ public class DtoToOrganizationMapperTest {
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
-    private Organization createEntity() {
-        return new Organization()
-                .setId(0L)
-                .setName("test_organization")
-                .setInn("test_inn")
-                .setDeleted(false);
+    private ProductPrice createEntity() {
+        return new ProductPrice()
+                .setId(1L)
+                .setPrice(1)
+                .setPriceDate(NOW);
     }
 
-    private OrganizationDto createDto() {
-        return new OrganizationDto()
-                .setId(0L)
-                .setName("test_organization")
-                .setInn("test_inn")
-                .setDeleted(false);
+    private ProductPriceDto createDto() {
+        return new ProductPriceDto()
+                .setId(1L)
+                .setPrice(1)
+                .setPriceDate(NOW);
     }
 
 }

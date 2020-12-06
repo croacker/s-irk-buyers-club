@@ -3,9 +3,9 @@ package com.croacker.buyersclub.service;
 import com.croacker.buyersclub.repo.ProductRepo;
 import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
-import com.croacker.buyersclub.service.mapper.product.AddDtoToProductMapper;
-import com.croacker.buyersclub.service.mapper.product.DtoToProductMapper;
-import com.croacker.buyersclub.service.mapper.product.ProductToDtoMapper;
+import com.croacker.buyersclub.service.mapper.product.AddDtoToProduct;
+import com.croacker.buyersclub.service.mapper.product.DtoToProduct;
+import com.croacker.buyersclub.service.mapper.product.ProductToDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +23,11 @@ public class ProductServiceImpl implements ProductService{
 
     private final ProductRepo repo;
 
-    private final ProductToDtoMapper toDtoMapper;
+    private final ProductToDto toDtoMapper;
 
-    private final DtoToProductMapper toEntityMapper;
+    private final DtoToProduct toEntityMapper;
 
-    private final AddDtoToProductMapper addToEntityMapper;
+    private final AddDtoToProduct addToEntityMapper;
 
     @Override
     public List<ProductDto> findAll(Pageable pageable) {

@@ -1,10 +1,13 @@
 package com.croacker.buyersclub.service;
 
+import com.croacker.buyersclub.service.dto.product.ProductDto;
 import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
+import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -12,11 +15,13 @@ import java.util.List;
  */
 public interface ProductPriceService {
 
-    List<ProductPriceInfoDto> findAll(Pageable pageable);
+    List<ProductPriceDto> findAll(Pageable pageable);
 
     ProductPriceDto findOne(Long id);
 
-    ProductPriceInfoDto findByProduct(String name);
+    List<ProductPriceDto> findByProduct(String name);
+
+    ProductPriceDto findPrice(ProductDto product, ShopDto shop, LocalDateTime dateTime);
 
     ProductPriceDto save(AddProductPriceDto dto);
 

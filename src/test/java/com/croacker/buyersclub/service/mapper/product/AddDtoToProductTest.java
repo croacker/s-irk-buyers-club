@@ -1,9 +1,9 @@
-package com.croacker.buyersclub.service.mapper.organization;
+package com.croacker.buyersclub.service.mapper.product;
 
 
 import com.croacker.buyersclub.TestConfiguration;
-import com.croacker.buyersclub.domain.Organization;
-import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
+import com.croacker.buyersclub.domain.Product;
+import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,13 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfiguration.class})
-public class DtoToOrganizationMapperTest {
+public class AddDtoToProductTest {
 
-    private DtoToOrganizationMapper mapper;
+    private AddDtoToProduct mapper;
 
     @BeforeEach
     void setUp() {
-        mapper = new DtoToOrganizationMapper();
+        mapper = new AddDtoToProduct();
     }
 
     @Test
@@ -38,20 +38,14 @@ public class DtoToOrganizationMapperTest {
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
-    private Organization createEntity() {
-        return new Organization()
-                .setId(0L)
-                .setName("test_organization")
-                .setInn("test_inn")
-                .setDeleted(false);
+    private Product createEntity() {
+        return new Product()
+                .setName("test_product");
     }
 
-    private OrganizationDto createDto() {
-        return new OrganizationDto()
-                .setId(0L)
-                .setName("test_organization")
-                .setInn("test_inn")
-                .setDeleted(false);
+    private AddProductDto createDto() {
+        return new AddProductDto()
+                .setName("test_product");
     }
 
 }

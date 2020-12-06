@@ -3,7 +3,6 @@ package com.croacker.buyersclub.service.mapper.product;
 import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Product;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
-import com.croacker.buyersclub.service.mapper.product.ProductToDtoMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,15 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfiguration.class})
-class ProductToDtoMapperTest {
+class ProductToDtoTest {
 
-    private ProductToDtoMapper mapper;
+    private ProductToDto mapper;
 
     private final static LocalDateTime NOW = LocalDateTime.now();
 
     @BeforeEach
     void setUp() {
-        mapper = new ProductToDtoMapper();
+        mapper = new ProductToDto();
     }
 
     @Test
