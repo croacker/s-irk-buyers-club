@@ -32,8 +32,8 @@ public class OfdCheckServiceImpl implements OfdCheckService{
     public void process(OfdCheck ofdCheck) {
         var organization = saveOrganization(ofdCheck);
         var shop = saveShop(ofdCheck, organization);
-        var cashier = saveCashier(ofdCheck, shop);
-        saveProducts(ofdCheck);
+        saveCashier(ofdCheck, shop);
+        saveProducts(ofdCheck, shop);
     }
 
     private OrganizationDto saveOrganization(OfdCheck ofdCheck){
@@ -73,19 +73,19 @@ public class OfdCheckServiceImpl implements OfdCheckService{
         return cashier;
     }
 
-    private List<ProductDto> saveProducts(OfdCheck ofdCheck) {
+    private List<ProductDto> saveProducts(OfdCheck ofdCheck, ShopDto shop) {
         return ofdCheck.getItems().stream().map(item -> {
             var product = productService.findByName(item.getName());
             if(product == null) {
                 var dto = new AddProductDto().setName(item.getName());
                 product = productService.save(dto);
             }
-            savePrice(item, product);
+            savePrice(item, product, shop);
             return product;
         }).collect(Collectors.toList());
     }
 
-    private void savePrice(Item item, ProductDto product) {
+    private void savePrice(Item item, ProductDto product, ShopDto shop) {
 
     }
 

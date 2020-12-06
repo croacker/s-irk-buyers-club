@@ -9,14 +9,14 @@ import lombok.experimental.Accessors;
 import java.time.LocalDateTime;
 
 /**
- * Цена на товар.
+ * Добавление цены на товар.
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
 @Schema(description = "Цена на товар")
-public class ProductPriceDto {
+public class AddProductPriceDto {
     /**
      * Идентификатор.
      */
