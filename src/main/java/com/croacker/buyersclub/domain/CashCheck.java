@@ -27,7 +27,7 @@ public class CashCheck {
     /**
      * Кассир.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cashier_id")
     private Cashier cashier;
 

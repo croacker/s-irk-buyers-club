@@ -36,7 +36,7 @@ public class Product {
     /**
      * Группа.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id")
     private ProductGroup productGroup;
 

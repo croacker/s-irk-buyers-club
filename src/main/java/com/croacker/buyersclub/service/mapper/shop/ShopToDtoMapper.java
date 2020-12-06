@@ -14,6 +14,7 @@ public class ShopToDtoMapper implements Mapper<Shop, ShopDto> {
                 .setId(input.getId())
                 .setName(input.getName())
                 .setAddress(input.getAddress())
+                .setOrganizationId(input.getOrganization().getId())
                 .setCreatedAt(input.getCreatedAt())
                 .setUpdatedAt(input.getUpdatedAt())
                 .setDeleted(input.getDeleted());

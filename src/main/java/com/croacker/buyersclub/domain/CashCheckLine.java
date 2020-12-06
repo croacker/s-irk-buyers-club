@@ -26,14 +26,14 @@ public class CashCheckLine {
     /**
      * Чек.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "check_id")
     private CashCheck cashCheck;
 
     /**
      * Товар.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;
 

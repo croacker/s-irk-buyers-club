@@ -2,6 +2,7 @@ package com.croacker.buyersclub.service.mapper.shop;
 
 import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Cashier;
+import com.croacker.buyersclub.domain.Organization;
 import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
@@ -45,10 +46,18 @@ class ShopToDtoMapperTest {
     }
 
     private Shop createEntity() {
+        var organization = new Organization()
+                .setId(0L)
+                .setName("test_organization")
+                .setInn("test_inn")
+                .setCreatedAt(NOW)
+                .setUpdatedAt(NOW)
+                .setDeleted(false);
         return new Shop()
                 .setId(0L)
                 .setName("test_shop")
                 .setAddress("test_address")
+                .setOrganization(organization)
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
@@ -59,6 +68,7 @@ class ShopToDtoMapperTest {
                 .setId(0L)
                 .setName("test_shop")
                 .setAddress("test_address")
+                .setOrganizationId(0L)
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);

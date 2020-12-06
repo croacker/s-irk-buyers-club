@@ -1,9 +1,6 @@
 package com.croacker.buyersclub.repo;
 
 import com.croacker.buyersclub.domain.Cashier;
-import com.croacker.buyersclub.domain.Organization;
-import com.croacker.buyersclub.service.mapper.Mapper;
-import com.croacker.buyersclub.service.mapper.cashier.CashierToDtoMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 

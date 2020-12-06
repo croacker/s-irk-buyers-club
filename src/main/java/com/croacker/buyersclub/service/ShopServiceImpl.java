@@ -1,5 +1,6 @@
 package com.croacker.buyersclub.service;
 
+import com.croacker.buyersclub.repo.OrganizationRepo;
 import com.croacker.buyersclub.repo.ShopRepo;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
@@ -22,6 +23,8 @@ import java.util.stream.StreamSupport;
 public class ShopServiceImpl implements ShopService{
 
     private final ShopRepo repo;
+
+    private final OrganizationRepo organizationRepo;
 
     private final ShopToDtoMapper toDtoMapper;
 
@@ -51,7 +54,9 @@ public class ShopServiceImpl implements ShopService{
 
     @Override
     public ShopDto save(AddShopDto dto) {
+        var organization = organizationRepo.findById(dto.getOrganizationId()).get();
         var shop = addToEntityMapper.map(dto)
+                .setOrganization(organization)
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now())
                 .setDeleted(false);

@@ -34,6 +34,12 @@ public class CashierDto {
     private String name;
 
     /**
+     * Идентификатор магазина.
+     */
+    @Schema(description = "Идентификатор магазина", example = "1")
+    private Long shopId;
+
+    /**
      * Создан.
      */
     @Schema(description = "Создан")

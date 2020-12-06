@@ -8,6 +8,7 @@ import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
+import com.croacker.buyersclub.service.ofd.Item;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,9 +30,9 @@ public class OfdCheckServiceImpl implements OfdCheckService{
 
     @Override
     public void process(OfdCheck ofdCheck) {
-        saveOrganization(ofdCheck);
-        saveShop(ofdCheck);
-        saveCashier(ofdCheck);
+        var organization = saveOrganization(ofdCheck);
+        var shop = saveShop(ofdCheck, organization);
+        var cashier = saveCashier(ofdCheck, shop);
         saveProducts(ofdCheck);
     }
 
@@ -44,7 +45,7 @@ public class OfdCheckServiceImpl implements OfdCheckService{
         return organization;
     }
 
-    private ShopDto saveShop(OfdCheck ofdCheck) {
+    private ShopDto saveShop(OfdCheck ofdCheck, OrganizationDto organization) {
         ShopDto shop;
         if(ofdCheck.getRetailPlaceAddress() == null){
             shop = shopService.findByName(ofdCheck.getUser());
@@ -52,16 +53,21 @@ public class OfdCheckServiceImpl implements OfdCheckService{
             shop = shopService.findByAddress(ofdCheck.getRetailPlaceAddress());
         }
         if (shop == null) {
-            var dto = new AddShopDto().setName(ofdCheck.getUser()).setAddress(ofdCheck.getRetailPlaceAddress());
+            var dto = new AddShopDto()
+                    .setName(ofdCheck.getUser())
+                    .setAddress(ofdCheck.getRetailPlaceAddress())
+                    .setOrganizationId(organization.getId());
             shop = shopService.save(dto);
         }
         return shop;
     }
 
-    private CashierDto saveCashier(OfdCheck ofdCheck) {
+    private CashierDto saveCashier(OfdCheck ofdCheck, ShopDto shop) {
         var cashier = cashierService.findByName(ofdCheck.getOperator());
         if(cashier == null){
-            var dto = new AddCashierDto().setName(ofdCheck.getOperator());
+            var dto = new AddCashierDto()
+                    .setName(ofdCheck.getOperator())
+                    .setShopId(shop.getId());
             cashier = cashierService.save(dto);
         }
         return cashier;
@@ -74,8 +80,13 @@ public class OfdCheckServiceImpl implements OfdCheckService{
                 var dto = new AddProductDto().setName(item.getName());
                 product = productService.save(dto);
             }
+            savePrice(item, product);
             return product;
         }).collect(Collectors.toList());
+    }
+
+    private void savePrice(Item item, ProductDto product) {
+
     }
 
 }

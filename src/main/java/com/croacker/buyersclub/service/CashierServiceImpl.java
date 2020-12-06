@@ -1,6 +1,7 @@
 package com.croacker.buyersclub.service;
 
 import com.croacker.buyersclub.repo.CashierRepo;
+import com.croacker.buyersclub.repo.ShopRepo;
 import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.mapper.cashier.AddDtoToCashierMapper;
@@ -25,6 +26,8 @@ public class CashierServiceImpl implements CashierService {
 
     private final CashierRepo repo;
 
+    private final ShopRepo shopRepo;
+
     private final CashierToDtoMapper toDtoMapper;
 
     private final DtoToCashierMapper toEntityMapper;
@@ -48,7 +51,9 @@ public class CashierServiceImpl implements CashierService {
 
     @Override
     public CashierDto save(AddCashierDto dto) {
+        var shop = shopRepo.findById(dto.getShopId()).get();
         var cashier = addToEntityMapper.map(dto)
+                .setShop(shop)
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now())
                 .setDeleted(false);
