@@ -2,6 +2,7 @@ package com.croacker.buyersclub.service.mapper.cashier;
 
 import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Cashier;
+import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,9 +43,15 @@ class CashierToDtoMapperTest {
     }
 
     private Cashier createEntity() {
+        var shop = new Shop()
+                .setId(0L)
+                .setName("test_shop")
+                .setAddress("test_address")
+                .setDeleted(false);
         return new Cashier()
                 .setId(0L)
                 .setName("test_cashier")
+                .setShop(shop)
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
@@ -54,6 +61,7 @@ class CashierToDtoMapperTest {
         return new CashierDto()
                 .setId(0L)
                 .setName("test_cashier")
+                .setShopId(0L)
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
