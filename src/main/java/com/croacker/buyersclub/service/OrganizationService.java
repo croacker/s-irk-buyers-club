@@ -23,4 +23,5 @@ public interface OrganizationService {
 
     OrganizationDto delete(Long id);
 
+    OrganizationDto findByInn(String inn);
 }

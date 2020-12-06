@@ -40,6 +40,11 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    public ProductDto findByName(String name) {
+        return repo.findByName(name).map(toDtoMapper).orElse(null);
+    }
+
+    @Override
     public ProductDto save(AddProductDto dto) {
         var product = addToEntityMapper.map(dto)
                 .setCreatedAt(LocalDateTime.now())

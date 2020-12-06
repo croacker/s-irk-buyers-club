@@ -15,10 +15,13 @@ public interface ShopService {
 
     ShopDto findOne(Long id);
 
+    ShopDto findByName(String name);
+
+    ShopDto findByAddress(String address);
+
     ShopDto save(AddShopDto dto);
 
     ShopDto update(ShopDto dto);
 
     ShopDto delete(Long id);
-
 }

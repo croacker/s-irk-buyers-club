@@ -15,10 +15,11 @@ public interface ProductService {
 
     ProductDto findOne(Long id);
 
+    ProductDto findByName(String name);
+
     ProductDto save(AddProductDto dto);
 
     ProductDto update(ProductDto dto);
 
     ProductDto delete(Long id);
-
 }

@@ -42,6 +42,11 @@ public class CashierServiceImpl implements CashierService {
     }
 
     @Override
+    public CashierDto findByName(String name) {
+        return repo.findByName(name).map(toDtoMapper).orElse(null);
+    }
+
+    @Override
     public CashierDto save(AddCashierDto dto) {
         var cashier = addToEntityMapper.map(dto)
                 .setCreatedAt(LocalDateTime.now())
