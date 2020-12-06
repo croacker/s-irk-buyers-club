@@ -1,0 +1,22 @@
+embedded:
+  postgresql:
+    docker-image: postgres:12-alpine
+    host: localhost
+    port: 5432
+    schema: buyers
+    database: buyers
+    user: buyers
+    password: buyers
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${embedded.postgresql.host}:${embedded.postgresql.port}/${embedded.postgresql.schema}
+    username: ${embedded.postgresql.user}
+    password: ${embedded.postgresql.password}
+  liquibase:
+    url: jdbc:postgresql://${embedded.postgresql.host}:${embedded.postgresql.port}/${embedded.postgresql.schema}
+    user: ${embedded.postgresql.user}
+    password: ${embedded.postgresql.password}
+    change-log: classpath:db/changelog/changelog-master.xml
+    enabled: true
