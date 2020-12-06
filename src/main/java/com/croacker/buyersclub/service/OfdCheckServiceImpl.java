@@ -45,7 +45,7 @@ public class OfdCheckServiceImpl implements OfdCheckService{
     }
 
     private ShopDto saveShop(OfdCheck ofdCheck) {
-        ShopDto shop = null;
+        ShopDto shop;
         if(ofdCheck.getRetailPlaceAddress() == null){
             shop = shopService.findByName(ofdCheck.getUser());
         }else{
