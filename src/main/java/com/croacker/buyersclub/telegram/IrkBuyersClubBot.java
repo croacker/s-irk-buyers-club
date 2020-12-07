@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 // TODO привести процессы в порядок.
 @Service
 @AllArgsConstructor
+@Slf4j
 public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     private final int RECONNECT_PAUSE = 10000;
@@ -65,7 +67,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
             var responseText = getResponseText(update.getMessage());
             execute(getHelpMessage(responseText, update.getMessage()));
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -79,22 +81,22 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         try {
             telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         try {
             telegramBotsApi.registerBot(this);
-            System.out.println("TelegramAPI started. Look for messages");
+            log.info("TelegramAPI started. Look for messages");
         } catch (TelegramApiRequestException e) {
-            System.out.println("Cant Connect. Pause " + RECONNECT_PAUSE / 1000 + "sec and try again. Error: " + e.getMessage());
+            log.info("Cant Connect. Pause " + RECONNECT_PAUSE / 1000 + "sec and try again. Error: " + e.getMessage());
             try {
                 Thread.sleep(RECONNECT_PAUSE);
             } catch (InterruptedException e1) {
-                e1.printStackTrace();
+                log.error(e1.getMessage(), e1);
                 return;
             }
             botConnect();
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -110,7 +112,6 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         Mono<String> filePath = getFilePath(fileId);
 
         filePath.map(path -> {
-            System.out.println(path);
             getFile(path).subscribe();
             return path;
         }).subscribe();
@@ -125,6 +126,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
      */
     private Flux<List<OfdCheck>> getFile(String filePath) {
         var url = "https://api.telegram.org/file/bot" + getBotToken() + "/" + filePath;
+        log.info("File url:{}", url);
         return client.get()
                 .uri(url)
                 .retrieve()
@@ -136,9 +138,9 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
                         ofdChecks = objectMapper.readValue(str, new TypeReference<>() {
                         });
                     } catch (JsonProcessingException e) {
-                        e.printStackTrace();
+                        log.error(e.getMessage(), e);
                     }
-                    System.out.println(ofdChecks);
+                    log.info("OfdChecks:{}", ofdChecks);
                     ofdChecks.forEach(ofdCheck -> ofdCheckService.process(ofdCheck));
                     return ofdChecks;
                 });
