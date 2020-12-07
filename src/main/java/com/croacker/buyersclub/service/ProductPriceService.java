@@ -15,11 +15,11 @@ import java.util.List;
  */
 public interface ProductPriceService {
 
-    List<ProductPriceDto> findAll(Pageable pageable);
+    List<ProductPriceInfoDto> findAll(Pageable pageable);
 
-    ProductPriceDto findOne(Long id);
+    ProductPriceInfoDto findOne(Long id);
 
-    List<ProductPriceDto> findByProduct(String name);
+    List<ProductPriceInfoDto> findByProduct(Long id);
 
     ProductPriceDto findPrice(ProductDto product, ShopDto shop, LocalDateTime dateTime);
 

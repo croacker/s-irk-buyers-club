@@ -12,6 +12,7 @@ import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.mapper.productprice.AddDtoToProductPrice;
 import com.croacker.buyersclub.service.mapper.productprice.DtoToProductPrice;
 import com.croacker.buyersclub.service.mapper.productprice.ProductPriceToDto;
+import com.croacker.buyersclub.service.mapper.productprice.ProductPriceToInfoDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -35,29 +36,33 @@ public class ProductPriceServiceImpl implements ProductPriceService{
 
     private final ProductPriceToDto toDtoMapper;
 
+    private final ProductPriceToInfoDto toInfoDtoMapper;
+
     private final DtoToProductPrice toEntityMapper;
 
     private final AddDtoToProductPrice addToEntityMapper;
 
     @Override
-    public List<ProductPriceDto> findAll(Pageable pageable) {
-        return StreamSupport.stream(repo.findAll().spliterator(), false).map(toDtoMapper).collect(Collectors.toList());
+    public List<ProductPriceInfoDto> findAll(Pageable pageable) {
+        return StreamSupport.stream(repo.findAll().spliterator(), false).map(toInfoDtoMapper).collect(Collectors.toList());
     }
 
     @Override
-    public ProductPriceDto findOne(Long id) {
-        return repo.findById(id).map(toDtoMapper).orElse(null);
+    public ProductPriceInfoDto findOne(Long id) {
+        return repo.findById(id).map(toInfoDtoMapper).orElse(null);
     }
 
     @Override
-    public List<ProductPriceDto> findByProduct(String name) {
-        var product = productRepo.findByName(name);
+    public List<ProductPriceInfoDto> findByProduct(Long id) {
+        var product = productRepo.findById(id).get();
         return StreamSupport.stream(repo.findByProduct(product).spliterator(), false)
-                .map(toDtoMapper).collect(Collectors.toList());
+                .map(toInfoDtoMapper).collect(Collectors.toList());
     }
 
     @Override
-    public ProductPriceDto findPrice(ProductDto product, ShopDto shop, LocalDateTime priceDate) {
+    public ProductPriceDto findPrice(ProductDto productDto, ShopDto shopDto, LocalDateTime priceDate) {
+        var product = productRepo.findById(productDto.getId()).get();
+        var shop = shopRepo.findById(shopDto.getId()).get();
         return repo.findByProductAndShopAndPriceDate(product, shop, priceDate).map(toDtoMapper).orElse(null);
     }
 

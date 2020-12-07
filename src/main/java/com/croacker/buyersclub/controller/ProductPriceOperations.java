@@ -1,9 +1,9 @@
 package com.croacker.buyersclub.controller;
 
-import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
-import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
+import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
+import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,10 +25,10 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-@Tag(name = "Product", description = "Товары")
-public interface ProductOperations {
+@Tag(name = "ProductPrice", description = "Товары")
+public interface ProductPriceOperations {
 
-    @Operation(operationId = "listProducts", summary = "Список товаров")
+    @Operation(operationId = "listProductPrices", summary = "Список товаров")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Товар",
                     content = {@Content(mediaType = "application/json",
@@ -38,72 +38,61 @@ public interface ProductOperations {
             @ApiResponse(responseCode = "404", description = "Товары не найдены", content = @Content),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)})
     @GetMapping
-    Flux<ProductDto> getAllProducts(@RequestParam(value = "page", defaultValue = "0") int page,
-                                    @RequestParam(value = "size", defaultValue = "20") int size,
-                                    @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
-                                    @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction);
+    Flux<ProductPriceInfoDto> getAllProductPrices(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                  @RequestParam(value = "size", defaultValue = "20") int size,
+                                                  @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
+                                                  @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction);
 
-    @Operation(operationId = "getProduct", summary = "Получить товар по идентификатору")
+    @Operation(operationId = "getProductPrice", summary = "Получить товар по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Товар",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProductDto.class))}),
+                            schema = @Schema(implementation = ProductPriceDto.class))}),
             @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
             @ApiResponse(responseCode = "401", description = "Ошибка авторизации", content = @Content),
             @ApiResponse(responseCode = "404", description = "Товар не найдена", content = @Content),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)})
     @GetMapping(path = "/{id}")
-    Mono<ProductDto> getProduct(@PathVariable Long id);
+    Mono<ProductPriceInfoDto> getProductPrice(@PathVariable Long id);
 
-    @Operation(operationId = "createProduct", summary = "Добавить товар",
+    @Operation(operationId = "createProductPrice", summary = "Добавить товар",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Товар",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProductDto.class))
+                            schema = @Schema(implementation = ProductPriceDto.class))
                     }),
             @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
             @ApiResponse(responseCode = "401", description = "Ошибка авторизации", content = @Content),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)
     })
     @PostMapping
-    Mono<ProductDto> createProduct(@RequestBody AddProductDto dto);
+    Mono<ProductPriceDto> createProductPrice(@RequestBody AddProductPriceDto dto);
 
-    @Operation(operationId = "updateProduct", summary = "Обновить товар",
+    @Operation(operationId = "updateProductPrice", summary = "Обновить товар",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Товар",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProductDto.class))
+                            schema = @Schema(implementation = ProductPriceDto.class))
                     }),
             @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
             @ApiResponse(responseCode = "401", description = "Ошибка авторизации", content = @Content),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)
     })
     @PutMapping
-    Mono<ProductDto> updateProduct(@RequestBody ProductDto dto);
+    Mono<ProductPriceDto> updateProductPrice(@RequestBody ProductPriceDto dto);
 
-    @Operation(operationId = "deleteProduct", summary = "Удалить товар по идентификатору")
+    @Operation(operationId = "deleteProductPrice", summary = "Удалить товар по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Товар",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProductDto.class))}),
+                            schema = @Schema(implementation = ProductPriceDto.class))}),
             @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
             @ApiResponse(responseCode = "401", description = "Ошибка авторизации", content = @Content),
             @ApiResponse(responseCode = "404", description = "Товар не найден", content = @Content),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)})
     @DeleteMapping(path = "/{id}")
-    Mono<ProductDto> deleteProduct(@PathVariable Long id);
+    Mono<ProductPriceDto> deleteProductPrice(@PathVariable Long id);
 
-    @Operation(operationId = "getProductPrice", summary = "Получить цены на товар по идентификатору")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Товар",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProductPriceInfoDto.class))}),
-            @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Ошибка авторизации", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Товар не найдена", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)})
-    @GetMapping(path = "/{id}/prices")
-    Flux<ProductPriceInfoDto> getProductPrice(@PathVariable Long id);
 }

@@ -19,13 +19,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(classes = {TestConfiguration.class})
 class ProductDtoToInfoDtoTest {
 
-    private DtoToProduct mapper;
+    private ProductDtoToInfoDto mapper;
 
     private final static LocalDateTime NOW = LocalDateTime.now();
 
     @BeforeEach
     void setUp() {
-        mapper = new DtoToProduct();
+        mapper = new ProductDtoToInfoDto();
     }
 
     @Test

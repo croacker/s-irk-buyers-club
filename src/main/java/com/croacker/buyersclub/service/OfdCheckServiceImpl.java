@@ -44,8 +44,8 @@ public class OfdCheckServiceImpl implements OfdCheckService{
     public void process(OfdCheck ofdCheck) {
         var organization = saveOrganization(ofdCheck);
         var shop = saveShop(ofdCheck, organization);
-        saveCashier(ofdCheck, shop);
-        saveProducts(ofdCheck, shop);
+        var cashier = saveCashier(ofdCheck, shop);
+        var products = saveProducts(ofdCheck, shop);
     }
 
     private OrganizationDto saveOrganization(OfdCheck ofdCheck){
@@ -104,7 +104,8 @@ public class OfdCheckServiceImpl implements OfdCheckService{
             var dto = new AddProductPriceDto()
                     .setProductId(product.getId())
                     .setShopId(shop.getId())
-                    .setPrice(item.getPrice());
+                    .setPrice(item.getPrice())
+                    .setPriceDate(dateTime);
             price = productPriceService.save(dto);
         }
         return price;
@@ -112,7 +113,7 @@ public class OfdCheckServiceImpl implements OfdCheckService{
 
     // TODO в common-класс
     private LocalDateTime fromEpoch(int datetime){
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(datetime), TimeZone.getDefault().toZoneId());
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(datetime), TimeZone.getDefault().toZoneId());
     }
 
 }
