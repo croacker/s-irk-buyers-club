@@ -1,6 +1,5 @@
 package com.croacker.buyersclub.service;
 
-import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.repo.ProductPriceRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
 import com.croacker.buyersclub.repo.ShopRepo;
@@ -9,10 +8,12 @@ import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
+import com.croacker.buyersclub.service.dto.telegram.TelegramProductPriceDto;
 import com.croacker.buyersclub.service.mapper.productprice.AddDtoToProductPrice;
 import com.croacker.buyersclub.service.mapper.productprice.DtoToProductPrice;
 import com.croacker.buyersclub.service.mapper.productprice.ProductPriceToDto;
 import com.croacker.buyersclub.service.mapper.productprice.ProductPriceToInfoDto;
+import com.croacker.buyersclub.service.mapper.telegram.ProductPriceToTelegramDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,8 @@ public class ProductPriceServiceImpl implements ProductPriceService{
     private final DtoToProductPrice toEntityMapper;
 
     private final AddDtoToProductPrice addToEntityMapper;
+
+    private final ProductPriceToTelegramDto toTelegramDtoMapper;
 
     @Override
     public List<ProductPriceInfoDto> findAll(Pageable pageable) {
@@ -94,5 +97,13 @@ public class ProductPriceServiceImpl implements ProductPriceService{
             cashier = repo.save(cashier);
             return toDtoMapper.map(cashier);
         }).orElse(null);
+    }
+
+    @Override
+    public List<TelegramProductPriceDto> getProductsPrices(String expression) {
+        return productRepo.findByNameContainingIgnoreCase(expression)
+                .stream().map(product -> repo.findByProduct(product))
+                .flatMap(List::stream)
+                .map(toTelegramDtoMapper).collect(Collectors.toList());
     }
 }

@@ -5,6 +5,7 @@ import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
+import com.croacker.buyersclub.service.dto.telegram.TelegramProductPriceDto;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
@@ -28,4 +29,6 @@ public interface ProductPriceService {
     ProductPriceDto update(ProductPriceDto dto);
 
     ProductPriceDto delete(Long id);
+
+    List<TelegramProductPriceDto> getProductsPrices(String expression);
 }
