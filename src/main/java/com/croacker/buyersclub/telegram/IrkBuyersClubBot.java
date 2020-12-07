@@ -2,6 +2,8 @@ package com.croacker.buyersclub.telegram;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
 import com.croacker.buyersclub.service.OfdCheckServiceImpl;
+import com.croacker.buyersclub.service.ProductPriceService;
+import com.croacker.buyersclub.service.mapper.telegram.TelegramProductPriceDtoToString;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import com.croacker.buyersclub.telegram.file.FileInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,6 +29,7 @@ import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 // TODO привести процессы в порядок.
 @Service
@@ -40,6 +43,10 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     private final WebClient client;
 
     private final OfdCheckServiceImpl ofdCheckService;
+
+    private final ProductPriceService productPriceService;
+
+    private final TelegramProductPriceDtoToString toStringMapper;
 
     @Override
     public String getBotUsername() {
@@ -55,7 +62,8 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         try {
             getFileId(update.getMessage()).ifPresent(this::processFile);
-            execute(getHelpMessage(update.getMessage()));
+            var responseText = getResponseText(update.getMessage());
+            execute(getHelpMessage(responseText, update.getMessage()));
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -90,11 +98,11 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         }
     }
 
-    private static SendMessage getHelpMessage(Message message) {
+    private static SendMessage getHelpMessage(String responseText, Message message) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(String.valueOf(message.getChatId()));
         sendMessage.enableMarkdown(true);
-        sendMessage.setText("testmessage");
+        sendMessage.setText(responseText);
         return sendMessage;
     }
 
@@ -156,4 +164,23 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     private boolean isErrorResponse(HttpStatus status) {
         return status.is4xxClientError() || status.is5xxServerError();
     }
+
+    /**
+     * Ответ на запрос цены.
+     * @param message
+     * @return текст с ценами
+     */
+    private String getResponseText(Message message) {
+        String result = "Спасибо";
+        var expression = message.getText();
+        if (expression != null) {
+            result = productPriceService.getProductsPrices(expression.trim())
+                    .stream().limit(10).map(toStringMapper).collect(Collectors.joining("\n "));
+        }
+        if(result.isEmpty()){
+            result = "Нет данных";
+        }
+        return result;
+    }
+
 }
