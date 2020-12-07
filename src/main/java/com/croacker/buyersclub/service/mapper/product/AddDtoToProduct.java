@@ -7,12 +7,11 @@ import com.croacker.buyersclub.service.mapper.Mapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AddDtoToProductMapper implements Mapper<AddProductDto, Product> {
+public class AddDtoToProduct implements Mapper<AddProductDto, Product> {
 
     @Override
     public Product map(AddProductDto input) {
         return new Product()
-                .setId(input.getId())
                 .setName(input.getName());
     }
 

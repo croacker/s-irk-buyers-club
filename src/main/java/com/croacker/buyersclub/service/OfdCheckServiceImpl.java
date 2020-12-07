@@ -1,19 +1,27 @@
 package com.croacker.buyersclub.service;
 
+import com.croacker.buyersclub.domain.ProductPrice;
 import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.dto.organization.AddOrganizationDto;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
 import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
+import com.croacker.buyersclub.service.dto.product.ProductInfoDto;
+import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
+import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
+import com.croacker.buyersclub.service.mapper.product.ProductDtoToInfoDto;
 import com.croacker.buyersclub.service.ofd.Item;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,12 +36,16 @@ public class OfdCheckServiceImpl implements OfdCheckService{
 
     private final ProductService productService;
 
+    private final ProductPriceService productPriceService;
+
+    private final ProductDtoToInfoDto toInfoDto;
+
     @Override
     public void process(OfdCheck ofdCheck) {
         var organization = saveOrganization(ofdCheck);
         var shop = saveShop(ofdCheck, organization);
         var cashier = saveCashier(ofdCheck, shop);
-        saveProducts(ofdCheck);
+        var products = saveProducts(ofdCheck, shop);
     }
 
     private OrganizationDto saveOrganization(OfdCheck ofdCheck){
@@ -73,20 +85,35 @@ public class OfdCheckServiceImpl implements OfdCheckService{
         return cashier;
     }
 
-    private List<ProductDto> saveProducts(OfdCheck ofdCheck) {
+    private List<ProductInfoDto> saveProducts(OfdCheck ofdCheck, ShopDto shop) {
+        var dateTime = fromEpoch(ofdCheck.getDateTime());
         return ofdCheck.getItems().stream().map(item -> {
             var product = productService.findByName(item.getName());
             if(product == null) {
                 var dto = new AddProductDto().setName(item.getName());
                 product = productService.save(dto);
             }
-            savePrice(item, product);
-            return product;
+            var price = savePrice(shop, product, item, dateTime);
+            return toInfoDto.map(product).setPrice(price);
         }).collect(Collectors.toList());
     }
 
-    private void savePrice(Item item, ProductDto product) {
+    private ProductPriceDto savePrice(ShopDto shop, ProductDto product, Item item, LocalDateTime dateTime) {
+        var price = productPriceService.findPrice(product, shop, dateTime);
+        if(price == null){
+            var dto = new AddProductPriceDto()
+                    .setProductId(product.getId())
+                    .setShopId(shop.getId())
+                    .setPrice(item.getPrice())
+                    .setPriceDate(dateTime);
+            price = productPriceService.save(dto);
+        }
+        return price;
+    }
 
+    // TODO в common-класс
+    private LocalDateTime fromEpoch(int datetime){
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(datetime), TimeZone.getDefault().toZoneId());
     }
 
 }

@@ -11,7 +11,6 @@ public class AddDtoToProductGroupMapper implements Mapper<AddProductGroupDto, Pr
     @Override
     public ProductGroup map(AddProductGroupDto input) {
         return new ProductGroup()
-                .setId(input.getId())
                 .setName(input.getName());
     }
 
