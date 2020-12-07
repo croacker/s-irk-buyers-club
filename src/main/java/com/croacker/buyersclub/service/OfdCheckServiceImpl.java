@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class OfdCheckServiceImpl implements OfdCheckService{
+public class OfdCheckServiceImpl implements OfdCheckService {
 
     private final OrganizationService organizationService;
 
@@ -48,20 +48,38 @@ public class OfdCheckServiceImpl implements OfdCheckService{
         var products = saveProducts(ofdCheck, shop);
     }
 
-    private OrganizationDto saveOrganization(OfdCheck ofdCheck){
+    /**
+     * Сохранить организацию.
+     *
+     * @param ofdCheck чек ОФД
+     * @return организация
+     */
+    private OrganizationDto saveOrganization(OfdCheck ofdCheck) {
         var organization = organizationService.findByInn(ofdCheck.getUserInn());
-        if(organization == null) {
-            var dto = new AddOrganizationDto().setName(ofdCheck.getUser()).setInn(ofdCheck.getUserInn());
+        if (organization == null) {
+            var name = ofdCheck.getUser();
+            var inn = ofdCheck.getUserInn();
+            if (name == null) {
+                name = inn;
+            }
+            var dto = new AddOrganizationDto().setName(name).setInn(inn);
             organization = organizationService.save(dto);
         }
         return organization;
     }
 
+    /**
+     * Сохранить магазин.
+     *
+     * @param ofdCheck     чек ОФД
+     * @param organization организация
+     * @return магазин
+     */
     private ShopDto saveShop(OfdCheck ofdCheck, OrganizationDto organization) {
         ShopDto shop;
-        if(ofdCheck.getRetailPlaceAddress() == null){
+        if (ofdCheck.getRetailPlaceAddress() == null) {
             shop = shopService.findByName(ofdCheck.getUser());
-        }else{
+        } else {
             shop = shopService.findByAddress(ofdCheck.getRetailPlaceAddress());
         }
         if (shop == null) {
@@ -74,9 +92,16 @@ public class OfdCheckServiceImpl implements OfdCheckService{
         return shop;
     }
 
+    /**
+     * Сохранить кассира
+     *
+     * @param ofdCheck чек ОФД
+     * @param shop     магазин
+     * @return кассир
+     */
     private CashierDto saveCashier(OfdCheck ofdCheck, ShopDto shop) {
         var cashier = cashierService.findByName(ofdCheck.getOperator());
-        if(cashier == null){
+        if (cashier == null) {
             var dto = new AddCashierDto()
                     .setName(ofdCheck.getOperator())
                     .setShopId(shop.getId());
@@ -85,11 +110,18 @@ public class OfdCheckServiceImpl implements OfdCheckService{
         return cashier;
     }
 
+    /**
+     * Сохранить товары.
+     *
+     * @param ofdCheck чек ОФД
+     * @param shop     магазин
+     * @return товар
+     */
     private List<ProductInfoDto> saveProducts(OfdCheck ofdCheck, ShopDto shop) {
         var dateTime = fromEpoch(ofdCheck.getDateTime());
         return ofdCheck.getItems().stream().map(item -> {
             var product = productService.findByName(item.getName());
-            if(product == null) {
+            if (product == null) {
                 var dto = new AddProductDto().setName(item.getName());
                 product = productService.save(dto);
             }
@@ -98,9 +130,19 @@ public class OfdCheckServiceImpl implements OfdCheckService{
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Сохранить цену.
+     * TODO самый уродский метод
+     *
+     * @param shop     магазин
+     * @param product  товар
+     * @param item     строка
+     * @param dateTime дата-время
+     * @return цена
+     */
     private ProductPriceDto savePrice(ShopDto shop, ProductDto product, Item item, LocalDateTime dateTime) {
         var price = productPriceService.findPrice(product, shop, dateTime);
-        if(price == null){
+        if (price == null) {
             var dto = new AddProductPriceDto()
                     .setProductId(product.getId())
                     .setShopId(shop.getId())
@@ -112,7 +154,7 @@ public class OfdCheckServiceImpl implements OfdCheckService{
     }
 
     // TODO в common-класс
-    private LocalDateTime fromEpoch(int datetime){
+    private LocalDateTime fromEpoch(int datetime) {
         return LocalDateTime.ofInstant(Instant.ofEpochSecond(datetime), TimeZone.getDefault().toZoneId());
     }
 
