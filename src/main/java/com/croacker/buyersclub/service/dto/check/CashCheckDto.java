@@ -1,16 +1,11 @@
 package com.croacker.buyersclub.service.dto.check;
 
-import com.croacker.buyersclub.domain.Cashier;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Id;
 
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 /**
@@ -27,6 +22,24 @@ public class CashCheckDto {
      */
     @Schema(description = "Идентификатор", example = "1")
     private Long id;
+
+    /**
+     * Идентификатор кассира.
+     */
+    @Schema(description = "Идентификатор кассира", example = "1")
+    private Long cashierId;
+
+    /**
+     * Номер чека(???).
+     */
+    @Schema(description = "Номер чека(???)", example = "987654321")
+    private String requestNumber;
+
+    /**
+     * Номер смены(???).
+     */
+    @Schema(description = "Номер смены(???)", example = "987654321")
+    private String shiftNumber;
 
     /**
      * Рег.номер кассового аппарата(имя атрибута оригинальное).

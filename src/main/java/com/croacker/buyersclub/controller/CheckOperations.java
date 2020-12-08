@@ -2,6 +2,7 @@ package com.croacker.buyersclub.controller;
 
 import com.croacker.buyersclub.service.dto.check.AddCashCheckDto;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
+import com.croacker.buyersclub.service.dto.check.CashCheckInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,7 +30,7 @@ public interface CheckOperations {
             @ApiResponse(responseCode = "404", description = "Чеки не найдены", content = @Content),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)})
     @GetMapping
-    Flux<CashCheckDto> getAllChecks(@RequestParam(value = "page", defaultValue = "0") int page,
+    Flux<CashCheckInfoDto> getAllChecks(@RequestParam(value = "page", defaultValue = "0") int page,
                                     @RequestParam(value = "size", defaultValue = "20") int size,
                                     @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
                                     @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction);
@@ -38,13 +39,13 @@ public interface CheckOperations {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Чек",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CashCheckDto.class))}),
+                            schema = @Schema(implementation = CashCheckInfoDto.class))}),
             @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
             @ApiResponse(responseCode = "401", description = "Ошибка авторизации", content = @Content),
             @ApiResponse(responseCode = "404", description = "Чек не найдена", content = @Content),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)})
     @GetMapping(path = "/{id}")
-    Mono<CashCheckDto> getCheck(@PathVariable Long id);
+    Mono<CashCheckInfoDto> getCheck(@PathVariable Long id);
 
     @Operation(operationId = "createCheck", summary = "Добавить чек",
             security = @SecurityRequirement(name = "bearerAuth"))

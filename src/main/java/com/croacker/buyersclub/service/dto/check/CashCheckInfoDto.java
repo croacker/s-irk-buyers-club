@@ -1,6 +1,8 @@
 package com.croacker.buyersclub.service.dto.check;
 
-import com.croacker.buyersclub.service.dto.checkline.AddCashCheckLineDto;
+import com.croacker.buyersclub.domain.CashCheckLine;
+import com.croacker.buyersclub.service.dto.checkline.CashCheckLineDto;
+import com.croacker.buyersclub.service.dto.checkline.CashCheckLineInfoDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,19 +13,37 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Добавить чек, шапка.
+ * Чек, шапка.
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
 @Schema(description = "Чек, шапка")
-public class AddCashCheckDto {
+public class CashCheckInfoDto {
+    /**
+     * Идентификатор.
+     */
+    @Schema(description = "Идентификатор", example = "1")
+    private Long id;
+
     /**
      * Идентификатор кассира.
      */
     @Schema(description = "Идентификатор кассира", example = "1")
     private Long cashierId;
+
+    /**
+     * Имя кассира.
+     */
+    @Schema(description = "Рег.номер кассового аппарата", example = "name")
+    private String cashierName;
+
+    /**
+     * Позиции в чеке.
+     */
+    @Schema(description = "Позиции в чеке")
+    private List<CashCheckLineInfoDto> checkLines;
 
     /**
      * Номер чека(???).
@@ -80,9 +100,20 @@ public class AddCashCheckDto {
     private LocalDateTime checkDate;
 
     /**
-     * Товары чека.
+     * Создан.
      */
-    @Schema(description = "Товары чека")
-    private List<AddCashCheckLineDto> checkLines;
+    @Schema(description = "Создан")
+    private LocalDateTime createdAt;
 
+    /**
+     * Обновлен.
+     */
+    @Schema(description = "Обновлен")
+    private LocalDateTime updatedAt;
+
+    /**
+     * Пометка на удаление.
+     */
+    @Schema(description = "Пометка на удаление", example = "false")
+    private Boolean deleted;
 }
