@@ -14,12 +14,12 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Schema(description = "Чек, шапка")
-public class CheckLineDto {
+public class AddCashCheckLineDto {
     /**
-     * Идентификатор.
+     * Идентификатор товара.
      */
-    @Schema(description = "Идентификатор", example = "1")
-    private Long id;
+    @Schema(description = "Идентификатор товара", example = "1")
+    private Long productId;
 
     /**
      * Цена.

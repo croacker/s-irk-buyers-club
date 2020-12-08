@@ -11,6 +11,7 @@ public class CashCheckToDtoMapper implements Mapper<CashCheck, CashCheckDto> {
     @Override
     public CashCheckDto map(CashCheck input) {
         return new CashCheckDto()
+                .setCashierId(input.getCashier().getId())
                 .setKktRegId(input.getKktRegId())
                 .setFiscalDriveNumber(input.getFiscalDriveNumber())
                 .setFiscalDocumentNumber(input.getFiscalDocumentNumber())

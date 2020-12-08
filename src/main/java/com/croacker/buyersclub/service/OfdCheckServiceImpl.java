@@ -1,18 +1,18 @@
 package com.croacker.buyersclub.service;
 
-import com.croacker.buyersclub.domain.ProductPrice;
 import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
+import com.croacker.buyersclub.service.dto.check.AddCashCheckDto;
+import com.croacker.buyersclub.service.dto.checkline.AddCashCheckLineDto;
 import com.croacker.buyersclub.service.dto.organization.AddOrganizationDto;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
 import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
-import com.croacker.buyersclub.service.dto.product.ProductInfoDto;
 import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
-import com.croacker.buyersclub.service.mapper.product.ProductDtoToInfoDto;
+import com.croacker.buyersclub.service.mapper.checkline.ItemToAddCheckLineDto;
 import com.croacker.buyersclub.service.ofd.Item;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import lombok.AllArgsConstructor;
@@ -36,9 +36,11 @@ public class OfdCheckServiceImpl implements OfdCheckService {
 
     private final ProductService productService;
 
+    private final CheckService checkService;
+
     private final ProductPriceService productPriceService;
 
-    private final ProductDtoToInfoDto toInfoDto;
+    private final ItemToAddCheckLineDto itemToAddCheckLine;
 
     @Override
     public void process(OfdCheck ofdCheck) {
@@ -46,6 +48,27 @@ public class OfdCheckServiceImpl implements OfdCheckService {
         var shop = saveShop(ofdCheck, organization);
         var cashier = saveCashier(ofdCheck, shop);
         var products = saveProducts(ofdCheck, shop);
+        saveCheck(cashier, products, ofdCheck);
+    }
+
+    /**
+     *  @param cashier
+     * @param checkLines
+     * @param ofdCheck
+     */
+    private void saveCheck(CashierDto cashier, List<AddCashCheckLineDto> checkLines, OfdCheck ofdCheck) {
+        var dateTime = fromEpoch(ofdCheck.getDateTime());
+        var checkDto = new AddCashCheckDto()
+                .setCashierId(cashier.getId())
+                .setKktRegId(ofdCheck.getKktRegId())
+                .setFiscalDocumentNumber(ofdCheck.getFiscalDocumentNumber())
+                .setFiscalDriveNumber(ofdCheck.getFiscalDriveNumber())
+                .setTotalSum(ofdCheck.getTotalSum())
+                .setCashSum(ofdCheck.getCashTotalSum())
+                .setEcashSum(ofdCheck.getEcashTotalSum())
+                .setCheckDate(dateTime)
+                .setCheckLines(checkLines);
+        checkService.save(checkDto);
     }
 
     /**
@@ -117,7 +140,7 @@ public class OfdCheckServiceImpl implements OfdCheckService {
      * @param shop     магазин
      * @return товар
      */
-    private List<ProductInfoDto> saveProducts(OfdCheck ofdCheck, ShopDto shop) {
+    private List<AddCashCheckLineDto> saveProducts(OfdCheck ofdCheck, ShopDto shop) {
         var dateTime = fromEpoch(ofdCheck.getDateTime());
         return ofdCheck.getItems().stream().map(item -> {
             var product = productService.findByName(item.getName());
@@ -125,8 +148,8 @@ public class OfdCheckServiceImpl implements OfdCheckService {
                 var dto = new AddProductDto().setName(item.getName());
                 product = productService.save(dto);
             }
-            var price = savePrice(shop, product, item, dateTime);
-            return toInfoDto.map(product).setPrice(price);
+            savePrice(shop, product, item, dateTime);
+            return itemToAddCheckLine.map(item).setProductId(product.getId());
         }).collect(Collectors.toList());
     }
 

@@ -1,5 +1,7 @@
 package com.croacker.buyersclub.service.dto.check;
 
+import com.croacker.buyersclub.domain.CashCheckLine;
+import com.croacker.buyersclub.service.dto.checkline.CashCheckLineDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Чек, шапка.
@@ -16,7 +19,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Schema(description = "Чек, шапка")
-public class CashCheckDto {
+public class CashCheckInfoDto {
     /**
      * Идентификатор.
      */
@@ -28,6 +31,18 @@ public class CashCheckDto {
      */
     @Schema(description = "Идентификатор кассира", example = "1")
     private Long cashierId;
+
+    /**
+     * Имя кассира.
+     */
+    @Schema(description = "Рег.номер кассового аппарата", example = "name")
+    private String cashierName;
+
+    /**
+     * Позиции в чеке.
+     */
+    @Schema(description = "Позиции в чеке")
+    private List<CashCheckLineDto> checkLines;
 
     /**
      * Рег.номер кассового аппарата(имя атрибута оригинальное).

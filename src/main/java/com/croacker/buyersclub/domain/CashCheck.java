@@ -10,7 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Чек, шапка.
@@ -65,6 +67,12 @@ public class CashCheck {
      * Дата-время.
      */
     private LocalDateTime checkDate;
+
+    /**
+     * Товары.
+     */
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<CashCheckLine> checkLines;
 
     /**
      * Создан.
