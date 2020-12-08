@@ -38,10 +38,4 @@ public class AddCashCheckLineDto {
      */
     @Schema(description = "Сумма", example = "20000")
     private Integer totalSum;
-
-    /**
-     * Пометка на удаление.
-     */
-    @Schema(description = "Пометка на удаление", example = "false")
-    private Boolean deleted;
 }

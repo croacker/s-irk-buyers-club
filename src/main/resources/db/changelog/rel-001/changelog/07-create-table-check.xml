@@ -15,6 +15,12 @@
             <column name="kkt_reg_id" type="varchar(128)">
                 <constraints nullable="true"/>
             </column>
+            <column name="request_number" type="varchar(128)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="shift_number" type="varchar(128)">
+                <constraints nullable="true"/>
+            </column>
             <column name="fiscal_drive_number" type="varchar(128)">
                 <constraints nullable="true"/>
             </column>

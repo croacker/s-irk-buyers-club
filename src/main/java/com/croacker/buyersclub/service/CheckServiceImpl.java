@@ -61,8 +61,7 @@ public class CheckServiceImpl implements CheckService{
             var product = productRepo.findById(lineDto.getProductId()).get();
             return addLineToEntityMapper
                     .map(lineDto)
-                    .setProduct(product)
-                    .setDeleted(false);
+                    .setProduct(product);
         }).collect(Collectors.toList());
         var check = addToEntityMapper.map(dto)
                 .setCashier(cashier)

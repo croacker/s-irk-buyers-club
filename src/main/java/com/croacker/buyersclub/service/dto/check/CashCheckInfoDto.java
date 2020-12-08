@@ -2,6 +2,7 @@ package com.croacker.buyersclub.service.dto.check;
 
 import com.croacker.buyersclub.domain.CashCheckLine;
 import com.croacker.buyersclub.service.dto.checkline.CashCheckLineDto;
+import com.croacker.buyersclub.service.dto.checkline.CashCheckLineInfoDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,7 +43,19 @@ public class CashCheckInfoDto {
      * Позиции в чеке.
      */
     @Schema(description = "Позиции в чеке")
-    private List<CashCheckLineDto> checkLines;
+    private List<CashCheckLineInfoDto> checkLines;
+
+    /**
+     * Номер чека(???).
+     */
+    @Schema(description = "Номер чека(???)", example = "987654321")
+    private String requestNumber;
+
+    /**
+     * Номер смены(???).
+     */
+    @Schema(description = "Номер смены(???)", example = "987654321")
+    private String shiftNumber;
 
     /**
      * Рег.номер кассового аппарата(имя атрибута оригинальное).

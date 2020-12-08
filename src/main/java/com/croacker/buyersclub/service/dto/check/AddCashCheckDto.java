@@ -26,6 +26,18 @@ public class AddCashCheckDto {
     private Long cashierId;
 
     /**
+     * Номер чека(???).
+     */
+    @Schema(description = "Номер чека(???)", example = "987654321")
+    private String requestNumber;
+
+    /**
+     * Номер смены(???).
+     */
+    @Schema(description = "Номер смены(???)", example = "987654321")
+    private String shiftNumber;
+
+    /**
      * Рег.номер кассового аппарата(имя атрибута оригинальное).
      */
     @Schema(description = "Рег.номер кассового аппарата", example = "987654321")

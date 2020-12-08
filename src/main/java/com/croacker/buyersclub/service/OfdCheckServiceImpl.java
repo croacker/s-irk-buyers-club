@@ -58,8 +58,10 @@ public class OfdCheckServiceImpl implements OfdCheckService {
      */
     private void saveCheck(CashierDto cashier, List<AddCashCheckLineDto> checkLines, OfdCheck ofdCheck) {
         var dateTime = fromEpoch(ofdCheck.getDateTime());
-        var checkDto = new AddCashCheckDto()
+        var checkDto = new AddCashCheckDto()// TODO в mapper
                 .setCashierId(cashier.getId())
+                .setRequestNumber(ofdCheck.getRequestNumber())
+                .setShiftNumber(ofdCheck.getShiftNumber())
                 .setKktRegId(ofdCheck.getKktRegId())
                 .setFiscalDocumentNumber(ofdCheck.getFiscalDocumentNumber())
                 .setFiscalDriveNumber(ofdCheck.getFiscalDriveNumber())

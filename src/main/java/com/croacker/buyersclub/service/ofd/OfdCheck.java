@@ -19,10 +19,10 @@ public class OfdCheck {
     private String userInn;
 
     @JsonProperty("requestNumber")
-    private int requestNumber;
+    private String requestNumber;
 
     @JsonProperty("shiftNumber")
-    private int shiftNumber;
+    private String shiftNumber;
 
     @JsonProperty("operator")
     private String operator;
