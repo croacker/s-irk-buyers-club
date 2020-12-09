@@ -20,6 +20,7 @@
         <spring-cloud-starter.version>2.2.5.RELEASE</spring-cloud-starter.version>
         <springdoc-openapi-webflux-ui.version>1.2.32</springdoc-openapi-webflux-ui.version>
         <testcontainers-postgres.version>1.83</testcontainers-postgres.version>
+
         <telegrambots.version>5.0.1</telegrambots.version>
     </properties>
 
@@ -226,7 +227,7 @@
                     <plugin>
                         <groupId>com.google.cloud.tools</groupId>
                         <artifactId>jib-maven-plugin</artifactId>
-                        <version>2.2.0</version>
+                        <version>2.7.0</version>
                         <configuration>
                             <from>
                                 <image>openjdk:14.0.1-jdk</image>
