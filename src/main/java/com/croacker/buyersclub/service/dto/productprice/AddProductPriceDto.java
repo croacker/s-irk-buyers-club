@@ -18,12 +18,6 @@ import java.time.LocalDateTime;
 @Schema(description = "Цена на товар")
 public class AddProductPriceDto {
     /**
-     * Идентификатор.
-     */
-    @Schema(description = "Идентификатор", example = "1")
-    private Long id;
-
-    /**
      * Идентификатор магазина.
      */
     @Schema(description = "Идентификатор магазина", example = "1")
@@ -46,10 +40,4 @@ public class AddProductPriceDto {
      */
     @Schema(description = "Дата-время")
     private LocalDateTime priceDate;
-
-    /**
-     * Пометка на удаление.
-     */
-    @Schema(description = "Пометка на удаление", example = "false")
-    private Boolean deleted;
 }

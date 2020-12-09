@@ -18,12 +18,6 @@ import java.time.LocalDateTime;
 @Schema(description = "Магазин")
 public class AddShopDto {
     /**
-     * Идентификатор.
-     */
-    @Schema(description = "Идентификатор", example = "1")
-    private Long id;
-
-    /**
      * Наименование.
      */
     @Schema(description = "Наименование", example = "Наименование")
@@ -40,22 +34,4 @@ public class AddShopDto {
      */
     @Schema(description = "Идентификатор организации", example = "1")
     private Long organizationId;
-
-    /**
-     * Создан.
-     */
-    @Schema(description = "Создан")
-    private LocalDateTime createdAt;
-
-    /**
-     * Обновлен.
-     */
-    @Schema(description = "Обновлен")
-    private LocalDateTime updatedAt;
-
-    /**
-     * Пометка на удаление.
-     */
-    @Schema(description = "Пометка на удаление", example = "false")
-    private Boolean deleted;
 }
