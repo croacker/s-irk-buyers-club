@@ -108,9 +108,11 @@ public class OfdCheckServiceImpl implements OfdCheckService {
             shop = shopService.findByAddress(ofdCheck.getRetailPlaceAddress());
         }
         if (shop == null) {
+            var name = organization.getName();
+            var address = ofdCheck.getRetailPlaceAddress();
             var dto = new AddShopDto()
-                    .setName(ofdCheck.getUser())
-                    .setAddress(ofdCheck.getRetailPlaceAddress())
+                    .setName(name)
+                    .setAddress(address)
                     .setOrganizationId(organization.getId());
             shop = shopService.save(dto);
         }

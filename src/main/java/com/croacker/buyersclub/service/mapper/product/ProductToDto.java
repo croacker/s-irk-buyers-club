@@ -13,10 +13,17 @@ public class ProductToDto implements Mapper<Product, ProductDto> {
         return new ProductDto()
                 .setId(input.getId())
                 .setName(input.getName())
-                .setProductGroupId(input.getProductGroup().getId())
+                .setProductGroupId(getProductGroupId(input))
                 .setCreatedAt(input.getCreatedAt())
                 .setUpdatedAt(input.getUpdatedAt())
                 .setDeleted(input.getDeleted());
     }
 
+    private Long getProductGroupId(Product input) {
+        Long result = null;
+        if (input.getProductGroup() != null) {
+            result = input.getProductGroup().getId();
+        }
+        return result;
+    }
 }

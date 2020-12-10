@@ -20,6 +20,8 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -27,6 +29,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -64,8 +67,13 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         try {
             getFileId(update.getMessage()).ifPresent(this::processFile);
-            var responseText = getResponseText(update.getMessage());
-            execute(getHelpMessage(responseText, update.getMessage()));
+            if (update.getMessage().hasText()
+                    && update.getMessage().getText().equals("/start")) {
+                execute(sendInlineKeyBoardMessage(update.getMessage()));
+            } else {
+                var responseText = getResponseText(update.getMessage());
+                execute(getHelpMessage(responseText, update.getMessage()));
+            }
         } catch (TelegramApiException e) {
             log.error(e.getMessage(), e);
         }
@@ -105,6 +113,31 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         sendMessage.setChatId(String.valueOf(message.getChatId()));
         sendMessage.enableMarkdown(true);
         sendMessage.setText(responseText);
+        return sendMessage;
+    }
+
+    public static SendMessage sendInlineKeyBoardMessage(Message message) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        InlineKeyboardButton buttonProducts = new InlineKeyboardButton();
+        buttonProducts.setText("Товары");
+        buttonProducts.setCallbackData("products");
+        InlineKeyboardButton buttonShops = new InlineKeyboardButton();
+        buttonShops.setText("Магазины");
+        buttonShops.setCallbackData("shops");
+        InlineKeyboardButton buttonOrganizations = new InlineKeyboardButton();
+        buttonOrganizations.setText("Организации");
+        buttonOrganizations.setCallbackData("organizations");
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        row.add(buttonProducts);
+        row.add(buttonShops);
+        row.add(buttonOrganizations);
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(row);
+        inlineKeyboardMarkup.setKeyboard(rowList);
+        var sendMessage = new SendMessage();
+        sendMessage.setChatId(String.valueOf(message.getChatId()));
+        sendMessage.setText("Выберите тип");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         return sendMessage;
     }
 

@@ -1,5 +1,6 @@
 package com.croacker.buyersclub.service;
 
+import com.croacker.buyersclub.domain.ProductGroup;
 import com.croacker.buyersclub.repo.ProductGroupRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
 import com.croacker.buyersclub.service.dto.product.AddProductDto;
@@ -49,7 +50,10 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDto save(AddProductDto dto) {
-        var productGroup = productGroupRepo.findById(dto.getProductGroupId()).orElse(null);
+        ProductGroup productGroup = null;
+        if(dto.getProductGroupId() != null) {
+            productGroup = productGroupRepo.findById(dto.getProductGroupId()).orElse(null);
+        }
         var product = addToEntityMapper.map(dto)
                 .setProductGroup(productGroup)
                 .setCreatedAt(LocalDateTime.now())
@@ -61,7 +65,10 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDto update(ProductDto dto) {
-        var productGroup = productGroupRepo.findById(dto.getProductGroupId()).orElse(null);
+        ProductGroup productGroup = null;
+        if(dto.getProductGroupId() != null) {
+            productGroup = productGroupRepo.findById(dto.getProductGroupId()).orElse(null);
+        }
         var product = toEntityMapper.map(dto)
                 .setProductGroup(productGroup)
                 .setUpdatedAt(LocalDateTime.now());
