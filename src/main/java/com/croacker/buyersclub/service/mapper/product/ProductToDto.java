@@ -13,6 +13,7 @@ public class ProductToDto implements Mapper<Product, ProductDto> {
         return new ProductDto()
                 .setId(input.getId())
                 .setName(input.getName())
+                .setProductGroupId(input.getProductGroup().getId())
                 .setCreatedAt(input.getCreatedAt())
                 .setUpdatedAt(input.getUpdatedAt())
                 .setDeleted(input.getDeleted());

@@ -1,5 +1,6 @@
 package com.croacker.buyersclub.service;
 
+import com.croacker.buyersclub.repo.ProductGroupRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
 import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
@@ -22,6 +23,8 @@ import java.util.stream.StreamSupport;
 public class ProductServiceImpl implements ProductService{
 
     private final ProductRepo repo;
+
+    private final ProductGroupRepo productGroupRepo;
 
     private final ProductToDto toDtoMapper;
 
@@ -46,7 +49,9 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDto save(AddProductDto dto) {
+        var productGroup = productGroupRepo.findById(dto.getProductGroupId()).orElse(null);
         var product = addToEntityMapper.map(dto)
+                .setProductGroup(productGroup)
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now())
                 .setDeleted(false);
@@ -56,7 +61,9 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDto update(ProductDto dto) {
+        var productGroup = productGroupRepo.findById(dto.getProductGroupId()).orElse(null);
         var product = toEntityMapper.map(dto)
+                .setProductGroup(productGroup)
                 .setUpdatedAt(LocalDateTime.now());
         product = repo.save(product);
         return toDtoMapper.map(product);

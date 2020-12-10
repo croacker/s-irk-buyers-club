@@ -31,6 +31,18 @@ public class ProductInfoDto {
     private String name;
 
     /**
+     * Идентификатор группы товаров.
+     */
+    @Schema(description = "Идентификатор группы товаров", example = "1")
+    private Long productGroupId;
+
+    /**
+     * Наименование группы товаров.
+     */
+    @Schema(description = "Наименование группы товаров", example = "1")
+    private String productGroupName;
+
+    /**
      * Создан.
      */
     @Schema(description = "Создан")
