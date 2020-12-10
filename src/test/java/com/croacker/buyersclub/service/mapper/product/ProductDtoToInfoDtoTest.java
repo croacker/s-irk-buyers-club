@@ -2,6 +2,7 @@ package com.croacker.buyersclub.service.mapper.product;
 
 import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Product;
+import com.croacker.buyersclub.domain.ProductGroup;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductInfoDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +32,7 @@ class ProductDtoToInfoDtoTest {
     @Test
     void shouldMapDto() {
         //given
-        var given = createDto();
+        var given = createEntity();
         var expected = createInfoDto();
 
         // when
@@ -42,19 +43,23 @@ class ProductDtoToInfoDtoTest {
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
-    private ProductInfoDto createInfoDto() {
-        return new ProductInfoDto()
+    private Product createEntity() {
+        var productGroup = new ProductGroup().setId(0L).setName("test_product_group");
+        return new Product()
                 .setId(0L)
                 .setName("test_product")
+                .setProductGroup(productGroup)
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
     }
 
-    private ProductDto createDto() {
-        return new ProductDto()
+    private ProductInfoDto createInfoDto() {
+        return new ProductInfoDto()
                 .setId(0L)
                 .setName("test_product")
+                .setProductGroupId(0L)
+                .setProductGroupName("test_product_group")
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);

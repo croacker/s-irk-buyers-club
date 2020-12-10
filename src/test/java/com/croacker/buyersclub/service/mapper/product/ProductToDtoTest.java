@@ -2,6 +2,7 @@ package com.croacker.buyersclub.service.mapper.product;
 
 import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Product;
+import com.croacker.buyersclub.domain.ProductGroup;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,9 +43,11 @@ class ProductToDtoTest {
     }
 
     private Product createEntity() {
+        var productGroup = new ProductGroup().setId(0L);
         return new Product()
                 .setId(0L)
                 .setName("test_product")
+                .setProductGroup(productGroup)
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
@@ -54,6 +57,7 @@ class ProductToDtoTest {
         return new ProductDto()
                 .setId(0L)
                 .setName("test_product")
+                .setProductGroupId(0L)
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
