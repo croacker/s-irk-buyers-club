@@ -35,8 +35,6 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     private final TelegramConfiguration configuration;
 
-    private final WebClient client;
-
     private final TelegramFileService telegramFileService;
 
     private final ProductPriceService productPriceService;
