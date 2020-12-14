@@ -1,17 +1,11 @@
 package com.croacker.buyersclub.telegram;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
-import com.croacker.buyersclub.service.OfdCheckServiceImpl;
 import com.croacker.buyersclub.service.ProductPriceService;
+import com.croacker.buyersclub.service.TelegramFileService;
 import com.croacker.buyersclub.service.mapper.telegram.TelegramProductPriceDtoToString;
-import com.croacker.buyersclub.service.ofd.OfdCheck;
-import com.croacker.buyersclub.telegram.file.FileInfo;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,14 +19,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 // TODO привести процессы в порядок.
@@ -47,7 +37,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     private final WebClient client;
 
-    private final OfdCheckServiceImpl ofdCheckService;
+    private final TelegramFileService telegramFileService;
 
     private final ProductPriceService productPriceService;
 
@@ -66,8 +56,9 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         try {
-            getFileId(update.getMessage()).ifPresent(this::processFile);
-            if (update.getMessage().hasText()
+            processFile(update.getMessage());
+            if (update.getMessage() != null
+                    && update.getMessage().hasText()
                     && update.getMessage().getText().equals("/start")) {
                 execute(sendInlineKeyBoardMessage(update.getMessage()));
             } else {
@@ -141,59 +132,12 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         return sendMessage;
     }
 
-    private String processFile(String fileId) {
-        Mono<String> filePath = getFilePath(fileId);
-
-        filePath.map(path -> {
-            getFile(path).subscribe();
-            return path;
-        }).subscribe();
-        return StringUtils.EMPTY;
-    }
-
     /**
-     * Получить ОФД чеки из файла.
-     *
-     * @param filePath
-     * @return
+     * Получить и обработать файл, если он есть.
+     * @param message
      */
-    private Flux<List<OfdCheck>> getFile(String filePath) {
-        var url = "https://api.telegram.org/file/bot" + getBotToken() + "/" + filePath;
-        log.info("File url:{}", url);
-        return client.get()
-                .uri(url)
-                .retrieve()
-                .bodyToFlux(String.class)
-                .map(str -> {// TODO если json отформатирован, он будет поступать построчно и не может быть десериализован
-                    List<OfdCheck> ofdChecks = Collections.EMPTY_LIST;
-                    var objectMapper = new ObjectMapper();
-                    try {
-                        ofdChecks = objectMapper.readValue(str, new TypeReference<>() {
-                        });
-                    } catch (JsonProcessingException e) {
-                        log.error(e.getMessage(), e);
-                    }
-                    log.info("OfdChecks:{}", ofdChecks);
-                    ofdChecks.forEach(ofdCheck -> ofdCheckService.process(ofdCheck));
-                    return ofdChecks;
-                });
-    }
-
-    private Optional<String> getFileId(Message message) {
-        Optional<String> result = Optional.empty();
-        if (message.getDocument() != null) {
-            result = Optional.of(message.getDocument().getFileId());
-        }
-        return result;
-    }
-
-    private Mono<String> getFilePath(String fileId) {
-        var url = "https://api.telegram.org/bot" + getBotToken() + "/getFile?file_id=" + fileId;
-        return client.get()
-                .uri(url)
-                .retrieve()
-                .bodyToMono(FileInfo.class)
-                .map(fileInfo -> fileInfo.getResult().getFilePath());
+    private void processFile(Message message) {
+        telegramFileService.processFile(message);
     }
 
     private boolean isErrorResponse(HttpStatus status) {
