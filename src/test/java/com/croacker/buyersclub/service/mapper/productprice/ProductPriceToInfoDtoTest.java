@@ -52,7 +52,8 @@ class ProductPriceToInfoDtoTest {
                 .setShop(shop)
                 .setProduct(product)
                 .setPrice(1)
-                .setPriceDate(NOW);
+                .setPriceDate(NOW)
+                .setDeleted(true);
     }
 
     private ProductPriceInfoDto createDto() {
@@ -63,7 +64,8 @@ class ProductPriceToInfoDtoTest {
                 .setProductId(1L)
                 .setProductName("test_product")
                 .setPrice(1)
-                .setPriceDate(NOW);
+                .setPriceDate(NOW)
+                .setDeleted(true);
     }
 
 }

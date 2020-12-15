@@ -12,6 +12,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.stream.Collectors;
 
+/**
+ * Клиент для обращения к Telegram по http
+ */
 @Service
 @Slf4j
 @AllArgsConstructor
@@ -25,12 +28,12 @@ public class TelegramWebClient {
         return configuration.getToken();
     }
 
-    public Mono<String> getFileContent(String fileId){
+    public Mono<String> getFileContent(String fileId) {
         return getFilePath(fileId).flatMapMany(this::getFile)
                 .collect(Collectors.joining(""));
     }
 
-    private Mono<String> getFilePath(String fileId){
+    private Mono<String> getFilePath(String fileId) {
         var url = "https://api.telegram.org/bot" + getBotToken() + "/getFile?file_id=" + fileId;
         return client.get()
                 .uri(url)
@@ -40,7 +43,7 @@ public class TelegramWebClient {
     }
 
     /**
-     * Получить ОФД чеки из файла.
+     * Получить json ОФД чеков из файла.
      *
      * @param filePath
      * @return
