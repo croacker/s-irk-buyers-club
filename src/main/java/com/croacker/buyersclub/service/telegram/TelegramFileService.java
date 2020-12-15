@@ -1,4 +1,4 @@
-package com.croacker.buyersclub.service;
+package com.croacker.buyersclub.service.telegram;
 
 import org.telegram.telegrambots.meta.api.objects.Message;
 

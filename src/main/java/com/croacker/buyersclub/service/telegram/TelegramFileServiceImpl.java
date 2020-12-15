@@ -1,6 +1,7 @@
-package com.croacker.buyersclub.service;
+package com.croacker.buyersclub.service.telegram;
 
 import com.croacker.buyersclub.client.TelegramWebClient;
+import com.croacker.buyersclub.service.OfdCheckServiceImpl;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

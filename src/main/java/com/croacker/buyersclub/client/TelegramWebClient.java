@@ -1,20 +1,15 @@
 package com.croacker.buyersclub.client;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
-import com.croacker.buyersclub.service.ofd.OfdCheck;
-import com.croacker.buyersclub.telegram.file.FileInfo;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.croacker.buyersclub.service.telegram.FileInfo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,5 +52,9 @@ public class TelegramWebClient {
                 .uri(url)
                 .retrieve()
                 .bodyToFlux(String.class);
+    }
+
+    private boolean isErrorResponse(HttpStatus status) {
+        return status.is4xxClientError() || status.is5xxServerError();
     }
 }

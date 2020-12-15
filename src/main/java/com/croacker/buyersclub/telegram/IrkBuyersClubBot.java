@@ -2,13 +2,13 @@ package com.croacker.buyersclub.telegram;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
 import com.croacker.buyersclub.service.ProductPriceService;
-import com.croacker.buyersclub.service.TelegramFileService;
+import com.croacker.buyersclub.service.telegram.TelegramFileService;
 import com.croacker.buyersclub.service.mapper.telegram.TelegramProductPriceDtoToString;
+import com.croacker.buyersclub.telegram.chat.Chat;
+import com.croacker.buyersclub.telegram.chat.ChatFactory;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -22,7 +22,9 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 // TODO привести процессы в порядок.
@@ -41,6 +43,10 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     private final TelegramProductPriceDtoToString toStringMapper;
 
+    private final ChatFactory chatFactory;
+
+    private Map<Long, Chat> chatPool = new HashMap<>();
+
     @Override
     public String getBotUsername() {
         return configuration.getUsername();
@@ -55,10 +61,10 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         try {
             processFile(update.getMessage());
-            if (update.getMessage() != null
-                    && update.getMessage().hasText()
-                    && update.getMessage().getText().equals("/start")) {
-                execute(sendInlineKeyBoardMessage(update.getMessage()));
+            if (isStart(update)) {
+                execute(startMenu(update.getMessage()));
+            } if (isSelectChatType(update)) {
+                createChat(update);
             } else {
                 var responseText = getResponseText(update.getMessage());
                 execute(getHelpMessage(responseText, update.getMessage()));
@@ -105,17 +111,17 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         return sendMessage;
     }
 
-    public static SendMessage sendInlineKeyBoardMessage(Message message) {
+    public static SendMessage startMenu(Message message) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         InlineKeyboardButton buttonProducts = new InlineKeyboardButton();
         buttonProducts.setText("Товары");
-        buttonProducts.setCallbackData("products");
+        buttonProducts.setCallbackData("product");
         InlineKeyboardButton buttonShops = new InlineKeyboardButton();
         buttonShops.setText("Магазины");
-        buttonShops.setCallbackData("shops");
+        buttonShops.setCallbackData("shop");
         InlineKeyboardButton buttonOrganizations = new InlineKeyboardButton();
         buttonOrganizations.setText("Организации");
-        buttonOrganizations.setCallbackData("organizations");
+        buttonOrganizations.setCallbackData("organization");
         List<InlineKeyboardButton> row = new ArrayList<>();
         row.add(buttonProducts);
         row.add(buttonShops);
@@ -138,8 +144,45 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         telegramFileService.processFile(message);
     }
 
-    private boolean isErrorResponse(HttpStatus status) {
-        return status.is4xxClientError() || status.is5xxServerError();
+    /**
+     * Получена команда start.
+     * @param update
+     * @return
+     */
+    private boolean isStart(Update update){
+        return update.getMessage() != null
+                && update.getMessage().hasText()
+                && update.getMessage().getText().equals("/start");
+    }
+
+    /**
+     * Выбран тип объекта.
+     * @param update
+     * @return
+     */
+    private boolean isSelectChatType(Update update) {
+        return update.getMessage() == null && update.getCallbackQuery() != null;
+    }
+
+    private void createChat(Update update) {
+        var chatId = update.getCallbackQuery().getMessage().getChatId();
+        var type = update.getCallbackQuery().getData();
+        var chat = chatFactory.createChat(chatId, type);
+        chatPool.put(chatId, chat);
+    }
+
+    private Chat createDefaultChat(Long chatId) {
+        var chat = chatFactory.createChat(chatId, "product");
+        chatPool.put(chatId, chat);
+        return chat;
+    }
+
+    private Chat getChat(Long chatId){
+        var chat = chatPool.get(chatId);
+        if (chat == null){
+            chat = createDefaultChat(chatId);
+        }
+        return chat;
     }
 
     /**
@@ -151,8 +194,9 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         String result = "Спасибо";
         var expression = message.getText();
         if (expression != null) {
-            result = productPriceService.getProductsPrices(expression.trim())
-                    .stream().limit(10).map(toStringMapper).collect(Collectors.joining("\n "));
+            var chatId = message.getChatId();
+            var chat = getChat(chatId);
+            result = chat.findByName(expression);
         }
         if(result.isEmpty()){
             result = "Нет данных";
