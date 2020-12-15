@@ -18,7 +18,8 @@ public class ProductPriceToInfoDto implements Mapper<ProductPrice, ProductPriceI
                 .setProductId(input.getProduct().getId())
                 .setProductName(input.getProduct().getName())
                 .setPrice(input.getPrice())
-                .setPriceDate(input.getPriceDate());
+                .setPriceDate(input.getPriceDate())
+                .setDeleted(input.getDeleted());
     }
 
 }
