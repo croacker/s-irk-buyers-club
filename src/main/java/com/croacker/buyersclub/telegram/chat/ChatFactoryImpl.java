@@ -1,6 +1,9 @@
 package com.croacker.buyersclub.telegram.chat;
 
+import com.croacker.buyersclub.service.OrganizationService;
 import com.croacker.buyersclub.service.ProductPriceService;
+import com.croacker.buyersclub.service.ShopService;
+import com.croacker.buyersclub.service.mapper.telegram.TelegramOrganizationDtoToString;
 import com.croacker.buyersclub.service.mapper.telegram.TelegramProductPriceDtoToString;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +16,13 @@ public class ChatFactoryImpl implements ChatFactory {
 
     private final ProductPriceService productPriceService;
 
-    private final TelegramProductPriceDtoToString toStringMapper;
+    private final OrganizationService organizationService;
+
+    private final ShopService shopService;
+
+    private final TelegramProductPriceDtoToString productPriceToStringMapper;
+
+    private final TelegramOrganizationDtoToString organizationToStringMapper;
 
     @Override
     public Chat createChat(Long id, String type) {
@@ -25,7 +34,7 @@ public class ChatFactoryImpl implements ChatFactory {
     }
 
     private Chat createProductChat(Long id) {
-        return new ProductChat(id, productPriceService, toStringMapper);
+        return new ProductChat(id, productPriceService, productPriceToStringMapper);
     }
 
     private Chat createShopChat(Long id) {
@@ -33,7 +42,7 @@ public class ChatFactoryImpl implements ChatFactory {
     }
 
     private Chat createOrganizationChat(Long id) {
-        return new OrganizationChat(id);
+        return new OrganizationChat(id, organizationService, organizationToStringMapper);
     }
 
 }
