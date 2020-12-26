@@ -44,6 +44,12 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    public List<OrganizationDto> getOrganizations(String expression) {
+        return repo.findByNameContainingIgnoreCase(expression)
+                .stream().map(toDtoMapper).collect(Collectors.toList());
+    }
+
+    @Override
     public OrganizationDto save(AddOrganizationDto dto) {
         var organization = addToEntityMapper.map(dto)
                 .setCreatedAt(LocalDateTime.now())

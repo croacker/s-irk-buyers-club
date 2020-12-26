@@ -1,6 +1,7 @@
 package com.croacker.buyersclub.repo;
 
 import com.croacker.buyersclub.domain.Organization;
+import com.croacker.buyersclub.domain.Product;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
@@ -15,4 +16,5 @@ public interface OrganizationRepo extends CrudRepository<Organization, Long> {
 
     Optional<Organization> findByInn(String inn);
 
+    List<Organization> findByNameContainingIgnoreCase(String expression);
 }

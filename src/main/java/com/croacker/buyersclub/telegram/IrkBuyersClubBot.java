@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 // TODO привести процессы в порядок.
 @Service
@@ -63,11 +62,13 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
             processFile(update.getMessage());
             if (isStart(update)) {
                 execute(startMenu(update.getMessage()));
-            } if (isSelectChatType(update)) {
-                createChat(update);
+            } else if (isSelectChatType(update)) {
+                var chat = createChat(update);
+                execute(getMessage(chat.getDescription(), chat.getChatId()));
             } else {
+                var chatId = String.valueOf(update.getMessage().getChatId());
                 var responseText = getResponseText(update.getMessage());
-                execute(getHelpMessage(responseText, update.getMessage()));
+                execute(getMessage(responseText, chatId));
             }
         } catch (TelegramApiException e) {
             log.error(e.getMessage(), e);
@@ -103,9 +104,9 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         }
     }
 
-    private static SendMessage getHelpMessage(String responseText, Message message) {
+    private static SendMessage getMessage(String responseText, String chatId) {
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(String.valueOf(message.getChatId()));
+        sendMessage.setChatId(chatId);
         sendMessage.enableMarkdown(true);
         sendMessage.setText(responseText);
         return sendMessage;
@@ -164,11 +165,12 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         return update.getMessage() == null && update.getCallbackQuery() != null;
     }
 
-    private void createChat(Update update) {
+    private Chat createChat(Update update) {
         var chatId = update.getCallbackQuery().getMessage().getChatId();
         var type = update.getCallbackQuery().getData();
         var chat = chatFactory.createChat(chatId, type);
         chatPool.put(chatId, chat);
+        return chat;
     }
 
     private Chat createDefaultChat(Long chatId) {
