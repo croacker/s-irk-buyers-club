@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.stream.Collectors;
+
 /**
  * Чат магазины
  */
@@ -26,7 +28,8 @@ public class ShopChat implements Chat {
 
     @Override
     public String findByName(String expression) {
-        return StringUtils.EMPTY;
+        return shopService.getShops(expression)
+                .stream().limit(10).map(toStringMapper).collect(Collectors.joining("\n "));
     }
 
     @Override
