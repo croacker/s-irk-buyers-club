@@ -81,4 +81,10 @@ public class ShopServiceImpl implements ShopService{
             return toDtoMapper.map(organization);
         }).orElse(null);
     }
+
+    @Override
+    public List<ShopDto> getShops(String expression) {
+        return repo.findByNameContainingIgnoreCase(expression)
+                .stream().map(toDtoMapper).collect(Collectors.toList());
+    }
 }

@@ -1,8 +1,13 @@
 package com.croacker.buyersclub.telegram.chat;
 
+import com.croacker.buyersclub.service.ShopService;
+import com.croacker.buyersclub.service.mapper.telegram.TelegramOrganizationDtoToString;
+import com.croacker.buyersclub.service.mapper.telegram.TelegramShopDtoToString;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.stream.Collectors;
 
 /**
  * Чат магазины
@@ -12,6 +17,10 @@ public class ShopChat implements Chat {
 
     private final Long chatId;
 
+    private final ShopService shopService;
+
+    private final TelegramShopDtoToString toStringMapper;
+
     @Override
     public String getChatId() {
         return String.valueOf(chatId);
@@ -19,7 +28,8 @@ public class ShopChat implements Chat {
 
     @Override
     public String findByName(String expression) {
-        return StringUtils.EMPTY;
+        return shopService.getShops(expression)
+                .stream().limit(10).map(toStringMapper).collect(Collectors.joining("\n "));
     }
 
     @Override
