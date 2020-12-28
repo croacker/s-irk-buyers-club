@@ -8,6 +8,7 @@ import com.croacker.buyersclub.telegram.chat.Chat;
 import com.croacker.buyersclub.telegram.chat.ChatFactory;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -24,6 +25,7 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 // TODO привести процессы в порядок.
@@ -34,17 +36,15 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     private final int RECONNECT_PAUSE = 10000;
 
+    private final MessageSource messageSource;
+
     private final TelegramConfiguration configuration;
 
     private final TelegramFileService telegramFileService;
 
-    private final ProductPriceService productPriceService;
-
-    private final TelegramProductPriceDtoToString toStringMapper;
-
     private final ChatFactory chatFactory;
 
-    private Map<Long, Chat> chatPool = new HashMap<>();
+    private Map<Long, Chat> chatPool;
 
     @Override
     public String getBotUsername() {
@@ -193,7 +193,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
      * @return текст с ценами
      */
     private String getResponseText(Message message) {
-        String result = "Спасибо";
+        String result = getMessage("message.thankyou");
         var expression = message.getText();
         if (expression != null) {
             var chatId = message.getChatId();
@@ -201,9 +201,13 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
             result = chat.findByName(expression);
         }
         if(result.isEmpty()){
-            result = "Нет данных";
+            result = getMessage("message.nodata");
         }
         return result;
     }
 
+    private String getMessage(String key){
+        var locale = Locale.getDefault();
+        return messageSource.getMessage(key, null, locale);
+    }
 }
