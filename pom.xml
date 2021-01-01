@@ -234,17 +234,19 @@
                             </from>
                             <to>
                                 <image>${docker.image.name}</image>
-                                <auth>
-                                    <!--suppress UnresolvedMavenProperty -->
-                                    <username>${DEPLOY_USER}</username>
-                                    <!--suppress UnresolvedMavenProperty -->
-                                    <password>${DEPLOY_USER_PASS}</password>
-                                </auth>
                             </to>
                             <container>
                                 <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
                             </container>
                         </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>dockerBuild</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
