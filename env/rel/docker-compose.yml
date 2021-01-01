@@ -1,0 +1,71 @@
+version: "3.7"
+services:
+
+  # БД
+  db:
+    image: postgres:12-alpine
+    container_name: db
+    hostname: db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      TZ: "Europe/Moscow"
+      POSTGRES_USER: buyers
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: buyers
+      PGDATA: /var/lib/postgresql/data/buyers
+    volumes:
+      - postgres-irk-buyers-club:/var/lib/postgresql/data/buyers
+    command: ["-c", "shared_buffers=256MB", "-c", "max_connections=200"]
+    networks:
+      - irk-buyers-club
+    healthcheck:
+      test: PGPASSWORD=buyers psql -d buyers -U buyers -w -c '\q'
+      interval: 20s
+      timeout: 10s
+
+  # PgAdmin
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - "9090:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: buyers@irk-buyers-club.ru
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    volumes:
+      - pgadmindata:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+    depends_on:
+      - db
+    networks:
+      - irk-buyers-club
+
+  irk-buers-app:
+    container_name: irk-buers-app
+    hostname: irk-buers-app
+    image: croacker/s-irk-buyers-club:${IRK_BUYERS_CLUB_VERSION}
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      DB_HOST: db
+      DB_NAME: buyers
+      DB_USERNAME: buyers
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME}
+    depends_on:
+       - db
+    networks:
+       - irk-buyers-club
+
+networks:
+  irk-buyers-club:
+    driver: bridge
+
+volumes:
+  postgres-irk-buyers-club:
+    external: false
+  pgadmindata:
