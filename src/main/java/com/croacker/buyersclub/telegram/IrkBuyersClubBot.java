@@ -2,6 +2,7 @@ package com.croacker.buyersclub.telegram;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
 import com.croacker.buyersclub.service.ProductPriceService;
+import com.croacker.buyersclub.service.TelegramUserServiceImpl;
 import com.croacker.buyersclub.service.telegram.TelegramFileService;
 import com.croacker.buyersclub.service.mapper.telegram.TelegramProductPriceDtoToString;
 import com.croacker.buyersclub.telegram.chat.Chat;
@@ -41,6 +42,8 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     private final TelegramConfiguration configuration;
 
     private final TelegramFileService telegramFileService;
+
+    private TelegramUserServiceImpl telegramUserService;
 
     private final ChatFactory chatFactory;
 

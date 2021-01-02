@@ -28,8 +28,11 @@ public class TelegramFileServiceImpl implements TelegramFileService {
 
     private final OfdCheckServiceImpl ofdCheckService;
 
+    private final TelegramTelegramUserServiceImpl telegramTelegramUserService;
+
     @Override
     public void processFile(Message message) {
+        telegramTelegramUserService.telegramUser(message);//TODO begin
         getFileId(message).ifPresent(fileId -> {
             client.getFileContent(fileId)
                     .map(this::toOfdChecks)
