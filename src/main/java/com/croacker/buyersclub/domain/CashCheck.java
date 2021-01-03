@@ -90,6 +90,13 @@ public class CashCheck {
     private List<CashCheckLine> checkLines;
 
     /**
+     * telegram-пользователь добавивиший чек.
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "telegram_user_id")
+    private TelegramUser telegramUser;
+
+    /**
      * Создан.
      */
     private LocalDateTime createdAt;

@@ -43,12 +43,12 @@ public class OfdCheckServiceImpl implements OfdCheckService {
     private final ItemToAddCheckLineDto itemToAddCheckLine;
 
     @Override
-    public void process(OfdCheck ofdCheck) {
+    public void process(OfdCheck ofdCheck, Long telegramUserId) {
         var organization = saveOrganization(ofdCheck);
         var shop = saveShop(ofdCheck, organization);
         var cashier = saveCashier(ofdCheck, shop);
         var products = saveProducts(ofdCheck, shop);
-        saveCheck(cashier, products, ofdCheck);
+        saveCheck(cashier, products, ofdCheck, telegramUserId);
     }
 
     /**
@@ -56,7 +56,8 @@ public class OfdCheckServiceImpl implements OfdCheckService {
      * @param checkLines
      * @param ofdCheck
      */
-    private void saveCheck(CashierDto cashier, List<AddCashCheckLineDto> checkLines, OfdCheck ofdCheck) {
+    private void saveCheck(CashierDto cashier, List<AddCashCheckLineDto> checkLines,
+                           OfdCheck ofdCheck, Long telegramUserId) {
         var dateTime = fromEpoch(ofdCheck.getDateTime());
         var checkDto = new AddCashCheckDto()// TODO в mapper
                 .setCashierId(cashier.getId())
@@ -69,7 +70,8 @@ public class OfdCheckServiceImpl implements OfdCheckService {
                 .setCashSum(ofdCheck.getCashTotalSum())
                 .setEcashSum(ofdCheck.getEcashTotalSum())
                 .setCheckDate(dateTime)
-                .setCheckLines(checkLines);
+                .setCheckLines(checkLines)
+                .setTelegramUserId(telegramUserId);
         checkService.save(checkDto);
     }
 

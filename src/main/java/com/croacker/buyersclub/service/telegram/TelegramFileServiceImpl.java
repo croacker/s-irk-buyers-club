@@ -28,12 +28,15 @@ public class TelegramFileServiceImpl implements TelegramFileService {
 
     private final OfdCheckServiceImpl ofdCheckService;
 
+    private final TelegramTelegramUserServiceImpl telegramTelegramUserService;
+
     @Override
     public void processFile(Message message) {
+        var userId = telegramTelegramUserService.saveUser(message);
         getFileId(message).ifPresent(fileId -> {
             client.getFileContent(fileId)
                     .map(this::toOfdChecks)
-                    .doOnNext(this::processChecks)
+                    .doOnNext(ofdChecks -> processChecks(ofdChecks, userId))
                     .subscribe();
         });
     }
@@ -61,9 +64,10 @@ public class TelegramFileServiceImpl implements TelegramFileService {
      * Обработать ОФД чеки
      *
      * @param ofdChecks ОФД чеки
+     * @param userId
      */
-    private void processChecks(List<OfdCheck> ofdChecks) {
-        ofdChecks.forEach(ofdCheck -> ofdCheckService.process(ofdCheck));
+    private void processChecks(List<OfdCheck> ofdChecks, Long userId) {
+        ofdChecks.forEach(ofdCheck -> ofdCheckService.process(ofdCheck, userId));
     }
 
     /**

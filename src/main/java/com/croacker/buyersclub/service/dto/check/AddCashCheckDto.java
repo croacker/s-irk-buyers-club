@@ -85,4 +85,10 @@ public class AddCashCheckDto {
     @Schema(description = "Товары чека")
     private List<AddCashCheckLineDto> checkLines;
 
+    /**
+     * Идентификатор telegram-пользователя добавивишего чек.
+     */
+    @Schema(description = "Идентификатор telegram-пользователя добавивишего чек", example = "1")
+    private Long telegramUserId;
+
 }
