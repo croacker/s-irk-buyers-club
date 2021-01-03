@@ -16,6 +16,7 @@ import com.croacker.buyersclub.service.mapper.checkline.ItemToAddCheckLineDto;
 import com.croacker.buyersclub.service.ofd.Item;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -27,6 +28,8 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class OfdCheckServiceImpl implements OfdCheckService {
+
+    private static final String UNDEFINED_CASHIER = "Не указан";
 
     private final OrganizationService organizationService;
 
@@ -131,8 +134,12 @@ public class OfdCheckServiceImpl implements OfdCheckService {
     private CashierDto saveCashier(OfdCheck ofdCheck, ShopDto shop) {
         var cashier = cashierService.findByName(ofdCheck.getOperator());
         if (cashier == null) {
+            var name = ofdCheck.getOperator();
+            if (StringUtils.isEmpty(name)){
+                name = UNDEFINED_CASHIER;
+            }
             var dto = new AddCashierDto()
-                    .setName(ofdCheck.getOperator())
+                    .setName(name)
                     .setShopId(shop.getId());
             cashier = cashierService.save(dto);
         }
