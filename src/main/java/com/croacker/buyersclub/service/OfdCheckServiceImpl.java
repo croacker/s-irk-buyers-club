@@ -43,7 +43,8 @@ public class OfdCheckServiceImpl implements OfdCheckService {
     private final ItemToAddCheckLineDto itemToAddCheckLine;
 
     @Override
-    public void process(OfdCheck ofdCheck) {
+    public void process(OfdCheck ofdCheck, Long userId) {
+        userId
         var organization = saveOrganization(ofdCheck);
         var shop = saveShop(ofdCheck, organization);
         var cashier = saveCashier(ofdCheck, shop);
