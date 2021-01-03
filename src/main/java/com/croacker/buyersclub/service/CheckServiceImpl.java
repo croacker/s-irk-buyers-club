@@ -1,8 +1,10 @@
 package com.croacker.buyersclub.service;
 
+import com.croacker.buyersclub.domain.TelegramUser;
 import com.croacker.buyersclub.repo.CashierRepo;
 import com.croacker.buyersclub.repo.CheckRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
+import com.croacker.buyersclub.repo.TelegramUserRepo;
 import com.croacker.buyersclub.service.dto.check.AddCashCheckDto;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.check.CashCheckInfoDto;
@@ -34,6 +36,8 @@ public class CheckServiceImpl implements CheckService{
 
     private final ProductRepo productRepo;
 
+    private final TelegramUserRepo telegramUserRepo;
+
     private final CashCheckToDtoMapper toDtoMapper;
 
     private final CashCheckToInfoDtoMapper toInfoDtoMapper;
@@ -63,9 +67,11 @@ public class CheckServiceImpl implements CheckService{
                     .map(lineDto)
                     .setProduct(product);
         }).collect(Collectors.toList());
+        var telegramUser = telegramUserRepo.findById(dto.getTelegramUserId()).orElse(null);
         var check = addToEntityMapper.map(dto)
                 .setCashier(cashier)
                 .setCheckLines(checkLines)
+                .setTelegramUser(telegramUser)
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now())
                 .setDeleted(false);

@@ -84,6 +84,12 @@ public class CashCheckDto {
     private LocalDateTime checkDate;
 
     /**
+     * Идентификатор telegram-пользователя добавивишего чек.
+     */
+    @Schema(description = "Идентификатор telegram-пользователя добавивишего чек", example = "1")
+    private Long telegramUserId;
+
+    /**
      * Создан.
      */
     @Schema(description = "Создан")
