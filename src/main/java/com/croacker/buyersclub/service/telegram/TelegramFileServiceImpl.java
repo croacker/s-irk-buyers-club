@@ -3,6 +3,7 @@ package com.croacker.buyersclub.service.telegram;
 import com.croacker.buyersclub.client.TelegramWebClient;
 import com.croacker.buyersclub.service.OfdCheckServiceImpl;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
+import com.croacker.buyersclub.service.ofd.excerpt.Excerpt;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Сервис работы с файлами telegram.
@@ -48,15 +50,52 @@ public class TelegramFileServiceImpl implements TelegramFileService {
      * @return
      */
     private List<OfdCheck> toOfdChecks(String str) {
-        List<OfdCheck> ofdChecks = Collections.EMPTY_LIST;
+        List<OfdCheck> ofdChecks;
         var objectMapper = new ObjectMapper();
+        ofdChecks = readAsChecks(str, objectMapper);
+        if (ofdChecks.isEmpty()){
+            ofdChecks = readAsExcerpt(str, objectMapper);
+        }
+        log.info("OfdChecks:{}", ofdChecks);
+        return ofdChecks;
+    }
+
+    /**
+     * Прочитать как чеки.
+     *
+     * @param str          строка
+     * @param objectMapper транслятор
+     * @return чеки
+     */
+    private List<OfdCheck> readAsChecks(String str, ObjectMapper objectMapper) {
         try {
-            ofdChecks = objectMapper.readValue(str, new TypeReference<>() {
-            });
+            return objectMapper.readValue(str, new TypeReference<>() {});
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage(), e); // TODO исключение може быть при чтении выписки как чека
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Прочитать как чеки.
+     *
+     * @param str          строка
+     * @param objectMapper транслятор
+     * @return чеки
+     */
+    private List<OfdCheck> readAsExcerpt(String str, ObjectMapper objectMapper) {
+        List<OfdCheck> ofdChecks = Collections.emptyList();
+        List<Excerpt> excerpts = Collections.emptyList();
+        try {
+            excerpts = objectMapper.readValue(str, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
             log.error(e.getMessage(), e);
         }
-        log.info("OfdChecks:{}", ofdChecks);
+        if (!excerpts.isEmpty()){
+            ofdChecks = excerpts.stream()
+                    .map(excerpt -> excerpt.getTicket().getDocument().getOfdCheck())
+                    .collect(Collectors.toList());
+        }
         return ofdChecks;
     }
 
