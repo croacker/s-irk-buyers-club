@@ -1,16 +1,17 @@
-package com.croacker.buyersclub.service.ofd;
+package com.croacker.buyersclub.service.ofd.excerpt;
 
+import com.croacker.buyersclub.service.ofd.Item;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OfdCheck {
+public class OfdCheckExcerpt {
     @JsonProperty("user")
     private String user;
 
@@ -60,7 +61,7 @@ public class OfdCheck {
     private int nds18;
 
     @JsonProperty("dateTime")
-    private int dateTime;
+    private String dateTime;
 
     @JsonProperty("taxationType")
     private int taxationType;

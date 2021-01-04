@@ -2,6 +2,7 @@ package com.croacker.buyersclub.service.telegram;
 
 import com.croacker.buyersclub.client.TelegramWebClient;
 import com.croacker.buyersclub.service.OfdCheckServiceImpl;
+import com.croacker.buyersclub.service.mapper.ofd.OfdCheckExcerptToOfdCheck;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import com.croacker.buyersclub.service.ofd.excerpt.Excerpt;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -32,6 +34,8 @@ public class TelegramFileServiceImpl implements TelegramFileService {
 
     private final TelegramTelegramUserServiceImpl telegramTelegramUserService;
 
+    private final OfdCheckExcerptToOfdCheck mapper;
+
     @Override
     public void processFile(Message message) {
         var userId = telegramTelegramUserService.saveUser(message);
@@ -52,9 +56,10 @@ public class TelegramFileServiceImpl implements TelegramFileService {
     private List<OfdCheck> toOfdChecks(String str) {
         List<OfdCheck> ofdChecks;
         var objectMapper = new ObjectMapper();
-        ofdChecks = readAsChecks(str, objectMapper);
-        if (ofdChecks.isEmpty()){
+        if(isExcerpt(str)) {
             ofdChecks = readAsExcerpt(str, objectMapper);
+        }else {
+            ofdChecks = readAsChecks(str, objectMapper);
         }
         log.info("OfdChecks:{}", ofdChecks);
         return ofdChecks;
@@ -68,12 +73,13 @@ public class TelegramFileServiceImpl implements TelegramFileService {
      * @return чеки
      */
     private List<OfdCheck> readAsChecks(String str, ObjectMapper objectMapper) {
+        List<OfdCheck> result = Collections.emptyList();
         try {
-            return objectMapper.readValue(str, new TypeReference<>() {});
+            result = objectMapper.readValue(str, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e); // TODO исключение може быть при чтении выписки как чека
-            return Collections.emptyList();
+            log.error(e.getMessage(), e);
         }
+        return result;
     }
 
     /**
@@ -94,6 +100,7 @@ public class TelegramFileServiceImpl implements TelegramFileService {
         if (!excerpts.isEmpty()){
             ofdChecks = excerpts.stream()
                     .map(excerpt -> excerpt.getTicket().getDocument().getOfdCheck())
+                    .map(mapper)
                     .collect(Collectors.toList());
         }
         return ofdChecks;
@@ -133,4 +140,7 @@ public class TelegramFileServiceImpl implements TelegramFileService {
         return result;
     }
 
+    private boolean isExcerpt(String str){
+        return StringUtils.isNotEmpty(str) && str.contains("\"claims\"");
+    }
 }
