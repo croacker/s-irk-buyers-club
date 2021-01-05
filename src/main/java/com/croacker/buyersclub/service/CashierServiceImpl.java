@@ -54,8 +54,8 @@ public class CashierServiceImpl implements CashierService {
         var shop = shopRepo.findById(dto.getShopId()).get();
         var cashier = addToEntityMapper.map(dto)
                 .setShop(shop)
-                .setCreatedAt(LocalDateTime.now())
-                .setUpdatedAt(LocalDateTime.now())
+//                .setCreatedAt(LocalDateTime.now())
+//                .setUpdatedAt(LocalDateTime.now())
                 .setDeleted(false);
         cashier = repo.save(cashier);
         return toDtoMapper.map(cashier);
@@ -64,7 +64,8 @@ public class CashierServiceImpl implements CashierService {
     @Override
     public CashierDto update(CashierDto dto) {
         var cashier = toEntityMapper.map(dto)
-                .setUpdatedAt(LocalDateTime.now());
+//                .setUpdatedAt(LocalDateTime.now())
+                ;
         cashier = repo.save(cashier);
         return toDtoMapper.map(cashier);
     }
@@ -72,7 +73,8 @@ public class CashierServiceImpl implements CashierService {
     @Override
     public CashierDto delete(Long id) {
         return repo.findById(id).map(cashier -> {
-            cashier.setUpdatedAt(LocalDateTime.now())
+            cashier
+//                    .setUpdatedAt(LocalDateTime.now())
                     .setDeleted(true);
             cashier = repo.save(cashier);
             return toDtoMapper.map(cashier);

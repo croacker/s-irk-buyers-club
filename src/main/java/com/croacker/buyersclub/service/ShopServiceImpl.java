@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -56,18 +55,16 @@ public class ShopServiceImpl implements ShopService{
     public ShopDto save(AddShopDto dto) {
         var organization = organizationRepo.findById(dto.getOrganizationId()).get();
         var shop = addToEntityMapper.map(dto)
-                .setOrganization(organization)
-                .setCreatedAt(LocalDateTime.now())
-                .setUpdatedAt(LocalDateTime.now())
-                .setDeleted(false);
+                .setOrganization(organization).setDeleted(false);
         shop = repo.save(shop);
         return toDtoMapper.map(shop);
     }
 
     @Override
     public ShopDto update(ShopDto dto) {
+        var organization = organizationRepo.findById(dto.getOrganizationId()).get();
         var shop = toShopMapper.map(dto)
-                .setUpdatedAt(LocalDateTime.now());
+                .setOrganization(organization);
         shop = repo.save(shop);
         return toDtoMapper.map(shop);
     }
@@ -75,8 +72,7 @@ public class ShopServiceImpl implements ShopService{
     @Override
     public ShopDto delete(Long id) {
         return repo.findById(id).map(organization -> {
-            organization.setUpdatedAt(LocalDateTime.now())
-                    .setDeleted(true);
+            organization.setDeleted(true);
             organization = repo.save(organization);
             return toDtoMapper.map(organization);
         }).orElse(null);
