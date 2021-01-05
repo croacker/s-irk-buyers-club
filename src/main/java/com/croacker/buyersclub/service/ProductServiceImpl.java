@@ -55,10 +55,7 @@ public class ProductServiceImpl implements ProductService{
             productGroup = productGroupRepo.findById(dto.getProductGroupId()).orElse(null);
         }
         var product = addToEntityMapper.map(dto)
-                .setProductGroup(productGroup)
-//                .setCreatedAt(LocalDateTime.now())
-//                .setUpdatedAt(LocalDateTime.now())
-                .setDeleted(false);
+                .setProductGroup(productGroup).setDeleted(false);
         product = repo.save(product);
         return toDtoMapper.map(product);
     }
@@ -70,9 +67,7 @@ public class ProductServiceImpl implements ProductService{
             productGroup = productGroupRepo.findById(dto.getProductGroupId()).orElse(null);
         }
         var product = toEntityMapper.map(dto)
-                .setProductGroup(productGroup)
-//                .setUpdatedAt(LocalDateTime.now())
-                ;
+                .setProductGroup(productGroup);
         product = repo.save(product);
         return toDtoMapper.map(product);
     }
@@ -80,9 +75,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductDto delete(Long id) {
         return repo.findById(id).map(organization -> {
-            organization
-//                    .setUpdatedAt(LocalDateTime.now())
-                    .setDeleted(true);
+            organization.setDeleted(true);
             organization = repo.save(organization);
             return toDtoMapper.map(organization);
         }).orElse(null);
