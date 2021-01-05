@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Entity;
 import java.time.LocalDateTime;
@@ -29,11 +32,14 @@ public class ProductGroup {
     /**
      * Создан.
      */
+    @Column(updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
     /**
      * Обновлен.
      */
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
     /**

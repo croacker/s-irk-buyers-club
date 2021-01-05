@@ -57,8 +57,8 @@ public class ShopServiceImpl implements ShopService{
         var organization = organizationRepo.findById(dto.getOrganizationId()).get();
         var shop = addToEntityMapper.map(dto)
                 .setOrganization(organization)
-                .setCreatedAt(LocalDateTime.now())
-                .setUpdatedAt(LocalDateTime.now())
+//                .setCreatedAt(LocalDateTime.now())
+//                .setUpdatedAt(LocalDateTime.now())
                 .setDeleted(false);
         shop = repo.save(shop);
         return toDtoMapper.map(shop);
@@ -67,7 +67,8 @@ public class ShopServiceImpl implements ShopService{
     @Override
     public ShopDto update(ShopDto dto) {
         var shop = toShopMapper.map(dto)
-                .setUpdatedAt(LocalDateTime.now());
+//                .setUpdatedAt(LocalDateTime.now())
+                ;
         shop = repo.save(shop);
         return toDtoMapper.map(shop);
     }
@@ -75,7 +76,8 @@ public class ShopServiceImpl implements ShopService{
     @Override
     public ShopDto delete(Long id) {
         return repo.findById(id).map(organization -> {
-            organization.setUpdatedAt(LocalDateTime.now())
+            organization
+//                    .setUpdatedAt(LocalDateTime.now())
                     .setDeleted(true);
             organization = repo.save(organization);
             return toDtoMapper.map(organization);

@@ -72,8 +72,8 @@ public class CheckServiceImpl implements CheckService{
                 .setCashier(cashier)
                 .setCheckLines(checkLines)
                 .setTelegramUser(telegramUser)
-                .setCreatedAt(LocalDateTime.now())
-                .setUpdatedAt(LocalDateTime.now())
+//                .setCreatedAt(LocalDateTime.now())
+//                .setUpdatedAt(LocalDateTime.now())
                 .setDeleted(false);
         check = repo.save(check);
         return toDtoMapper.map(check);
@@ -82,7 +82,8 @@ public class CheckServiceImpl implements CheckService{
     @Override
     public CashCheckDto update(CashCheckDto dto) {
         var check = toEntityMapper.map(dto)
-                .setUpdatedAt(LocalDateTime.now());
+//                .setUpdatedAt(LocalDateTime.now())
+                ;
         check = repo.save(check);
         return toDtoMapper.map(check);
     }

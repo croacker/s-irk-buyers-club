@@ -52,8 +52,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationDto save(AddOrganizationDto dto) {
         var organization = addToEntityMapper.map(dto)
-                .setCreatedAt(LocalDateTime.now())
-                .setUpdatedAt(LocalDateTime.now())
+//                .setCreatedAt(LocalDateTime.now())
+//                .setUpdatedAt(LocalDateTime.now())
                 .setDeleted(false);
         organization = repo.save(organization);
         return toDtoMapper.map(organization);
@@ -62,7 +62,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationDto update(OrganizationDto dto) {
         var organization = toEntityMapper.map(dto)
-                .setUpdatedAt(LocalDateTime.now());
+//                .setUpdatedAt(LocalDateTime.now())
+                ;
         organization = repo.save(organization);
         return toDtoMapper.map(organization);
     }
@@ -70,7 +71,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationDto delete(Long id) {
         return repo.findById(id).map(organization -> {
-            organization.setUpdatedAt(LocalDateTime.now())
+            organization
+//                    .setUpdatedAt(LocalDateTime.now())
                     .setDeleted(true);
             organization = repo.save(organization);
             return toDtoMapper.map(organization);
