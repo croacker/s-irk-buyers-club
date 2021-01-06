@@ -35,7 +35,9 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<ProductDto> findAll(Pageable pageable) {
-        return StreamSupport.stream(repo.findAll().spliterator(), false).map(toDtoMapper).collect(Collectors.toList());
+        return StreamSupport.stream(
+                repo.findByDeletedIsFalse(pageable).spliterator(), false)
+                .map(toDtoMapper).collect(Collectors.toList());
     }
 
     @Override

@@ -33,7 +33,8 @@ public class ShopServiceImpl implements ShopService{
 
     @Override
     public List<ShopDto> findAll(Pageable pageable) {
-        return StreamSupport.stream(repo.findAll().spliterator(), false).map(toDtoMapper).collect(Collectors.toList());
+        return repo.findByDeletedIsFalse(pageable)
+                .stream().map(toDtoMapper).collect(Collectors.toList());
     }
 
     @Override

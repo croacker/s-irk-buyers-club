@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-@Tag(name = "Check", description = "Кассиры")
+@Tag(name = "Check", description = "Кассовые чеки")
 public interface CheckOperations {
 
     @Operation(operationId = "listChecks", summary = "Список чеков")

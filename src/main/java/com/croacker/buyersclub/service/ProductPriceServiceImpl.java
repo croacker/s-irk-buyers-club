@@ -47,7 +47,7 @@ public class ProductPriceServiceImpl implements ProductPriceService{
 
     @Override
     public List<ProductPriceInfoDto> findAll(Pageable pageable) {
-        return StreamSupport.stream(repo.findAll().spliterator(), false).map(toInfoDtoMapper).collect(Collectors.toList());
+        return repo.findByDeletedIsFalse(pageable).stream().map(toInfoDtoMapper).collect(Collectors.toList());
     }
 
     @Override
