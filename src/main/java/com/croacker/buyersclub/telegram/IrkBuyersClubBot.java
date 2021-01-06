@@ -7,6 +7,7 @@ import com.croacker.buyersclub.service.telegram.TelegramFileService;
 import com.croacker.buyersclub.service.mapper.telegram.TelegramProductPriceDtoToString;
 import com.croacker.buyersclub.telegram.chat.Chat;
 import com.croacker.buyersclub.telegram.chat.ChatFactory;
+import com.croacker.buyersclub.telegram.keyboard.ChatKeyboardBuilder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -116,27 +117,15 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     }
 
     public static SendMessage startMenu(Message message) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        InlineKeyboardButton buttonProducts = new InlineKeyboardButton();
-        buttonProducts.setText("Товары");
-        buttonProducts.setCallbackData("product");
-        InlineKeyboardButton buttonShops = new InlineKeyboardButton();
-        buttonShops.setText("Магазины");
-        buttonShops.setCallbackData("shop");
-        InlineKeyboardButton buttonOrganizations = new InlineKeyboardButton();
-        buttonOrganizations.setText("Организации");
-        buttonOrganizations.setCallbackData("organization");
-        List<InlineKeyboardButton> row = new ArrayList<>();
-        row.add(buttonProducts);
-        row.add(buttonShops);
-        row.add(buttonOrganizations);
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        rowList.add(row);
-        inlineKeyboardMarkup.setKeyboard(rowList);
+        var builder = new ChatKeyboardBuilder();
+        builder.newButton().setText("Товары").setData("product");
+        builder.newButton().setText("Магазины").setData("shop");
+        builder.newButton().setText("Организации").setData("organization");
+        var keyboard = builder.build();
         var sendMessage = new SendMessage();
         sendMessage.setChatId(String.valueOf(message.getChatId()));
         sendMessage.setText("Выберите тип");
-        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        sendMessage.setReplyMarkup(keyboard);
         return sendMessage;
     }
 
