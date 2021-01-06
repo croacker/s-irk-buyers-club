@@ -3,7 +3,6 @@ package com.croacker.buyersclub.telegram.chat;
 import com.croacker.buyersclub.service.ProductPriceService;
 import com.croacker.buyersclub.service.mapper.telegram.TelegramProductPriceDtoToString;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 import java.util.stream.Collectors;
 
@@ -27,7 +26,7 @@ public class ProductChat implements Chat{
     @Override
     public String findByName(String expression) {
         return productPriceService.getProductsPrices(expression.trim())
-                .stream().limit(10).map(toStringMapper).collect(Collectors.joining("\n "));
+                .stream().limit(10).map(toStringMapper).collect(Collectors.joining(LINE_DELIMITER));
     }
 
     @Override
