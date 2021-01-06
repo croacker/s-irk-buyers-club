@@ -1,10 +1,8 @@
 package com.croacker.buyersclub.telegram;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
-import com.croacker.buyersclub.service.ProductPriceService;
 import com.croacker.buyersclub.service.TelegramUserServiceImpl;
 import com.croacker.buyersclub.service.telegram.TelegramFileService;
-import com.croacker.buyersclub.service.mapper.telegram.TelegramProductPriceDtoToString;
 import com.croacker.buyersclub.telegram.chat.Chat;
 import com.croacker.buyersclub.telegram.chat.ChatFactory;
 import com.croacker.buyersclub.telegram.keyboard.ChatKeyboardBuilder;
@@ -17,16 +15,11 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -108,7 +101,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         }
     }
 
-    private static SendMessage getMessage(String responseText, String chatId) {
+    private SendMessage getMessage(String responseText, String chatId) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.enableMarkdown(true);
@@ -116,11 +109,11 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         return sendMessage;
     }
 
-    public static SendMessage startMenu(Message message) {
+    public SendMessage startMenu(Message message) {
         var builder = new ChatKeyboardBuilder();
-        builder.newButton().setText("Товары").setData("product");
-        builder.newButton().setText("Магазины").setData("shop");
-        builder.newButton().setText("Организации").setData("organization");
+        builder.newButton().setText(getString("menu.start.products")).setData("product");
+        builder.newButton().setText(getString("menu.start.shops")).setData("shop");
+        builder.newButton().setText(getString("menu.start.Organizations")).setData("organization");
         var keyboard = builder.build();
         var sendMessage = new SendMessage();
         sendMessage.setChatId(String.valueOf(message.getChatId()));
@@ -185,7 +178,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
      * @return текст с ценами
      */
     private String getResponseText(Message message) {
-        String result = getMessage("message.thankyou");
+        String result = getString("message.thankyou");
         var expression = message.getText();
         if (expression != null) {
             var chatId = message.getChatId();
@@ -193,12 +186,12 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
             result = chat.findByName(expression);
         }
         if(result.isEmpty()){
-            result = getMessage("message.nodata");
+            result = getString("message.nodata");
         }
         return result;
     }
 
-    private String getMessage(String key){
+    private String getString(String key){
         var locale = Locale.getDefault();
         return messageSource.getMessage(key, null, locale);
     }
