@@ -7,6 +7,6 @@ import com.croacker.buyersclub.service.ofd.OfdCheck;
  */
 public interface OfdCheckService {
 
-    void process(OfdCheck ofdCheck);
+    void process(OfdCheck ofdCheck, Long userId);
 
 }

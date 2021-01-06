@@ -1,5 +1,6 @@
 package com.croacker.buyersclub.service.dto.check;
 
+import com.croacker.buyersclub.service.dto.checkline.AddCashCheckLineDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Добавить чек, шапка.
@@ -18,10 +20,22 @@ import java.time.LocalDateTime;
 @Schema(description = "Чек, шапка")
 public class AddCashCheckDto {
     /**
-     * Идентификатор.
+     * Идентификатор кассира.
      */
-    @Schema(description = "Идентификатор", example = "1")
-    private Long id;
+    @Schema(description = "Идентификатор кассира", example = "1")
+    private Long cashierId;
+
+    /**
+     * Номер чека(???).
+     */
+    @Schema(description = "Номер чека(???)", example = "987654321")
+    private String requestNumber;
+
+    /**
+     * Номер смены(???).
+     */
+    @Schema(description = "Номер смены(???)", example = "987654321")
+    private String shiftNumber;
 
     /**
      * Рег.номер кассового аппарата(имя атрибута оригинальное).
@@ -66,20 +80,15 @@ public class AddCashCheckDto {
     private LocalDateTime checkDate;
 
     /**
-     * Создан.
+     * Товары чека.
      */
-    @Schema(description = "Создан")
-    private LocalDateTime createdAt;
+    @Schema(description = "Товары чека")
+    private List<AddCashCheckLineDto> checkLines;
 
     /**
-     * Обновлен.
+     * Идентификатор telegram-пользователя добавивишего чек.
      */
-    @Schema(description = "Обновлен")
-    private LocalDateTime updatedAt;
+    @Schema(description = "Идентификатор telegram-пользователя добавивишего чек", example = "1")
+    private Long telegramUserId;
 
-    /**
-     * Пометка на удаление.
-     */
-    @Schema(description = "Пометка на удаление", example = "false")
-    private Boolean deleted;
 }

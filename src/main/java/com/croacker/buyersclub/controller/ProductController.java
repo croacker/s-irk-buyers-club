@@ -1,8 +1,10 @@
 package com.croacker.buyersclub.controller;
 
+import com.croacker.buyersclub.service.ProductPriceService;
 import com.croacker.buyersclub.service.ProductService;
 import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
+import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +24,8 @@ import reactor.core.publisher.Mono;
 public class ProductController implements ProductOperations {
 
     private final ProductService service;
+
+    private final ProductPriceService productPriceService;
 
     @Override
     public Flux<ProductDto> getAllProducts(int page, int size, String sort, Sort.Direction direction){
@@ -46,6 +50,11 @@ public class ProductController implements ProductOperations {
     @Override
     public Mono<ProductDto> deleteProduct(@PathVariable Long id){
         return Mono.just(service.delete(id));
+    }
+
+    @Override
+    public Flux<ProductPriceInfoDto> getProductPrice(Long id) {
+        return Flux.fromIterable(productPriceService.findByProduct(id));
     }
 
 }

@@ -6,15 +6,13 @@ import com.croacker.buyersclub.service.mapper.Mapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductToDtoMapper implements Mapper<Product, ProductDto> {
+public class DtoToProduct implements Mapper<ProductDto, Product> {
 
     @Override
-    public ProductDto map(Product input) {
-        return new ProductDto()
+    public Product map(ProductDto input) {
+        return new Product()
                 .setId(input.getId())
                 .setName(input.getName())
-                .setCreatedAt(input.getCreatedAt())
-                .setUpdatedAt(input.getUpdatedAt())
                 .setDeleted(input.getDeleted());
     }
 

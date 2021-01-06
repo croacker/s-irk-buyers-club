@@ -4,6 +4,7 @@ import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
+import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -94,4 +95,15 @@ public interface ProductOperations {
     @DeleteMapping(path = "/{id}")
     Mono<ProductDto> deleteProduct(@PathVariable Long id);
 
+    @Operation(operationId = "getProductPrice", summary = "Получить цены на товар по идентификатору")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Товар",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProductPriceInfoDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Ошибка авторизации", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Товар не найдена", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)})
+    @GetMapping(path = "/{id}/prices")
+    Flux<ProductPriceInfoDto> getProductPrice(@PathVariable Long id);
 }

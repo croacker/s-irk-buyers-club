@@ -24,6 +24,18 @@ public class ProductPriceDto {
     private Long id;
 
     /**
+     * Идентификатор магазина.
+     */
+    @Schema(description = "Идентификатор магазина", example = "1")
+    private Long shopId;
+
+    /**
+     * Идентификатор товара.
+     */
+    @Schema(description = "Идентификатор товара", example = "1")
+    private Long productId;
+
+    /**
      * Цена.
      */
     @Schema(description = "Цена", example = "1")

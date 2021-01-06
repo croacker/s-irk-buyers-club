@@ -1,45 +1,53 @@
 package com.croacker.buyersclub.telegram;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
-import com.croacker.buyersclub.service.OfdCheckServiceImpl;
-import com.croacker.buyersclub.service.ofd.OfdCheck;
-import com.croacker.buyersclub.telegram.file.FileInfo;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.croacker.buyersclub.service.ProductPriceService;
+import com.croacker.buyersclub.service.TelegramUserServiceImpl;
+import com.croacker.buyersclub.service.telegram.TelegramFileService;
+import com.croacker.buyersclub.service.mapper.telegram.TelegramProductPriceDtoToString;
+import com.croacker.buyersclub.telegram.chat.Chat;
+import com.croacker.buyersclub.telegram.chat.ChatFactory;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Locale;
+import java.util.Map;
 
 // TODO привести процессы в порядок.
 @Service
 @AllArgsConstructor
+@Slf4j
 public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     private final int RECONNECT_PAUSE = 10000;
 
+    private final MessageSource messageSource;
+
     private final TelegramConfiguration configuration;
 
-    private final WebClient client;
+    private final TelegramFileService telegramFileService;
 
-    private final OfdCheckServiceImpl ofdCheckService;
+    private TelegramUserServiceImpl telegramUserService;
+
+    private final ChatFactory chatFactory;
+
+    private Map<Long, Chat> chatPool;
 
     @Override
     public String getBotUsername() {
@@ -54,10 +62,19 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         try {
-            getFileId(update.getMessage()).ifPresent(this::processFile);
-            execute(getHelpMessage(update.getMessage()));
+            processFile(update.getMessage());
+            if (isStart(update)) {
+                execute(startMenu(update.getMessage()));
+            } else if (isSelectChatType(update)) {
+                var chat = createChat(update);
+                execute(getMessage(chat.getDescription(), chat.getChatId()));
+            } else {
+                var chatId = String.valueOf(update.getMessage().getChatId());
+                var responseText = getResponseText(update.getMessage());
+                execute(getMessage(responseText, chatId));
+            }
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -71,89 +88,129 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         try {
             telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         try {
             telegramBotsApi.registerBot(this);
-            System.out.println("TelegramAPI started. Look for messages");
+            log.info("TelegramAPI started. Look for messages");
         } catch (TelegramApiRequestException e) {
-            System.out.println("Cant Connect. Pause " + RECONNECT_PAUSE / 1000 + "sec and try again. Error: " + e.getMessage());
+            log.info("Cant Connect. Pause " + RECONNECT_PAUSE / 1000 + "sec and try again. Error: " + e.getMessage());
             try {
                 Thread.sleep(RECONNECT_PAUSE);
             } catch (InterruptedException e1) {
-                e1.printStackTrace();
+                log.error(e1.getMessage(), e1);
                 return;
             }
             botConnect();
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
-    private static SendMessage getHelpMessage(Message message) {
+    private static SendMessage getMessage(String responseText, String chatId) {
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(String.valueOf(message.getChatId()));
+        sendMessage.setChatId(chatId);
         sendMessage.enableMarkdown(true);
-        sendMessage.setText("testmessage");
+        sendMessage.setText(responseText);
         return sendMessage;
     }
 
-    private String processFile(String fileId) {
-        Mono<String> filePath = getFilePath(fileId);
-
-        filePath.map(path -> {
-            System.out.println(path);
-            getFile(path).subscribe();
-            return path;
-        }).subscribe();
-        return StringUtils.EMPTY;
+    public static SendMessage startMenu(Message message) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        InlineKeyboardButton buttonProducts = new InlineKeyboardButton();
+        buttonProducts.setText("Товары");
+        buttonProducts.setCallbackData("product");
+        InlineKeyboardButton buttonShops = new InlineKeyboardButton();
+        buttonShops.setText("Магазины");
+        buttonShops.setCallbackData("shop");
+        InlineKeyboardButton buttonOrganizations = new InlineKeyboardButton();
+        buttonOrganizations.setText("Организации");
+        buttonOrganizations.setCallbackData("organization");
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        row.add(buttonProducts);
+        row.add(buttonShops);
+        row.add(buttonOrganizations);
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(row);
+        inlineKeyboardMarkup.setKeyboard(rowList);
+        var sendMessage = new SendMessage();
+        sendMessage.setChatId(String.valueOf(message.getChatId()));
+        sendMessage.setText("Выберите тип");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
     }
 
     /**
-     * Получить ОФД чеки из файла.
-     *
-     * @param filePath
-     * @return
+     * Получить и обработать файл, если он есть.
+     * @param message
      */
-    private Flux<List<OfdCheck>> getFile(String filePath) {
-        var url = "https://api.telegram.org/file/bot" + getBotToken() + "/" + filePath;
-        return client.get()
-                .uri(url)
-                .retrieve()
-                .bodyToFlux(String.class)
-                .map(str -> {// TODO если json отформатирован, он будет поступать построчно и не может быть десериализован
-                    List<OfdCheck> ofdChecks = Collections.EMPTY_LIST;
-                    var objectMapper = new ObjectMapper();
-                    try {
-                        ofdChecks = objectMapper.readValue(str, new TypeReference<>() {
-                        });
-                    } catch (JsonProcessingException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println(ofdChecks);
-                    ofdChecks.forEach(ofdCheck -> ofdCheckService.process(ofdCheck));
-                    return ofdChecks;
-                });
+    private void processFile(Message message) {
+        telegramFileService.processFile(message);
     }
 
-    private Optional<String> getFileId(Message message) {
-        Optional<String> result = Optional.empty();
-        if (message.getDocument() != null) {
-            result = Optional.of(message.getDocument().getFileId());
+    /**
+     * Получена команда start.
+     * @param update
+     * @return
+     */
+    private boolean isStart(Update update){
+        return update.getMessage() != null
+                && update.getMessage().hasText()
+                && update.getMessage().getText().equals("/start");
+    }
+
+    /**
+     * Выбран тип объекта.
+     * @param update
+     * @return
+     */
+    private boolean isSelectChatType(Update update) {
+        return update.getMessage() == null && update.getCallbackQuery() != null;
+    }
+
+    private Chat createChat(Update update) {
+        var chatId = update.getCallbackQuery().getMessage().getChatId();
+        var type = update.getCallbackQuery().getData();
+        var chat = chatFactory.createChat(chatId, type);
+        chatPool.put(chatId, chat);
+        return chat;
+    }
+
+    private Chat createDefaultChat(Long chatId) {
+        var chat = chatFactory.createChat(chatId, "product");
+        chatPool.put(chatId, chat);
+        return chat;
+    }
+
+    private Chat getChat(Long chatId){
+        var chat = chatPool.get(chatId);
+        if (chat == null){
+            chat = createDefaultChat(chatId);
+        }
+        return chat;
+    }
+
+    /**
+     * Ответ на запрос цены.
+     * @param message
+     * @return текст с ценами
+     */
+    private String getResponseText(Message message) {
+        String result = getMessage("message.thankyou");
+        var expression = message.getText();
+        if (expression != null) {
+            var chatId = message.getChatId();
+            var chat = getChat(chatId);
+            result = chat.findByName(expression);
+        }
+        if(result.isEmpty()){
+            result = getMessage("message.nodata");
         }
         return result;
     }
 
-    private Mono<String> getFilePath(String fileId) {
-        var url = "https://api.telegram.org/bot" + getBotToken() + "/getFile?file_id=" + fileId;
-        return client.get()
-                .uri(url)
-                .retrieve()
-                .bodyToMono(FileInfo.class)
-                .map(fileInfo -> fileInfo.getResult().getFilePath());
-    }
-
-    private boolean isErrorResponse(HttpStatus status) {
-        return status.is4xxClientError() || status.is5xxServerError();
+    private String getMessage(String key){
+        var locale = Locale.getDefault();
+        return messageSource.getMessage(key, null, locale);
     }
 }

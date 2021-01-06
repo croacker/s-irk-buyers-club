@@ -1,11 +1,13 @@
 package com.croacker.buyersclub.service;
 
+import com.croacker.buyersclub.domain.ProductGroup;
+import com.croacker.buyersclub.repo.ProductGroupRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
 import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
-import com.croacker.buyersclub.service.mapper.product.AddDtoToProductMapper;
-import com.croacker.buyersclub.service.mapper.product.DtoToProductMapper;
-import com.croacker.buyersclub.service.mapper.product.ProductToDtoMapper;
+import com.croacker.buyersclub.service.mapper.product.AddDtoToProduct;
+import com.croacker.buyersclub.service.mapper.product.DtoToProduct;
+import com.croacker.buyersclub.service.mapper.product.ProductToDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +25,13 @@ public class ProductServiceImpl implements ProductService{
 
     private final ProductRepo repo;
 
-    private final ProductToDtoMapper toDtoMapper;
+    private final ProductGroupRepo productGroupRepo;
 
-    private final DtoToProductMapper toEntityMapper;
+    private final ProductToDto toDtoMapper;
 
-    private final AddDtoToProductMapper addToEntityMapper;
+    private final DtoToProduct toEntityMapper;
+
+    private final AddDtoToProduct addToEntityMapper;
 
     @Override
     public List<ProductDto> findAll(Pageable pageable) {
@@ -46,18 +50,24 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDto save(AddProductDto dto) {
+        ProductGroup productGroup = null;
+        if(dto.getProductGroupId() != null) {
+            productGroup = productGroupRepo.findById(dto.getProductGroupId()).orElse(null);
+        }
         var product = addToEntityMapper.map(dto)
-                .setCreatedAt(LocalDateTime.now())
-                .setUpdatedAt(LocalDateTime.now())
-                .setDeleted(false);
+                .setProductGroup(productGroup).setDeleted(false);
         product = repo.save(product);
         return toDtoMapper.map(product);
     }
 
     @Override
     public ProductDto update(ProductDto dto) {
+        ProductGroup productGroup = null;
+        if(dto.getProductGroupId() != null) {
+            productGroup = productGroupRepo.findById(dto.getProductGroupId()).orElse(null);
+        }
         var product = toEntityMapper.map(dto)
-                .setUpdatedAt(LocalDateTime.now());
+                .setProductGroup(productGroup);
         product = repo.save(product);
         return toDtoMapper.map(product);
     }
@@ -65,8 +75,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductDto delete(Long id) {
         return repo.findById(id).map(organization -> {
-            organization.setUpdatedAt(LocalDateTime.now())
-                    .setDeleted(true);
+            organization.setDeleted(true);
             organization = repo.save(organization);
             return toDtoMapper.map(organization);
         }).orElse(null);

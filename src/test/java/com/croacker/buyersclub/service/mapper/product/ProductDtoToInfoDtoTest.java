@@ -2,8 +2,9 @@ package com.croacker.buyersclub.service.mapper.product;
 
 import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Product;
+import com.croacker.buyersclub.domain.ProductGroup;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
-import com.croacker.buyersclub.service.mapper.product.ProductToDtoMapper;
+import com.croacker.buyersclub.service.dto.product.ProductInfoDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,26 +14,26 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfiguration.class})
-class ProductToDtoMapperTest {
+class ProductDtoToInfoDtoTest {
 
-    private ProductToDtoMapper mapper;
+    private ProductDtoToInfoDto mapper;
 
     private final static LocalDateTime NOW = LocalDateTime.now();
 
     @BeforeEach
     void setUp() {
-        mapper = new ProductToDtoMapper();
+        mapper = new ProductDtoToInfoDto();
     }
 
     @Test
-    void shouldMapEntity() {
+    void shouldMapDto() {
         //given
         var given = createEntity();
-        var expected = createDto();
+        var expected = createInfoDto();
 
         // when
         var actual = mapper.map(given);
@@ -43,22 +44,25 @@ class ProductToDtoMapperTest {
     }
 
     private Product createEntity() {
+        var productGroup = new ProductGroup().setId(0L).setName("test_product_group");
         return new Product()
                 .setId(0L)
                 .setName("test_product")
+                .setProductGroup(productGroup)
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
     }
 
-    private ProductDto createDto() {
-        return new ProductDto()
+    private ProductInfoDto createInfoDto() {
+        return new ProductInfoDto()
                 .setId(0L)
                 .setName("test_product")
+                .setProductGroupId(0L)
+                .setProductGroupName("test_product_group")
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
     }
-
 
 }

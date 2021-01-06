@@ -2,6 +2,7 @@ package com.croacker.buyersclub.service.mapper.check;
 
 import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.CashCheck;
+import com.croacker.buyersclub.domain.Cashier;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,9 @@ class CashCheckToDtoMapperTest {
     }
 
     private CashCheck createEntity() {
+        var cashier = new Cashier().setId(0L);
         return new CashCheck()
+                .setCashier(cashier)
                 .setKktRegId("test_kkt_reg_id")
                 .setFiscalDriveNumber("test_fiscal_drive_number")
                 .setFiscalDocumentNumber("test_fiscal_document_number")
@@ -55,6 +58,7 @@ class CashCheckToDtoMapperTest {
 
     private CashCheckDto createDto() {
         return new CashCheckDto()
+                .setCashierId(0L)
                 .setKktRegId("test_kkt_reg_id")
                 .setFiscalDriveNumber("test_fiscal_drive_number")
                 .setFiscalDocumentNumber("test_fiscal_document_number")

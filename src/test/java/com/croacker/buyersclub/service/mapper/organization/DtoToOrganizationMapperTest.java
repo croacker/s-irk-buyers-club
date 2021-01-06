@@ -3,10 +3,7 @@ package com.croacker.buyersclub.service.mapper.organization;
 
 import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Organization;
-import com.croacker.buyersclub.domain.Product;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
-import com.croacker.buyersclub.service.dto.product.ProductDto;
-import com.croacker.buyersclub.service.mapper.product.DtoToProductMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

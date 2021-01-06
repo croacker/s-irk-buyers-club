@@ -18,12 +18,6 @@ import java.time.LocalDateTime;
 @Schema(description = "Кассир")
 public class AddCashierDto {
     /**
-     * Идентификатор.
-     */
-    @Schema(description = "Идентификатор", example = "1")
-    private Long id;
-
-    /**
      * Наименование.
      */
     @Schema(description = "Наименование", example = "Кассир К.К.")
@@ -35,21 +29,4 @@ public class AddCashierDto {
     @Schema(description = "Идентификатор магазина", example = "1")
     private Long shopId;
 
-    /**
-     * Создан.
-     */
-    @Schema(description = "Создан")
-    private LocalDateTime createdAt;
-
-    /**
-     * Обновлен.
-     */
-    @Schema(description = "Обновлен")
-    private LocalDateTime updatedAt;
-
-    /**
-     * Пометка на удаление.
-     */
-    @Schema(description = "Пометка на удаление", example = "false")
-    private Boolean deleted;
 }

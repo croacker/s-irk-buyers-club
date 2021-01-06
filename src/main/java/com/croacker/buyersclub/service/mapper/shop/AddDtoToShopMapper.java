@@ -11,7 +11,6 @@ public class AddDtoToShopMapper implements Mapper<AddShopDto, Shop> {
     @Override
     public Shop map(AddShopDto input) {
         return new Shop()
-                .setId(input.getId())
                 .setName(input.getName())
                 .setAddress(input.getAddress());
     }

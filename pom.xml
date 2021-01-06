@@ -10,16 +10,17 @@
     </parent>
     <groupId>com.croacker</groupId>
     <artifactId>irk-buyers-club</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.6</version>
     <name>buyer-club</name>
     <description>Irkutsk buyer club</description>
 
     <properties>
         <java.version>14</java.version>
         <docker.image.name>croacker/s-irk-buyers-club:${version}</docker.image.name>
-        <spring-cloud-starter.version>2.2.5.RELEASE</spring-cloud-starter.version>
-        <springdoc-openapi-webflux-ui.version>1.2.32</springdoc-openapi-webflux-ui.version>
-        <testcontainers-postgres.version>1.83</testcontainers-postgres.version>
+        <spring-cloud-starter.version>2.2.6.RELEASE</spring-cloud-starter.version>
+        <springdoc-openapi-webflux-ui.version>1.5.1</springdoc-openapi-webflux-ui.version>
+        <testcontainers-postgres.version>1.86</testcontainers-postgres.version>
+        <jib-maven-plugin.version>2.7.0</jib-maven-plugin.version>
         <telegrambots.version>5.0.1</telegrambots.version>
     </properties>
 
@@ -226,24 +227,26 @@
                     <plugin>
                         <groupId>com.google.cloud.tools</groupId>
                         <artifactId>jib-maven-plugin</artifactId>
-                        <version>2.2.0</version>
+                        <version>${jib-maven-plugin.version}</version>
                         <configuration>
                             <from>
                                 <image>openjdk:14.0.1-jdk</image>
                             </from>
                             <to>
                                 <image>${docker.image.name}</image>
-                                <auth>
-                                    <!--suppress UnresolvedMavenProperty -->
-                                    <username>${DEPLOY_USER}</username>
-                                    <!--suppress UnresolvedMavenProperty -->
-                                    <password>${DEPLOY_USER_PASS}</password>
-                                </auth>
                             </to>
                             <container>
                                 <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
                             </container>
                         </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>dockerBuild</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>

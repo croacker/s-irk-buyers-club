@@ -1,10 +1,9 @@
-package com.croacker.buyersclub.service.mapper.product;
-
+package com.croacker.buyersclub.service.mapper.telegram;
 
 import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Product;
-import com.croacker.buyersclub.service.dto.product.AddProductDto;
-import com.croacker.buyersclub.service.mapper.product.AddDtoToProductMapper;
+import com.croacker.buyersclub.domain.ProductPrice;
+import com.croacker.buyersclub.service.dto.telegram.TelegramProductPriceDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,24 +11,24 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfiguration.class})
-public class AddDtoToProductMapperTest {
+class TelegramProductPriceDtoToStringTest {
 
-    private AddDtoToProductMapper mapper;
+    private TelegramProductPriceDtoToString mapper;
 
     @BeforeEach
     void setUp() {
-        mapper = new AddDtoToProductMapper();
+        mapper = new TelegramProductPriceDtoToString();
     }
 
     @Test
-    void shouldMapDto() {
+    void shouldMapEntity() {
         //given
         var given = createDto();
-        var expected = createEntity();
+        var expected = "[test_shop, test_product - 150.17 руб.]";
 
         // when
         var actual = mapper.map(given);
@@ -39,14 +38,11 @@ public class AddDtoToProductMapperTest {
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
-    private Product createEntity() {
-        return new Product()
-                .setName("test_product");
-    }
-
-    private AddProductDto createDto() {
-        return new AddProductDto()
-                .setName("test_product");
+    private TelegramProductPriceDto createDto() {
+        return new TelegramProductPriceDto()
+                .setShop("test_shop")
+                .setName("test_product")
+                .setPrice("150.17");
     }
 
 }

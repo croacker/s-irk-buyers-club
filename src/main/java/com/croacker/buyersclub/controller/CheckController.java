@@ -3,6 +3,7 @@ package com.croacker.buyersclub.controller;
 import com.croacker.buyersclub.service.CheckService;
 import com.croacker.buyersclub.service.dto.check.AddCashCheckDto;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
+import com.croacker.buyersclub.service.dto.check.CashCheckInfoDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -20,12 +21,12 @@ public class CheckController implements CheckOperations{
     private final CheckService service;
 
     @Override
-    public Flux<CashCheckDto> getAllChecks(int page, int size, String sort, Sort.Direction direction){
+    public Flux<CashCheckInfoDto> getAllChecks(int page, int size, String sort, Sort.Direction direction){
         return Flux.fromIterable(service.findAll(PageRequest.of(page, size, direction, sort)));
     }
 
     @Override
-    public Mono<CashCheckDto> getCheck(Long id) {
+    public Mono<CashCheckInfoDto> getCheck(Long id) {
         return Mono.just(service.findOne(id));
     }
 
