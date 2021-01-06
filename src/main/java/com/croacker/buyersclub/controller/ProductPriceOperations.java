@@ -1,7 +1,5 @@
 package com.croacker.buyersclub.controller;
 
-import com.croacker.buyersclub.service.dto.product.AddProductDto;
-import com.croacker.buyersclub.service.dto.product.ProductDto;
 import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
@@ -40,7 +38,7 @@ public interface ProductPriceOperations {
     @GetMapping
     Flux<ProductPriceInfoDto> getAllProductPrices(@RequestParam(value = "page", defaultValue = "0") int page,
                                                   @RequestParam(value = "size", defaultValue = "20") int size,
-                                                  @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
+                                                  @RequestParam(value = "sort", defaultValue = "priceDate") String sort,
                                                   @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction);
 
     @Operation(operationId = "getProductPrice", summary = "Получить товар по идентификатору")
