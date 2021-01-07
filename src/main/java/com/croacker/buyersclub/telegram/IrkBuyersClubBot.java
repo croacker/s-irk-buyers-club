@@ -2,6 +2,7 @@ package com.croacker.buyersclub.telegram;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
 import com.croacker.buyersclub.service.TelegramUserServiceImpl;
+import com.croacker.buyersclub.service.locale.LocaleService;
 import com.croacker.buyersclub.service.telegram.TelegramFileService;
 import com.croacker.buyersclub.telegram.chat.Chat;
 import com.croacker.buyersclub.telegram.chat.ChatFactory;
@@ -31,7 +32,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     private final int RECONNECT_PAUSE = 10000;
 
-    private final MessageSource messageSource;
+    private final LocaleService localeService;
 
     private final TelegramConfiguration configuration;
 
@@ -110,10 +111,11 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     }
 
     public SendMessage startMenu(Message message) {
+        var languageCode = getLanguageCode(message);
         var builder = new ChatKeyboardBuilder();
-        builder.newButton().setText(getString("menu.start.products")).setData("product");
-        builder.newButton().setText(getString("menu.start.shops")).setData("shop");
-        builder.newButton().setText(getString("menu.start.Organizations")).setData("organization");
+        builder.newButton().setText(getString("menu.start.products", languageCode)).setData("product");
+        builder.newButton().setText(getString("menu.start.shops", languageCode)).setData("shop");
+        builder.newButton().setText(getString("menu.start.Organizations", languageCode)).setData("organization");
         var keyboard = builder.build();
         var sendMessage = new SendMessage();
         sendMessage.setChatId(String.valueOf(message.getChatId()));
@@ -178,7 +180,8 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
      * @return текст с ценами
      */
     private String getResponseText(Message message) {
-        String result = getString("message.thankyou");
+        var languageCode = getLanguageCode(message);
+        String result = getString("message.thankyou", languageCode);
         var expression = message.getText();
         if (expression != null) {
             var chatId = message.getChatId();
@@ -186,13 +189,16 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
             result = chat.findByName(expression);
         }
         if(result.isEmpty()){
-            result = getString("message.nodata");
+            result = getString("message.nodata", languageCode);
         }
         return result;
     }
 
-    private String getString(String key){
-        var locale = Locale.getDefault();
-        return messageSource.getMessage(key, null, locale);
+    private String getLanguageCode(Message message){
+        return message.getFrom().getLanguageCode();
+    }
+
+    private String getString(String key, String languageCode){
+        return localeService.getString(key, languageCode);
     }
 }
