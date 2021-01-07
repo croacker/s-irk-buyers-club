@@ -31,9 +31,6 @@ public class Item {
     @JsonProperty("nds18")
     private int nds18;
 
-    @JsonProperty("modifiers")
-    private String modifiers;
-
     @JsonProperty("ndsCalculated10")
     private String ndsCalculated10;
 

@@ -43,8 +43,6 @@ public class OfdCheckExcerptToOfdCheck implements Mapper<OfdCheckExcerpt, OfdChe
                 .setDiscountSum(input.getDiscountSum())
                 .setMarkup(input.getMarkup())
                 .setMarkupSum(input.getMarkupSum())
-                .setModifiers(input.getModifiers())
-                .setStornoItems(input.getStornoItems())
                 .setDateTime(dateTimeToEpoch(stringToLocalDateTime(input.getDateTime())));
     }
 
