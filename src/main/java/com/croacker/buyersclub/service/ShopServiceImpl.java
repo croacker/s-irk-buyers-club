@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @AllArgsConstructor
@@ -44,12 +43,12 @@ public class ShopServiceImpl implements ShopService{
 
     @Override
     public ShopDto findByName(String name) {
-        return repo.findByName(name).map(toDtoMapper).orElse(null);
+        return repo.findFirstByName(name).map(toDtoMapper).orElse(null);
     }
 
     @Override
     public ShopDto findByAddress(String address) {
-        return repo.findByAddress(address).map(toDtoMapper).orElse(null);
+        return repo.findFirstByAddress(address).map(toDtoMapper).orElse(null);
     }
 
     @Override

@@ -9,9 +9,9 @@ import java.util.Optional;
 
 public interface ShopRepo extends CrudRepository<Shop, Long> {
 
-    Optional<Shop> findByAddress(String address);
+    Optional<Shop> findFirstByAddress(String address);
 
-    Optional<Shop> findByName(String name);
+    Optional<Shop> findFirstByName(String name);
 
     List<Shop> findByNameContainingIgnoreCase(String expression);
 
