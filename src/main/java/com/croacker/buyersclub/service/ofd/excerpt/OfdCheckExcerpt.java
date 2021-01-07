@@ -84,9 +84,6 @@ public class OfdCheckExcerpt {
     @JsonProperty("markupSum")
     private String markupSum;
 
-    @JsonProperty("name")
-    private String modifiers;
-
     @JsonProperty("nds0")
     private String nds0;
 
@@ -99,6 +96,4 @@ public class OfdCheckExcerpt {
     @JsonProperty("ndsNo")
     private String ndsNo;
 
-    @JsonProperty("stornoItems")
-    private String stornoItems;
 }
