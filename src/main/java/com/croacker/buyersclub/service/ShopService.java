@@ -26,5 +26,5 @@ public interface ShopService {
 
     ShopDto delete(Long id);
 
-    List<ShopDto> getShops(String expression);
+    List<ShopDto> getShops(String expression, Pageable pageable);
 }

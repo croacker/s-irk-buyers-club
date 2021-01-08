@@ -44,8 +44,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public List<OrganizationDto> getOrganizations(String expression) {
-        return repo.findByNameContainingIgnoreCase(expression)
+    public List<OrganizationDto> getOrganizations(String expression, Pageable pageable) {
+        return repo.findByNameContainingIgnoreCase(expression, pageable)
                 .stream().map(toDtoMapper).collect(Collectors.toList());
     }
 

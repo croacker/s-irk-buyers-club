@@ -1,5 +1,7 @@
 package com.croacker.buyersclub.telegram.chat;
 
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
+
 public interface Chat {
 
     /**
@@ -21,6 +23,14 @@ public interface Chat {
      * @return entities representation
      */
     String findByName(String expression);
+
+    /**
+     * Find entity by expression(use LIKE)
+     *
+     * @param expression
+     * @return entities representation
+     */
+    ReplyKeyboard findByName2(String expression);
 
     /**
      * Chat description.

@@ -30,5 +30,5 @@ public interface ProductPriceService {
 
     ProductPriceDto delete(Long id);
 
-    List<TelegramProductPriceDto> getProductsPrices(String expression);
+    List<TelegramProductPriceDto> getProductsPrices(String expression, Pageable pageable);
 }

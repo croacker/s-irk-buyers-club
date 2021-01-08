@@ -39,12 +39,10 @@ public class TelegramFileServiceImpl implements TelegramFileService {
     @Override
     public void processFile(Message message) {
         var userId = telegramTelegramUserService.saveUser(message);
-        getFileId(message).ifPresent(fileId -> {
-            client.getFileContent(fileId)
-                    .map(this::toOfdChecks)
-                    .doOnNext(ofdChecks -> processChecks(ofdChecks, userId))
-                    .subscribe();
-        });
+        getFileId(message).ifPresent(fileId -> client.getFileContent(fileId)
+                .map(this::toOfdChecks)
+                .doOnNext(ofdChecks -> processChecks(ofdChecks, userId))
+                .subscribe());
     }
 
     /**

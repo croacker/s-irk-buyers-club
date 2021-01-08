@@ -103,9 +103,9 @@ public class ProductPriceServiceImpl implements ProductPriceService{
     }
 
     @Override
-    public List<TelegramProductPriceDto> getProductsPrices(String expression) {
+    public List<TelegramProductPriceDto> getProductsPrices(String expression, Pageable pageable) {
         // TODO to sql
-        return productRepo.findByNameContainingIgnoreCase(expression)
+        return productRepo.findByNameContainingIgnoreCase(expression, pageable)
                 .stream().map(product -> repo.findByProduct(product))
                 .flatMap(List::stream)
                 .collect(Collectors.groupingBy(

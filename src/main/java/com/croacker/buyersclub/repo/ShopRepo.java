@@ -13,7 +13,7 @@ public interface ShopRepo extends CrudRepository<Shop, Long> {
 
     Optional<Shop> findFirstByName(String name);
 
-    List<Shop> findByNameContainingIgnoreCase(String expression);
+    List<Shop> findByNameContainingIgnoreCase(String expression, Pageable pageable);
 
     List<Shop> findByDeletedIsFalse(Pageable pageable);
 }
