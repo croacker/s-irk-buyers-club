@@ -10,16 +10,16 @@
     </parent>
     <groupId>com.croacker</groupId>
     <artifactId>irk-buyers-club</artifactId>
-    <version>0.0.14</version>
+    <version>0.0.15</version>
     <name>buyer-club</name>
     <description>Irkutsk buyer club</description>
 
     <properties>
         <java.version>14</java.version>
         <docker.image.name>croacker/s-irk-buyers-club:${version}</docker.image.name>
-        <spring-cloud-starter.version>2.2.6.RELEASE</spring-cloud-starter.version>
-        <springdoc-openapi-webflux-ui.version>1.5.1</springdoc-openapi-webflux-ui.version>
-        <testcontainers-postgres.version>1.86</testcontainers-postgres.version>
+        <spring-cloud-starter.version>3.0.0</spring-cloud-starter.version>
+        <springdoc-openapi-webflux-ui.version>1.5.2</springdoc-openapi-webflux-ui.version>
+        <embedded-postgresql.version>1.86</embedded-postgresql.version>
         <jib-maven-plugin.version>2.7.0</jib-maven-plugin.version>
         <telegrambots.version>5.0.1</telegrambots.version>
     </properties>
@@ -108,7 +108,7 @@
         <dependency>
             <groupId>com.playtika.testcontainers</groupId>
             <artifactId>embedded-postgresql</artifactId>
-            <version>${testcontainers-postgres.version}</version>
+            <version>${embedded-postgresql.version}</version>
             <scope>test</scope>
         </dependency>
         <!--test-->

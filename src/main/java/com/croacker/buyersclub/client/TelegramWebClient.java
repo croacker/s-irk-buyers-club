@@ -1,7 +1,7 @@
 package com.croacker.buyersclub.client;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
-import com.croacker.buyersclub.service.telegram.FileInfo;
+import com.croacker.buyersclub.telegram.file.FileInfo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
