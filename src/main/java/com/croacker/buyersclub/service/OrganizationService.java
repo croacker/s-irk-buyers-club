@@ -27,5 +27,5 @@ public interface OrganizationService {
 
     OrganizationDto findByInn(String inn);
 
-    List<OrganizationDto> getOrganizations(String expression);
+    List<OrganizationDto> getOrganizations(String expression, Pageable pageable);
 }

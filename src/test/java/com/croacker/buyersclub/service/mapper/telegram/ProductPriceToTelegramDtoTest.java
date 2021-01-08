@@ -43,7 +43,7 @@ class ProductPriceToTelegramDtoTest {
     }
 
     private ProductPrice createEntity() {
-        var product = new Product().setName("test_product");
+        var product = new Product().setName("test_product").setId(0L);
         var shop = new Shop().setName("test_shop");
         return new ProductPrice()
                 .setId(0L)
@@ -54,7 +54,7 @@ class ProductPriceToTelegramDtoTest {
 
     private TelegramProductPriceDto createDto() {
         return new TelegramProductPriceDto()
-                .setShop("test_shop")
+                .setProductId(0L)
                 .setName("test_product")
                 .setPrice("150.17");
     }

@@ -79,8 +79,8 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public List<ShopDto> getShops(String expression) {
-        return repo.findByNameContainingIgnoreCase(expression)
+    public List<ShopDto> getShops(String expression, Pageable pageable) {
+        return repo.findByNameContainingIgnoreCase(expression, pageable)
                 .stream().map(toDtoMapper).collect(Collectors.toList());
     }
 }
