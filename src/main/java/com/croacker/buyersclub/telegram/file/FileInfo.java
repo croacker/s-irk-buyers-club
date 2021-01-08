@@ -1,4 +1,4 @@
-package com.croacker.buyersclub.service.telegram;
+package com.croacker.buyersclub.telegram.file;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
