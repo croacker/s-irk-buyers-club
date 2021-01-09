@@ -46,6 +46,17 @@ public class TelegramFileServiceImpl implements TelegramFileService {
     }
 
     /**
+     * Получить идентификатор файла.
+     *
+     * @param message сообщение
+     * @return идентификатор файла
+     */
+    @Override
+    public Optional<String> getFileId(Message message) {
+        return getDocument(message).map(Document::getFileId);
+    }
+
+    /**
      * Строку в набор ОФД чеков
      *
      * @param str строка
@@ -112,16 +123,6 @@ public class TelegramFileServiceImpl implements TelegramFileService {
      */
     private void processChecks(List<OfdCheck> ofdChecks, Long userId) {
         ofdChecks.forEach(ofdCheck -> ofdCheckService.process(ofdCheck, userId));
-    }
-
-    /**
-     * Получить идентификатор файла.
-     *
-     * @param message сообщение
-     * @return идентификатор файла
-     */
-    private Optional<String> getFileId(Message message) {
-        return getDocument(message).map(Document::getFileId);
     }
 
     /**

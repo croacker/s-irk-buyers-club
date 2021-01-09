@@ -6,6 +6,8 @@ import com.croacker.buyersclub.service.telegram.TelegramFileService;
 import com.croacker.buyersclub.telegram.chat.Chat;
 import com.croacker.buyersclub.telegram.chat.ChatFactory;
 import com.croacker.buyersclub.telegram.keyboard.MenuKeyboardBuilder;
+import com.croacker.buyersclub.telegram.updateprocessor.UpdateDispatcher;
+import com.croacker.buyersclub.telegram.updateprocessor.UpdateProcessor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import javax.annotation.PostConstruct;
 import java.util.Map;
@@ -30,6 +31,8 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     private final int RECONNECT_PAUSE = 10000;
 
+    private final TelegramBotsApi telegramBotsApi;
+
     private final LocaleService localeService;
 
     private final TelegramConfiguration configuration;
@@ -37,6 +40,8 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     private final TelegramFileService telegramFileService;
 
     private final ChatFactory chatFactory;
+
+    private final UpdateDispatcher updateDispatcher;
 
     private Map<Long, Chat> chatPool;
 
@@ -51,11 +56,18 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     }
 
     @Override
-    public void onUpdateReceived(Update update) {
+    public void onUpdateReceived(Update update) {// TODO разделить на операции
+        var response = getProcessor(update).process();
+        try {
+            execute(response);
+        } catch (TelegramApiException e) {
+            log.error(e.getMessage(), e);
+        }
+
         try {
             processFile(update.getMessage());
             if (isStart(update)) {
-                execute(startMenu(update.getMessage()));
+//                execute(startMenu(update.getMessage()));
             } else if (isSelectChatType(update)) {
                 var chat = createChat(update);
                 execute(getMessage(chat.getDescription(), chat.getChatId()));
@@ -75,12 +87,6 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     }
 
     private void botConnect() {
-        TelegramBotsApi telegramBotsApi = null;
-        try {
-            telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-        } catch (TelegramApiException e) {
-            log.error(e.getMessage(), e);
-        }
         try {
             telegramBotsApi.registerBot(this);
             log.info("TelegramAPI started. Look for messages");
@@ -96,6 +102,10 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    private UpdateProcessor getProcessor(Update update){
+        return updateDispatcher.getProcessor(update);
     }
 
     private SendMessage getMessage(String responseText, String chatId) {
@@ -117,18 +127,18 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         return sendMessage;
     }
 
-    public SendMessage startMenu(Message message) {
-        var languageCode = getLanguageCode(message);
-        var builder = new MenuKeyboardBuilder();
-        builder.newButton().setText(getString("menu.start.products", languageCode)).setData("product");
-        builder.newButton().setText(getString("menu.start.shops", languageCode)).setData("shop");
-        builder.newButton().setText(getString("menu.start.Organizations", languageCode)).setData("organization");
-        var sendMessage = new SendMessage();
-        sendMessage.setChatId(String.valueOf(message.getChatId()));
-        sendMessage.setText(getString("message.choosetype", languageCode));
-        sendMessage.setReplyMarkup(builder.build());
-        return sendMessage;
-    }
+//    public SendMessage startMenu(Message message) {
+//        var languageCode = getLanguageCode(message);
+//        var builder = new MenuKeyboardBuilder();
+//        builder.newButton().setText(getString("menu.start.products", languageCode)).setData("product");
+//        builder.newButton().setText(getString("menu.start.shops", languageCode)).setData("shop");
+//        builder.newButton().setText(getString("menu.start.Organizations", languageCode)).setData("organization");
+//        var sendMessage = new SendMessage();
+//        sendMessage.setChatId(String.valueOf(message.getChatId()));
+//        sendMessage.setText(getString("message.choosetype", languageCode));
+//        sendMessage.setReplyMarkup(builder.build());
+//        return sendMessage;
+//    }
 
     /**
      * Получить и обработать файл, если он есть.
