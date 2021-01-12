@@ -2,6 +2,7 @@ package com.croacker.buyersclub.telegram.updateprocessor;
 
 import com.croacker.buyersclub.service.locale.LocaleService;
 import com.croacker.buyersclub.service.telegram.TelegramFileService;
+import com.croacker.buyersclub.telegram.chat.ChatPool;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class UpdateDispatcherImpl implements UpdateDispatcher {
 
     private final TelegramFileService telegramFileService;
+
+    private final ChatPool chatPool;
 
     private final LocaleService localeService;
 
@@ -32,11 +35,11 @@ public class UpdateDispatcherImpl implements UpdateDispatcher {
     }
 
     private UpdateProcessor createCallbackProcessor(Update update) {
-        return new CallbackProcessor(update.getCallbackQuery());
+        return new CallbackProcessor(update.getCallbackQuery(), chatPool, localeService);
     }
 
     private UpdateProcessor createCommandProcessor(Update update) {
-        return new CommandProcessor(update.getMessage());
+        return new CommandProcessor(update.getMessage(), localeService);
     }
 
     private UpdateProcessor createQueryProcessor(Update update) {

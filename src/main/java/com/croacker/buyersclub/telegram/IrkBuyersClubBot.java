@@ -64,21 +64,21 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
             log.error(e.getMessage(), e);
         }
 
-        try {
-            processFile(update.getMessage());
-            if (isStart(update)) {
-//                execute(startMenu(update.getMessage()));
-            } else if (isSelectChatType(update)) {
-                var chat = createChat(update);
-                execute(getMessage(chat.getDescription(), chat.getChatId()));
-            } else {
-                var message = update.getMessage();
-                var response = getResponseText(update.getMessage());
-                execute(getMessage(response, message));
-            }
-        } catch (TelegramApiException e) {
-            log.error(e.getMessage(), e);
-        }
+//        try {
+//            processFile(update.getMessage());
+//            if (isStart(update)) {
+////                execute(startMenu(update.getMessage()));
+//            } else if (isSelectChatType(update)) {
+//                var chat = createChat(update);
+//                execute(getMessage(chat.getDescription(), chat.getChatId()));
+//            } else {
+//                var message = update.getMessage();
+//                var response = getResponseText(update.getMessage());
+//                execute(getMessage(response, message));
+//            }
+//        } catch (TelegramApiException e) {
+//            log.error(e.getMessage(), e);
+//        }
     }
 
     @PostConstruct
@@ -197,7 +197,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
      */
     private ReplyKeyboard getResponseText(Message message) {
         var languageCode = getLanguageCode(message);
-        ReplyKeyboard result = null;//getString("message.thankyou", languageCode);
+        ReplyKeyboard result = null;
         var expression = message.getText();
         if (expression != null) {
             var chatId = message.getChatId();

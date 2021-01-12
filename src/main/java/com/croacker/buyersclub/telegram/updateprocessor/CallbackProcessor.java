@@ -2,17 +2,14 @@ package com.croacker.buyersclub.telegram.updateprocessor;
 
 import com.croacker.buyersclub.service.locale.LocaleService;
 import com.croacker.buyersclub.telegram.chat.Chat;
-import com.croacker.buyersclub.telegram.chat.ChatFactory;
 import com.croacker.buyersclub.telegram.chat.ChatPool;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-@Service
 @Slf4j
 @AllArgsConstructor
 public class CallbackProcessor implements UpdateProcessor{
@@ -25,20 +22,20 @@ public class CallbackProcessor implements UpdateProcessor{
 
     @Override
     public SendMessage process() {
-        var chat = getChat()
+        var chat = getChat();
         return null;
     }
 
     private Chat getChat() {
-        chatPool.getChat()
+        return chatPool.getChat(callbackQuery.getMessage().getChatId(), callbackQuery.getData());
     }
 
     private Chat createChat(Update update) {
-        var chatId = update.getCallbackQuery().getMessage().getChatId();
-        var type = update.getCallbackQuery().getData();
-        var chat = chatFactory.createChat(chatId, type);
-        chatPool.put(chatId, chat);
-        return chat;
+//        var chatId = update.getCallbackQuery().getMessage().getChatId();
+//        var type = update.getCallbackQuery().getData();
+//        var chat = chatFactory.createChat(chatId, type);
+//        chatPool.put(chatId, chat);
+        return null;
     }
 
     private Message getMessage(){
