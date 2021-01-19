@@ -30,6 +30,19 @@ public class UpdateDispatcherImpl implements UpdateDispatcher {
         };
     }
 
+    @Override
+    public MessageType getMessageType(Update update){
+        var result = MessageType.QUERY;
+        if(isStart(update)){
+            result = MessageType.COMMAND;
+        }else if(isFile(update)) {
+            result = MessageType.FILE;
+        } else if (isCallback(update)){
+            result = MessageType.CALLBACK;
+        }
+        return result;
+    }
+
     private UpdateProcessor createFileProcessor(Update update) {
         return new FileProcessor(update.getMessage(), telegramFileService, localeService);
     }
@@ -43,19 +56,7 @@ public class UpdateDispatcherImpl implements UpdateDispatcher {
     }
 
     private UpdateProcessor createQueryProcessor(Update update) {
-        return new QueryProcessor(update.getMessage());
-    }
-
-    private MessageType getMessageType(Update update){
-        var result = MessageType.QUERY;
-        if(isStart(update)){
-            result = MessageType.COMMAND;
-        }else if(isFile(update)) {
-            result = MessageType.FILE;
-        } else if (isCallback(update)){
-            result = MessageType.CALLBACK;
-        }
-        return result;
+        return new QueryProcessor(update.getMessage(), localeService);
     }
 
     /**

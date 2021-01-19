@@ -6,6 +6,7 @@ import com.croacker.buyersclub.service.telegram.TelegramFileService;
 import com.croacker.buyersclub.telegram.chat.Chat;
 import com.croacker.buyersclub.telegram.chat.ChatFactory;
 import com.croacker.buyersclub.telegram.keyboard.MenuKeyboardBuilder;
+import com.croacker.buyersclub.telegram.updateprocessor.MessageType;
 import com.croacker.buyersclub.telegram.updateprocessor.UpdateDispatcher;
 import com.croacker.buyersclub.telegram.updateprocessor.UpdateProcessor;
 import lombok.AllArgsConstructor;
@@ -19,9 +20,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
 import java.util.Map;
+import java.util.Optional;
 
 // TODO привести процессы в порядок.
 @Service
@@ -55,15 +58,15 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         return configuration.getToken();
     }
 
+    @PostConstruct
+    public void init() {
+        botConnect();
+    }
+
     @Override
     public void onUpdateReceived(Update update) {// TODO разделить на операции
-        var response = getProcessor(update).process();
-        try {
-            execute(response);
-        } catch (TelegramApiException e) {
-            log.error(e.getMessage(), e);
-        }
-
+        Mono.just(update).map(this::process).subscribe(this::sendResponse);
+        getInprocessMessage(update).ifPresent(this::sendResponse);
 //        try {
 //            processFile(update.getMessage());
 //            if (isStart(update)) {
@@ -81,9 +84,26 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 //        }
     }
 
-    @PostConstruct
-    public void init() {
-        botConnect();
+    private Optional<SendMessage> getInprocessMessage(Update update) {
+        var chatId = getChatId(update);
+        var languageCode = getLanguageCode(update);
+        return switch (getMessageType(update)){
+            case FILE -> Optional.of(fileInprocess(chatId, languageCode));
+            case QUERY -> Optional.of(queryInprocess(chatId, languageCode));;
+            default -> Optional.empty();
+        };
+    }
+
+    private void sendResponse(SendMessage response) {
+        try {
+            execute(response);
+        } catch (TelegramApiException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    private SendMessage process(Update update) {
+        return getProcessor(update).process();
     }
 
     private void botConnect() {
@@ -106,6 +126,26 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     private UpdateProcessor getProcessor(Update update){
         return updateDispatcher.getProcessor(update);
+    }
+
+    private MessageType getMessageType(Update update){
+        return updateDispatcher.getMessageType(update);
+    }
+
+    private SendMessage fileInprocess(String chatId, String languageCode){
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.enableMarkdown(true);
+        sendMessage.setText(getString("response.file.inprocess", languageCode));
+        return sendMessage;
+    }
+
+    private SendMessage queryInprocess(String chatId, String languageCode){
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.enableMarkdown(true);
+        sendMessage.setText(getString("response.query.inprocess", languageCode));
+        return sendMessage;
     }
 
     private SendMessage getMessage(String responseText, String chatId) {
@@ -213,8 +253,12 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         return result;
     }
 
-    private String getLanguageCode(Message message){
-        return message.getFrom().getLanguageCode();
+    private String getChatId(Update update) {
+        return String.valueOf(update.getMessage().getChatId());
+    }
+
+    private String getLanguageCode(Update update){
+        return update.getMessage().getFrom().getLanguageCode();
     }
 
     private String getString(String key, String languageCode){
