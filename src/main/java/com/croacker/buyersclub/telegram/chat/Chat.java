@@ -17,6 +17,13 @@ public interface Chat {
     String getChatId();
 
     /**
+     * Chat type.
+     *
+     * @return type
+     */
+    ChatType getChatType();
+
+    /**
      * Find entity by expression(use LIKE)
      *
      * @param expression

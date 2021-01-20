@@ -11,6 +11,6 @@ public interface ChatFactory {
      * @param type тип
      * @return чат
      */
-    Chat createChat(Long id, String type);
+    Chat createChat(Long id, ChatType type);
 
 }

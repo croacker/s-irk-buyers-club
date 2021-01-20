@@ -42,11 +42,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     private final TelegramFileService telegramFileService;
 
-    private final ChatFactory chatFactory;
-
     private final UpdateDispatcher updateDispatcher;
-
-    private Map<Long, Chat> chatPool;
 
     @Override
     public String getBotUsername() {
@@ -89,7 +85,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         var languageCode = getLanguageCode(update);
         return switch (getMessageType(update)){
             case FILE -> Optional.of(fileInprocess(chatId, languageCode));
-            case QUERY -> Optional.of(queryInprocess(chatId, languageCode));;
+            case QUERY -> Optional.of(queryInprocess(chatId, languageCode));
             default -> Optional.empty();
         };
     }
@@ -133,22 +129,16 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     }
 
     private SendMessage fileInprocess(String chatId, String languageCode){
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.enableMarkdown(true);
-        sendMessage.setText(getString("response.file.inprocess", languageCode));
-        return sendMessage;
+        var text = getString("response.file.inprocess", languageCode);
+        return getMessage(chatId, text);
     }
 
     private SendMessage queryInprocess(String chatId, String languageCode){
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.enableMarkdown(true);
-        sendMessage.setText(getString("response.query.inprocess", languageCode));
-        return sendMessage;
+        var text = getString("response.query.inprocess", languageCode);
+        return getMessage(chatId, text);
     }
 
-    private SendMessage getMessage(String responseText, String chatId) {
+    private SendMessage getMessage(String chatId, String responseText) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.enableMarkdown(true);
@@ -156,16 +146,16 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         return sendMessage;
     }
 
-    private SendMessage getMessage(ReplyKeyboard keyboard, Message message) {
-        var chatId = String.valueOf(message.getChatId());
-        var languageCode = getLanguageCode(message);
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.enableMarkdown(true);
-        sendMessage.setText(getString("response.search.caption", languageCode));
-        sendMessage.setReplyMarkup(keyboard);
-        return sendMessage;
-    }
+//    private SendMessage getMessage(ReplyKeyboard keyboard, Message message) {
+//        var chatId = String.valueOf(message.getChatId());
+//        var languageCode = getLanguageCode(message);
+//        SendMessage sendMessage = new SendMessage();
+//        sendMessage.setChatId(chatId);
+//        sendMessage.enableMarkdown(true);
+//        sendMessage.setText(getString("response.search.caption", languageCode));
+//        sendMessage.setReplyMarkup(keyboard);
+//        return sendMessage;
+//    }
 
 //    public SendMessage startMenu(Message message) {
 //        var languageCode = getLanguageCode(message);
@@ -180,78 +170,61 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 //        return sendMessage;
 //    }
 
-    /**
-     * Получить и обработать файл, если он есть.
-     * @param message
-     */
-    private void processFile(Message message) {
-        telegramFileService.processFile(message);
-    }
+//    /**
+//     * Получить и обработать файл, если он есть.
+//     * @param message
+//     */
+//    private void processFile(Message message) {
+//        telegramFileService.processFile(message);
+//    }
 
-    /**
-     * Получена команда start.
-     * @param update
-     * @return
-     */
-    private boolean isStart(Update update){
-        return update.getMessage() != null
-                && update.getMessage().hasText()
-                && update.getMessage().getText().equals("/start");
-    }
+//    /**
+//     * Получена команда start.
+//     * @param update
+//     * @return
+//     */
+//    private boolean isStart(Update update){
+//        return update.getMessage() != null
+//                && update.getMessage().hasText()
+//                && update.getMessage().getText().equals("/start");
+//    }
 
-    /**
-     * Выбран тип объекта.
-     * @param update
-     * @return
-     */
-    private boolean isSelectChatType(Update update) {
-        return update.getMessage() == null && update.getCallbackQuery() != null;
-    }
+//    private Chat createDefaultChat(Long chatId) {
+//        var chat = chatFactory.createChat(chatId, "product");
+//        chatPool.put(chatId, chat);
+//        return chat;
+//    }
 
-    private Chat createChat(Update update) {
-        var chatId = update.getCallbackQuery().getMessage().getChatId();
-        var type = update.getCallbackQuery().getData();
-        var chat = chatFactory.createChat(chatId, type);
-        chatPool.put(chatId, chat);
-        return chat;
-    }
+//    private Chat getChat(Long chatId){
+//        var chat = chatPool.get(chatId);
+//        if (chat == null){
+//            chat = createDefaultChat(chatId);
+//        }
+//        return chat;
+//    }
 
-    private Chat createDefaultChat(Long chatId) {
-        var chat = chatFactory.createChat(chatId, "product");
-        chatPool.put(chatId, chat);
-        return chat;
-    }
-
-    private Chat getChat(Long chatId){
-        var chat = chatPool.get(chatId);
-        if (chat == null){
-            chat = createDefaultChat(chatId);
-        }
-        return chat;
-    }
-
-    /**
-     * Ответ на запрос цены.
-     * @param message
-     * @return текст с ценами
-     */
-    private ReplyKeyboard getResponseText(Message message) {
-        var languageCode = getLanguageCode(message);
-        ReplyKeyboard result = null;
-        var expression = message.getText();
-        if (expression != null) {
-            var chatId = message.getChatId();
-            var chat = getChat(chatId);
-            result = chat.findByName2(expression);
-        }
-        if(result == null){
-            var builder = new MenuKeyboardBuilder();
-            var text = getString("message.nodata", languageCode);
-            builder.newButton().setText(text).setData(text);
-            result = builder.build();
-        }
-        return result;
-    }
+//    /**
+//     * Ответ на запрос цены.
+//     * @param message
+//     * @return текст с ценами
+//     */
+//    private ReplyKeyboard getResponseText(Message message) {
+//        var languageCode = getLanguageCode(message);
+//        ReplyKeyboard result = null;
+//        var expression = message.getText();
+//        if (expression != null) {
+//            var chatId = message.getChatId();
+//            var chat = getChat(chatId);
+//            result = chat.findByName2(expression);
+//        }
+//        if(result == null){
+//            var builder = new MenuKeyboardBuilder();
+//            var text = getString("message.nodata", languageCode);
+//            builder.newButton().setText(text).setData(text);
+//            result = builder.build();
+//        }
+//        return result;
+//    }
 
     private String getChatId(Update update) {
         return String.valueOf(update.getMessage().getChatId());

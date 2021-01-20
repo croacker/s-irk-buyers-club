@@ -28,10 +28,10 @@ public class ChatFactoryImpl implements ChatFactory {
     private final TelegramProductPriceDtoToString productPriceToStringMapper;
 
     @Override
-    public Chat createChat(Long id, String type) {
+    public Chat createChat(Long id, ChatType type) {
         return switch (type){
-            case "shop" -> createShopChat(id);
-            case "organization" -> createOrganizationChat(id);
+            case SHOP -> createShopChat(id);
+            case ORGANIZATION -> createOrganizationChat(id);
             default -> createProductChat(id);
         };
     }

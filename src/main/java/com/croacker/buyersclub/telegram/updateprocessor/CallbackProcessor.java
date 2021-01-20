@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Slf4j
 @AllArgsConstructor
@@ -22,28 +21,29 @@ public class CallbackProcessor implements UpdateProcessor{
 
     @Override
     public SendMessage process() {
+        return createResponse(); // TODO вернуть детали информации о товаре
+    }
+
+    private SendMessage createResponse(){
         var chat = getChat();
-        return null;
+        var text = getString("chat." + chat.getChatType().toString().toLowerCase() + ".welcome");
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(getChatId().toString());
+        sendMessage.enableMarkdown(true);
+        sendMessage.setText(text);
+        return sendMessage;
     }
 
     private Chat getChat() {
-        return chatPool.getChat(callbackQuery.getMessage().getChatId(), callbackQuery.getData());
-    }
-
-    private Chat createChat(Update update) {
-//        var chatId = update.getCallbackQuery().getMessage().getChatId();
-//        var type = update.getCallbackQuery().getData();
-//        var chat = chatFactory.createChat(chatId, type);
-//        chatPool.put(chatId, chat);
-        return null;
+        return chatPool.getChat(getChatId());
     }
 
     private Message getMessage(){
         return callbackQuery.getMessage();
     }
 
-    private String getChatId(){
-        return getMessage().getChatId().toString();
+    private Long getChatId(){
+        return getMessage().getChatId();
     }
 
     private String getLanguageCode(){

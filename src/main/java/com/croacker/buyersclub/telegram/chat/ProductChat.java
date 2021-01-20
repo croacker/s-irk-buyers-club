@@ -8,6 +8,7 @@ import com.croacker.buyersclub.telegram.keyboard.MenuKeyboardBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 import java.util.List;
@@ -28,6 +29,11 @@ public class ProductChat implements Chat{
     @Override
     public String getChatId() {
         return String.valueOf(chatId);
+    }
+
+    @Override
+    public ChatType getChatType() {
+        return ChatType.PRODUCT;
     }
 
     @Override
@@ -55,4 +61,5 @@ public class ProductChat implements Chat{
         var pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
         return productPriceService.getProductsPrices(expression.trim(), pageable);
     }
+
 }

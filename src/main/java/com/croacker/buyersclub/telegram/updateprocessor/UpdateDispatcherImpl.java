@@ -44,7 +44,7 @@ public class UpdateDispatcherImpl implements UpdateDispatcher {
     }
 
     private UpdateProcessor createFileProcessor(Update update) {
-        return new FileProcessor(update.getMessage(), telegramFileService, localeService);
+        return new FileProcessor(update.getMessage(), telegramFileService, chatPool, localeService);
     }
 
     private UpdateProcessor createCallbackProcessor(Update update) {
@@ -52,11 +52,11 @@ public class UpdateDispatcherImpl implements UpdateDispatcher {
     }
 
     private UpdateProcessor createCommandProcessor(Update update) {
-        return new CommandProcessor(update.getMessage(), localeService);
+        return new CommandProcessor(update.getMessage(), chatPool, localeService);
     }
 
     private UpdateProcessor createQueryProcessor(Update update) {
-        return new QueryProcessor(update.getMessage(), localeService);
+        return new QueryProcessor(update.getMessage(), chatPool, localeService);
     }
 
     /**

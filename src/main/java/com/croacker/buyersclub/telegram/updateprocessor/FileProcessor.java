@@ -2,6 +2,8 @@ package com.croacker.buyersclub.telegram.updateprocessor;
 
 import com.croacker.buyersclub.service.locale.LocaleService;
 import com.croacker.buyersclub.service.telegram.TelegramFileService;
+import com.croacker.buyersclub.telegram.chat.Chat;
+import com.croacker.buyersclub.telegram.chat.ChatPool;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -15,6 +17,8 @@ public class FileProcessor implements UpdateProcessor{
 
     private final TelegramFileService telegramFileService;
 
+    private final ChatPool chatPool;
+
     private final LocaleService localeService;
 
     @Override
@@ -24,9 +28,9 @@ public class FileProcessor implements UpdateProcessor{
     }
 
     private SendMessage createResponse(){
-        var chatId = getChatId();
+        var chat = getChat();
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
+        sendMessage.setChatId(chat.getChatId());
         sendMessage.enableMarkdown(true);
         sendMessage.setText(getString("response.file.success"));
         return sendMessage;
@@ -40,8 +44,12 @@ public class FileProcessor implements UpdateProcessor{
         telegramFileService.processFile(message);
     }
 
-    private String getChatId(){
-        return message.getChatId().toString();
+    private Chat getChat() {
+        return chatPool.getChat(getChatId());
+    }
+
+    private Long getChatId(){
+        return message.getChatId();
     }
 
     private String getLanguageCode(){

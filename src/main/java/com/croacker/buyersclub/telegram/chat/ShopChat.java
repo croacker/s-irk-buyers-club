@@ -29,6 +29,11 @@ public class ShopChat implements Chat {
     }
 
     @Override
+    public ChatType getChatType() {
+        return ChatType.SHOP;
+    }
+
+    @Override
     public String findByName(String expression) {
         return getShops(expression)
                 .stream().map(toStringMapper).collect(Collectors.joining(LINE_DELIMITER));
