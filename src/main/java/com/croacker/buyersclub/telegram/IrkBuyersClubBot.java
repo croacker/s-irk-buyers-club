@@ -3,9 +3,6 @@ package com.croacker.buyersclub.telegram;
 import com.croacker.buyersclub.config.TelegramConfiguration;
 import com.croacker.buyersclub.service.locale.LocaleService;
 import com.croacker.buyersclub.service.telegram.TelegramFileService;
-import com.croacker.buyersclub.telegram.chat.Chat;
-import com.croacker.buyersclub.telegram.chat.ChatFactory;
-import com.croacker.buyersclub.telegram.keyboard.MenuKeyboardBuilder;
 import com.croacker.buyersclub.telegram.updateprocessor.MessageType;
 import com.croacker.buyersclub.telegram.updateprocessor.UpdateDispatcher;
 import com.croacker.buyersclub.telegram.updateprocessor.UpdateProcessor;
@@ -15,15 +12,12 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
-import java.util.Map;
 import java.util.Optional;
 
 // TODO привести процессы в порядок.
@@ -61,8 +55,8 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {// TODO разделить на операции
-        Mono.just(update).map(this::process).subscribe(this::sendResponse);
         getInprocessMessage(update).ifPresent(this::sendResponse);
+        Mono.just(update).map(this::process).subscribe(this::sendResponse);
 //        try {
 //            processFile(update.getMessage());
 //            if (isStart(update)) {
