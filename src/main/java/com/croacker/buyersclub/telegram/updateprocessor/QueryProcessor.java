@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @AllArgsConstructor
@@ -20,19 +22,29 @@ public class QueryProcessor implements UpdateProcessor{
     private final LocaleService localeService;
 
     @Override
-    public SendMessage process() {
+    public Mono<SendMessage> process() {
         var chat = getChat();
         return createResponse(chat.findByName2(getExpression()));
     }
 
-    private SendMessage createResponse(ReplyKeyboard keyboard) {
+    private Mono<SendMessage> createResponse(ReplyKeyboard keyboard) {
         var chatId = getChatId().toString();
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.enableMarkdown(true);
-        sendMessage.setText(getString("response.search.caption"));
+        sendMessage.setText(getText(keyboard));
         sendMessage.setReplyMarkup(keyboard);
-        return sendMessage;
+        return Mono.just(sendMessage);
+    }
+
+    private String getText(ReplyKeyboard keyboard){
+        String result;
+        if(((InlineKeyboardMarkup) keyboard).getKeyboard().isEmpty()){
+            result = getString("response.search.empty");
+        }else {
+            result = getString("response.search.caption");
+        }
+        return result;
     }
 
     private String getExpression() {

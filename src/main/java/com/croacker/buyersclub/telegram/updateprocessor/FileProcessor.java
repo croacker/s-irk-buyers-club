@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @AllArgsConstructor
@@ -22,17 +23,16 @@ public class FileProcessor implements UpdateProcessor{
     private final LocaleService localeService;
 
     @Override
-    public SendMessage process() {
-        processFile(message);
-        return createResponse();
+    public Mono<SendMessage> process() {
+        return processFile(message).map(this::createResponse);
     }
 
-    private SendMessage createResponse(){
+    private SendMessage createResponse(String result){
         var chat = getChat();
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chat.getChatId());
         sendMessage.enableMarkdown(true);
-        sendMessage.setText(getString("response.file.success"));
+        sendMessage.setText(getString("response.file.success") + "\n" + result);
         return sendMessage;
     }
 
@@ -40,8 +40,8 @@ public class FileProcessor implements UpdateProcessor{
      * Получить и обработать файл, если он есть.
      * @param message
      */
-    private void processFile(Message message) {
-        telegramFileService.processFile(message);
+    private Mono<String> processFile(Message message) {
+        return telegramFileService.processFile(message);
     }
 
     private Chat getChat() {

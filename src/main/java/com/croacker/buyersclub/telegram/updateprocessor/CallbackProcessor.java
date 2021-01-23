@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @AllArgsConstructor
@@ -20,18 +21,18 @@ public class CallbackProcessor implements UpdateProcessor{
     private final LocaleService localeService;
 
     @Override
-    public SendMessage process() {
+    public Mono<SendMessage> process() {
         return createResponse(); // TODO вернуть детали информации о товаре
     }
 
-    private SendMessage createResponse(){
+    private Mono<SendMessage> createResponse(){
         var chat = getChat();
         var text = getString("chat." + chat.getChatType().toString().toLowerCase() + ".welcome");
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(getChatId().toString());
         sendMessage.enableMarkdown(true);
         sendMessage.setText(text);
-        return sendMessage;
+        return Mono.just(sendMessage);
     }
 
     private Chat getChat() {

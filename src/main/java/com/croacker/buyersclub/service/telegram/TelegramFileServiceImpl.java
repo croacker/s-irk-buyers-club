@@ -2,6 +2,7 @@ package com.croacker.buyersclub.service.telegram;
 
 import com.croacker.buyersclub.client.TelegramWebClient;
 import com.croacker.buyersclub.service.OfdCheckServiceImpl;
+import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.mapper.ofd.OfdCheckExcerptToOfdCheck;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import com.croacker.buyersclub.service.ofd.excerpt.Excerpt;
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import reactor.core.publisher.Mono;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,12 +39,12 @@ public class TelegramFileServiceImpl implements TelegramFileService {
     private final OfdCheckExcerptToOfdCheck mapper;
 
     @Override
-    public void processFile(Message message) {
+    public Mono<String> processFile(Message message) {
         var userId = telegramTelegramUserService.saveUser(message);
-        getFileId(message).ifPresent(fileId -> client.getFileContent(fileId)
+        return getFileId(message).map(fileId -> client.getFileContent(fileId)
                 .map(this::toOfdChecks)
-                .doOnNext(ofdChecks -> processChecks(ofdChecks, userId))
-                .subscribe());
+                .map(ofdChecks -> processChecks(ofdChecks, userId))
+        ).orElseGet(()->Mono.just("Ошибка"));
     }
 
     /**
@@ -117,12 +119,15 @@ public class TelegramFileServiceImpl implements TelegramFileService {
 
     /**
      * Обработать ОФД чеки
-     *
-     * @param ofdChecks ОФД чеки
+     *  @param ofdChecks ОФД чеки
      * @param userId
+     * @return
      */
-    private void processChecks(List<OfdCheck> ofdChecks, Long userId) {
-        ofdChecks.forEach(ofdCheck -> ofdCheckService.process(ofdCheck, userId));
+    private String processChecks(List<OfdCheck> ofdChecks, Long userId) {
+        return ofdChecks.stream()
+                .map(ofdCheck -> ofdCheckService.process(ofdCheck, userId))
+                .map(telegramFileProcessResult -> telegramFileProcessResult.getCheckInfo())
+                .collect(Collectors.joining("\n"));
     }
 
     /**

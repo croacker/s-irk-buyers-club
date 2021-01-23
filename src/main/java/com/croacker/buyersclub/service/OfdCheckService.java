@@ -1,5 +1,6 @@
 package com.croacker.buyersclub.service;
 
+import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 
 /**
@@ -7,6 +8,6 @@ import com.croacker.buyersclub.service.ofd.OfdCheck;
  */
 public interface OfdCheckService {
 
-    void process(OfdCheck ofdCheck, Long userId);
+    TelegramFileProcessResult process(OfdCheck ofdCheck, Long userId);
 
 }
