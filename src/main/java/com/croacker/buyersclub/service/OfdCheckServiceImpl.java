@@ -3,6 +3,7 @@ package com.croacker.buyersclub.service;
 import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.dto.check.AddCashCheckDto;
+import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.checkline.AddCashCheckLineDto;
 import com.croacker.buyersclub.service.dto.organization.AddOrganizationDto;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
@@ -12,7 +13,9 @@ import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
+import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
 import com.croacker.buyersclub.service.mapper.checkline.ItemToAddCheckLineDto;
+import com.croacker.buyersclub.service.mapper.telegram.CashCheckDtoToTelegramFileProcessResult;
 import com.croacker.buyersclub.service.ofd.Item;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import lombok.AllArgsConstructor;
@@ -45,22 +48,29 @@ public class OfdCheckServiceImpl implements OfdCheckService {
 
     private final ItemToAddCheckLineDto itemToAddCheckLine;
 
+    private final CashCheckDtoToTelegramFileProcessResult cashCheckDtoToTelegramFileProcessResultMapper;
+
     @Override
-    public void process(OfdCheck ofdCheck, Long telegramUserId) {
+    public TelegramFileProcessResult process(OfdCheck ofdCheck, Long telegramUserId) {
         var organization = saveOrganization(ofdCheck);
         var shop = saveShop(ofdCheck, organization);
         var cashier = saveCashier(ofdCheck, shop);
         var products = saveProducts(ofdCheck, shop);
-        saveCheck(cashier, products, ofdCheck, telegramUserId);
+        return toResult(saveCheck(cashier, products, ofdCheck, telegramUserId));
+    }
+
+    private TelegramFileProcessResult toResult(CashCheckDto check) {
+        return cashCheckDtoToTelegramFileProcessResultMapper.map(check);
     }
 
     /**
-     *  @param cashier
+     * @param cashier
      * @param checkLines
      * @param ofdCheck
+     * @return
      */
-    private void saveCheck(CashierDto cashier, List<AddCashCheckLineDto> checkLines,
-                           OfdCheck ofdCheck, Long telegramUserId) {
+    private CashCheckDto saveCheck(CashierDto cashier, List<AddCashCheckLineDto> checkLines,
+                                   OfdCheck ofdCheck, Long telegramUserId) {
         var dateTime = fromEpoch(ofdCheck.getDateTime());
         var checkDto = new AddCashCheckDto()// TODO в mapper
                 .setCashierId(cashier.getId())
@@ -75,7 +85,7 @@ public class OfdCheckServiceImpl implements OfdCheckService {
                 .setCheckDate(dateTime)
                 .setCheckLines(checkLines)
                 .setTelegramUserId(telegramUserId);
-        checkService.save(checkDto);
+        return checkService.save(checkDto);
     }
 
     /**

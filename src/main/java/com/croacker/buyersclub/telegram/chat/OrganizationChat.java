@@ -30,6 +30,11 @@ public class OrganizationChat implements Chat{
     }
 
     @Override
+    public ChatType getChatType() {
+        return ChatType.ORGANIZATION;
+    }
+
+    @Override
     public String findByName(String expression) {
         return getOrganizations(expression)
                 .stream().map(toStringMapper).collect(Collectors.joining(LINE_DELIMITER));
