@@ -1,8 +1,11 @@
 package com.croacker.buyersclub.service.mapper.ofd;
 
+import com.croacker.buyersclub.service.DateTimeService;
+import com.croacker.buyersclub.service.DateTimeServiceImpl;
 import com.croacker.buyersclub.service.mapper.Mapper;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import com.croacker.buyersclub.service.ofd.excerpt.OfdCheckExcerpt;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -11,7 +14,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Service
+@AllArgsConstructor
 public class OfdCheckExcerptToOfdCheck implements Mapper<OfdCheckExcerpt, OfdCheck> {
+
+    private final DateTimeService dateTimeService;
 
     @Override
     public OfdCheck map(OfdCheckExcerpt input) {
@@ -46,16 +52,11 @@ public class OfdCheckExcerptToOfdCheck implements Mapper<OfdCheckExcerpt, OfdChe
                 .setDateTime(dateTimeToEpoch(stringToLocalDateTime(input.getDateTime())));
     }
 
-    // TODO в common
     private LocalDateTime stringToLocalDateTime(String str){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        return LocalDateTime.parse(str, formatter);
+        return dateTimeService.stringToLocalDateTime(str);
     }
 
-    // TODO в common
     private int dateTimeToEpoch(LocalDateTime date){
-        Instant instant = Instant.now();
-        ZoneId zoneId = ZoneId.systemDefault();
-        return (int) date.toEpochSecond(zoneId.getRules().getOffset(instant));
+        return dateTimeService.dateTimeToEpoch(date);
     }
 }

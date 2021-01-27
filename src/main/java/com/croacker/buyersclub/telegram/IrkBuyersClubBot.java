@@ -51,7 +51,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     }
 
     @Override
-    public void onUpdateReceived(Update update) {// TODO разделить на операции
+    public void onUpdateReceived(Update update) {
         getInprocessMessage(update).ifPresent(this::sendResponse);
         Mono.just(update).flatMap(this::process).subscribe(this::sendResponse);
     }
