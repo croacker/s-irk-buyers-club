@@ -29,7 +29,7 @@ public class OfdCheckExcerptToOfdCheckTest {
     private OfdCheckExcerptToOfdCheck mapper;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         dateTimeService = new DateTimeServiceImpl();
         mapper = new OfdCheckExcerptToOfdCheck(dateTimeService);
     }

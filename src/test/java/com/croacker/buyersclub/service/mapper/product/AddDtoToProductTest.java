@@ -20,7 +20,7 @@ public class AddDtoToProductTest {
     private AddDtoToProduct mapper;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         mapper = new AddDtoToProduct();
     }
 

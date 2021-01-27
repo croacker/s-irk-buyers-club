@@ -25,7 +25,7 @@ class ProductDtoToInfoDtoTest {
     private final static LocalDateTime NOW = LocalDateTime.now();
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         mapper = new ProductDtoToInfoDto();
     }
 

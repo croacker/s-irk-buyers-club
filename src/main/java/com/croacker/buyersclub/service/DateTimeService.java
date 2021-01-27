@@ -9,4 +9,6 @@ public interface DateTimeService {
     int dateTimeToEpoch(LocalDateTime date);
 
     LocalDateTime fromEpoch(int datetime);
+
+    String localDateTimeToString(LocalDateTime dateTime);
 }

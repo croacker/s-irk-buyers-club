@@ -15,7 +15,7 @@ public class ItemToAddCheckLineDto implements Mapper<Item, AddCashCheckLineDto> 
                 .setTotalSum(input.getSum());
     }
 
-    private Integer toInteger(float quantity){
-        return Math.round(quantity*1000);
+    private Integer toInteger(float quantity) {
+        return Math.round(quantity * 1000);
     }
 }

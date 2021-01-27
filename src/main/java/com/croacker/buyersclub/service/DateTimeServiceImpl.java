@@ -10,10 +10,16 @@ import java.util.TimeZone;
 
 @Service
 public class DateTimeServiceImpl implements DateTimeService {
+
+    private static final DateTimeFormatter DATE_TIME_FORMATTER
+            = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+
+    private static final DateTimeFormatter OFD_DATE_TIME_FORMATTER
+            = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
     @Override
     public LocalDateTime stringToLocalDateTime(String str) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        return LocalDateTime.parse(str, formatter);
+        return LocalDateTime.parse(str, OFD_DATE_TIME_FORMATTER);
     }
 
     @Override
@@ -23,7 +29,14 @@ public class DateTimeServiceImpl implements DateTimeService {
         return (int) date.toEpochSecond(zoneId.getRules().getOffset(instant));
     }
 
+    @Override
     public LocalDateTime fromEpoch(int datetime) {
         return LocalDateTime.ofInstant(Instant.ofEpochSecond(datetime), TimeZone.getDefault().toZoneId());
     }
+
+    @Override
+    public String localDateTimeToString(LocalDateTime dateTime){
+        return dateTime.format(DATE_TIME_FORMATTER);
+    }
+
 }

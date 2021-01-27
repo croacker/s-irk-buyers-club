@@ -1,11 +1,8 @@
 package com.croacker.buyersclub.service.mapper.productprice;
 
 import com.croacker.buyersclub.TestConfiguration;
-import com.croacker.buyersclub.domain.ProductGroup;
 import com.croacker.buyersclub.domain.ProductPrice;
-import com.croacker.buyersclub.service.dto.productgroup.AddProductGroupDto;
 import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
-import com.croacker.buyersclub.service.mapper.productgroup.AddDtoToProductGroupMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +23,7 @@ class AddDtoToProductPriceTest {
     private final static LocalDateTime NOW = LocalDateTime.now();
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         mapper = new AddDtoToProductPrice();
     }
 
