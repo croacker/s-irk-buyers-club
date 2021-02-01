@@ -53,8 +53,8 @@ class CashierControllerTest {
     @Test
     public void shouldReturnCashier() {
         // given
-        var given = new CashierDto().setId(1L).setName("test_cashier").setShopId(1L);
-        when(service.findOne(any())).thenReturn(given);
+        var expected = new CashierDto().setId(1L).setName("test_cashier").setShopId(1L);
+        when(service.findOne(any())).thenReturn(expected);
 
         // when and then
         client.get()
@@ -63,7 +63,7 @@ class CashierControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(CashierDto.class)
-                .value(cashier -> cashier.getName(), equalTo("test_cashier"));
+                .value(cashier -> cashier, equalTo(expected));
     }
 
     @Test
@@ -81,7 +81,7 @@ class CashierControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(CashierDto.class)
-                .value(cashier -> cashier.getName(), equalTo("test_cashier"));
+                .value(cashier -> cashier, equalTo(expected));
     }
 
     @Test
@@ -99,7 +99,7 @@ class CashierControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(CashierDto.class)
-                .value(cashier -> cashier.getName(), equalTo("test_cashier_updated"));
+                .value(cashier -> cashier, equalTo(expected));
     }
 
     @Test
@@ -114,10 +114,7 @@ class CashierControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(CashierDto.class)
-                .value(cashier -> cashier.getDeleted(), equalTo(true));
+                .value(cashier -> cashier, equalTo(expected));
     }
 
-    private Pageable getPageable(){
-        return PageRequest.of(0, 20, Sort.Direction.ASC, "createdAt");
-    }
 }
