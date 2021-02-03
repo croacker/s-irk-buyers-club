@@ -60,7 +60,8 @@ public class CashierServiceImpl implements CashierService {
 
     @Override
     public CashierDto update(CashierDto dto) {
-        var cashier = toEntityMapper.map(dto);
+        var shop = shopRepo.findById(dto.getShopId()).get();
+        var cashier = toEntityMapper.map(dto).setShop(shop);
         cashier = repo.save(cashier);
         return toDtoMapper.map(cashier);
     }
