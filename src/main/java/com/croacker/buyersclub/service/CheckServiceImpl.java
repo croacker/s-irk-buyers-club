@@ -78,14 +78,20 @@ public class CheckServiceImpl implements CheckService{
     @Override
     public CashCheckDto update(CashCheckDto dto) {
         var cashier = cashierRepo.findById(dto.getCashierId()).get();
+        var telegramUser = telegramUserRepo.findById(dto.getTelegramUserId()).orElse(null);
         var check = toEntityMapper.map(dto)
-                .setCashier(cashier);
+                .setCashier(cashier)
+                .setTelegramUser(telegramUser);
         check = repo.save(check);
         return toDtoMapper.map(check);
     }
 
     @Override
     public CashCheckDto delete(Long id) {
-        return null;
+        return repo.findById(id).map(check -> {
+            check.setDeleted(true);
+            check = repo.save(check);
+            return toDtoMapper.map(check);
+        }).orElse(null);
     }
 }
