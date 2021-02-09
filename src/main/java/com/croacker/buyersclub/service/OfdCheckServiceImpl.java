@@ -44,6 +44,8 @@ public class OfdCheckServiceImpl implements OfdCheckService {
 
     private final CheckService checkService;
 
+    private final DateTimeService dateTimeService;
+
     private final ProductPriceService productPriceService;
 
     private final ItemToAddCheckLineDto itemToAddCheckLine;
@@ -199,9 +201,8 @@ public class OfdCheckServiceImpl implements OfdCheckService {
         return price;
     }
 
-    // TODO в common-класс
     private LocalDateTime fromEpoch(int datetime) {
-        return LocalDateTime.ofInstant(Instant.ofEpochSecond(datetime), TimeZone.getDefault().toZoneId());
+        return dateTimeService.fromEpoch(datetime);
     }
 
 }

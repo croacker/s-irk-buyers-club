@@ -53,7 +53,7 @@ public class OfdCheck {
     @JsonProperty("fiscalSign")
     private String fiscalSign;
 
-    @JsonProperty("nds10")
+    @JsonProperty("nds10")// TODO nds0 - String привести к одному типу
     private int nds10;
 
     @JsonProperty("nds18")

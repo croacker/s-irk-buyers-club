@@ -3,15 +3,14 @@ package com.croacker.buyersclub.service;
 import com.croacker.buyersclub.repo.OrganizationRepo;
 import com.croacker.buyersclub.service.dto.organization.AddOrganizationDto;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
-import com.croacker.buyersclub.service.mapper.organization.AddDtoToOrganizationMapper;
-import com.croacker.buyersclub.service.mapper.organization.DtoToOrganizationMapper;
-import com.croacker.buyersclub.service.mapper.organization.OrganizationToDtoMapper;
+import com.croacker.buyersclub.service.mapper.organization.AddDtoToOrganization;
+import com.croacker.buyersclub.service.mapper.organization.DtoToOrganization;
+import com.croacker.buyersclub.service.mapper.organization.OrganizationToDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,11 +21,11 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepo repo;
 
-    private final OrganizationToDtoMapper toDtoMapper;
+    private final OrganizationToDto toDtoMapper;
 
-    private final DtoToOrganizationMapper toEntityMapper;
+    private final DtoToOrganization toEntityMapper;
 
-    private final AddDtoToOrganizationMapper addToEntityMapper;
+    private final AddDtoToOrganization addToEntityMapper;
 
     @Override
     public List<OrganizationDto> findAll(Pageable pageable) {

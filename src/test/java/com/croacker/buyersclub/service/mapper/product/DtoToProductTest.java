@@ -20,7 +20,7 @@ public class DtoToProductTest {
     private DtoToProduct mapper;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         mapper = new DtoToProduct();
     }
 

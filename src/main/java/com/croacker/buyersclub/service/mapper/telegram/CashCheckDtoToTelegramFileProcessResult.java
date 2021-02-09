@@ -1,17 +1,19 @@
 package com.croacker.buyersclub.service.mapper.telegram;
 
+import com.croacker.buyersclub.service.DateTimeService;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
 import com.croacker.buyersclub.service.mapper.Mapper;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Service
+@AllArgsConstructor
 public class CashCheckDtoToTelegramFileProcessResult implements Mapper<CashCheckDto, TelegramFileProcessResult> {
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-YYYY HH:mm:SS");
+    private final DateTimeService service;
 
     @Override
     public TelegramFileProcessResult map(CashCheckDto input) {
@@ -20,7 +22,7 @@ public class CashCheckDtoToTelegramFileProcessResult implements Mapper<CashCheck
     }
 
     private String toString(LocalDateTime dateTime){
-        return dateTime.format(formatter);
+        return service.localDateTimeToString(dateTime);
     }
 
 }

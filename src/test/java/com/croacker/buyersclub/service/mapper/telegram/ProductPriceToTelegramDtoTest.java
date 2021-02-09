@@ -1,13 +1,10 @@
 package com.croacker.buyersclub.service.mapper.telegram;
 
 import com.croacker.buyersclub.TestConfiguration;
-import com.croacker.buyersclub.domain.Organization;
 import com.croacker.buyersclub.domain.Product;
 import com.croacker.buyersclub.domain.ProductPrice;
 import com.croacker.buyersclub.domain.Shop;
-import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramProductPriceDto;
-import com.croacker.buyersclub.service.mapper.shop.ShopToDtoMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +21,7 @@ class ProductPriceToTelegramDtoTest {
     private ProductPriceToTelegramDto mapper;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         mapper = new ProductPriceToTelegramDto();
     }
 

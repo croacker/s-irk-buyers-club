@@ -53,7 +53,7 @@ public class ChatPoolImplTest {
     private ChatPool chatPool;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         pool = new HashMap<>();
         chatPool = new ChatPoolImpl(chatFactory, pool);
     }

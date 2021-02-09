@@ -3,15 +3,14 @@ package com.croacker.buyersclub.service;
 import com.croacker.buyersclub.repo.ProductGroupRepo;
 import com.croacker.buyersclub.service.dto.productgroup.AddProductGroupDto;
 import com.croacker.buyersclub.service.dto.productgroup.ProductGroupDto;
-import com.croacker.buyersclub.service.mapper.productgroup.AddDtoToProductGroupMapper;
-import com.croacker.buyersclub.service.mapper.productgroup.DtoToProductGroupMapper;
-import com.croacker.buyersclub.service.mapper.productgroup.ProductGroupToDtoMapper;
+import com.croacker.buyersclub.service.mapper.productgroup.AddDtoToProductGroup;
+import com.croacker.buyersclub.service.mapper.productgroup.DtoToProductGroup;
+import com.croacker.buyersclub.service.mapper.productgroup.ProductGroupToDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -23,11 +22,11 @@ public class ProductGroupServiceImpl implements ProductGroupService{
 
     private final ProductGroupRepo repo;
 
-    private final ProductGroupToDtoMapper toDtoMapper;
+    private final ProductGroupToDto toDtoMapper;
 
-    private final DtoToProductGroupMapper toEntityMapper;
+    private final DtoToProductGroup toEntityMapper;
 
-    private final AddDtoToProductGroupMapper addToEntityMapper;
+    private final AddDtoToProductGroup addToEntityMapper;
 
     @Override
     public List<ProductGroupDto> findAll(Pageable pageable) {

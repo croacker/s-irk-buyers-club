@@ -4,9 +4,9 @@ import com.croacker.buyersclub.repo.OrganizationRepo;
 import com.croacker.buyersclub.repo.ShopRepo;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
-import com.croacker.buyersclub.service.mapper.shop.AddDtoToShopMapper;
-import com.croacker.buyersclub.service.mapper.shop.DtoToShopMapper;
-import com.croacker.buyersclub.service.mapper.shop.ShopToDtoMapper;
+import com.croacker.buyersclub.service.mapper.shop.AddDtoToShop;
+import com.croacker.buyersclub.service.mapper.shop.DtoToShop;
+import com.croacker.buyersclub.service.mapper.shop.ShopToDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -24,11 +24,11 @@ public class ShopServiceImpl implements ShopService{
 
     private final OrganizationRepo organizationRepo;
 
-    private final ShopToDtoMapper toDtoMapper;
+    private final ShopToDto toDtoMapper;
 
-    private final DtoToShopMapper toShopMapper;
+    private final DtoToShop toShopMapper;
 
-    private final AddDtoToShopMapper addToEntityMapper;
+    private final AddDtoToShop addToEntityMapper;
 
     @Override
     public List<ShopDto> findAll(Pageable pageable) {
