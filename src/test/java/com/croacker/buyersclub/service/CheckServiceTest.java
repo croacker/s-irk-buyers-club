@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfiguration.class})
-class CheckServiceImplTest {
+class CheckServiceTest {
 
     private final static LocalDateTime NOW = LocalDateTime.now();
 

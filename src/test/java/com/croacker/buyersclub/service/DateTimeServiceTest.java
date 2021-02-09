@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfiguration.class})
-class DateTimeServiceImplTest {
+class DateTimeServiceTest {
 
     private DateTimeService service;
 

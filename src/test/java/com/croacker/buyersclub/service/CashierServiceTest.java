@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfiguration.class})
-class CashierServiceImplTest {
+class CashierServiceTest {
 
     private CashierService service;
 
