@@ -11,6 +11,8 @@ import java.util.TimeZone;
 @Service
 public class DateTimeServiceImpl implements DateTimeService {
 
+    public static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("UTC+8");
+
     private static final DateTimeFormatter DATE_TIME_FORMATTER
             = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
@@ -25,8 +27,7 @@ public class DateTimeServiceImpl implements DateTimeService {
     @Override
     public int dateTimeToEpoch(LocalDateTime date) {
         Instant instant = Instant.now();
-        ZoneId zoneId = ZoneId.systemDefault();
-        return (int) date.toEpochSecond(zoneId.getRules().getOffset(instant));
+        return (int) date.toEpochSecond(DEFAULT_ZONE_ID.getRules().getOffset(instant));
     }
 
     @Override

@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ContextConfiguration(classes = {TestConfiguration.class})
 public class OfdCheckExcerptToOfdCheckTest {
 
-    private final static LocalDateTime NOW = LocalDateTime.now();
     private final static String STRING_DATE_TIME = "2020-11-22T23:34:41";
 
     private DateTimeService dateTimeService;
