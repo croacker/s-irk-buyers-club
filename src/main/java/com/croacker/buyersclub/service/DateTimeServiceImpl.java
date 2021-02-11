@@ -32,7 +32,7 @@ public class DateTimeServiceImpl implements DateTimeService {
 
     @Override
     public LocalDateTime fromEpoch(int datetime) {
-        return LocalDateTime.ofInstant(Instant.ofEpochSecond(datetime), TimeZone.getDefault().toZoneId());
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(datetime), DEFAULT_ZONE_ID);
     }
 
     @Override
