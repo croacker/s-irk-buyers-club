@@ -42,9 +42,9 @@ services:
     networks:
       - irk-buyers-club
 
-  irk-buers-app:
-    container_name: irk-buers-app
-    hostname: irk-buers-app
+  app:
+    container_name: app
+    hostname: app
     image: croacker/s-irk-buyers-club:${IRK_BUYERS_CLUB_VERSION}
     restart: always
     ports:
