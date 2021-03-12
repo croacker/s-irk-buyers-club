@@ -67,10 +67,14 @@ public class TelegramFileServiceImpl implements TelegramFileService {
     private List<OfdCheck> toOfdChecks(String str) {
         List<OfdCheck> ofdChecks;
         var objectMapper = new ObjectMapper();
-        if(isExcerpt(str)) {
+        if (isExcerpt(str)) {
             ofdChecks = readAsExcerpt(str, objectMapper);
-        }else {
-            ofdChecks = readAsChecks(str, objectMapper);
+        } else {
+            if (isMultipleChecks(str)) {
+                ofdChecks = readAsChecks(str, objectMapper);
+            } else {
+                ofdChecks = readAsCheck(str, objectMapper);
+            }
         }
         log.info("OfdChecks:{}", ofdChecks);
         return ofdChecks;
@@ -87,6 +91,23 @@ public class TelegramFileServiceImpl implements TelegramFileService {
         List<OfdCheck> result = Collections.emptyList();
         try {
             result = objectMapper.readValue(str, new TypeReference<>() {});
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage(), e);
+        }
+        return result;
+    }
+
+    /**
+     * Прочитать как чек.
+     *
+     * @param str          строка
+     * @param objectMapper транслятор
+     * @return чек
+     */
+    private List<OfdCheck> readAsCheck(String str, ObjectMapper objectMapper) {
+        List<OfdCheck> result = Collections.emptyList();
+        try {
+            result = List.of(objectMapper.readValue(str, OfdCheck.class));
         } catch (JsonProcessingException e) {
             log.error(e.getMessage(), e);
         }
@@ -147,4 +168,9 @@ public class TelegramFileServiceImpl implements TelegramFileService {
     private boolean isExcerpt(String str){
         return StringUtils.isNotEmpty(str) && str.contains("\"claims\"");
     }
+
+    private boolean isMultipleChecks(String str) {
+        return str.startsWith("[");
+    }
+
 }
