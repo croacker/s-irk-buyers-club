@@ -1,7 +1,7 @@
 package com.croacker.buyersclub.client;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
-import com.croacker.buyersclub.service.telegram.FileInfo;
+import com.croacker.buyersclub.telegram.file.FileInfo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,6 +20,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TelegramWebClient {
 
+    private static final String API_TELEGRAM_BOT = "https://api.telegram.org/bot";
+
+    private static final String API_TELEGRAM_FILE = "https://api.telegram.org/file/bot";
+
     private final WebClient client;
 
     private final TelegramConfiguration configuration;
@@ -34,7 +38,7 @@ public class TelegramWebClient {
     }
 
     private Mono<String> getFilePath(String fileId) {
-        var url = "https://api.telegram.org/bot" + getBotToken() + "/getFile?file_id=" + fileId;
+        var url = API_TELEGRAM_BOT + getBotToken() + "/getFile?file_id=" + fileId;
         return client.get()
                 .uri(url)
                 .retrieve()
@@ -49,7 +53,7 @@ public class TelegramWebClient {
      * @return
      */
     private Flux<String> getFile(String filePath) {
-        var url = "https://api.telegram.org/file/bot" + getBotToken() + "/" + filePath;
+        var url = API_TELEGRAM_FILE + getBotToken() + "/" + filePath;
         log.info("File url:{}", url);
         return client.get()
                 .uri(url)
@@ -57,7 +61,4 @@ public class TelegramWebClient {
                 .bodyToFlux(String.class);
     }
 
-    private boolean isErrorResponse(HttpStatus status) {
-        return status.is4xxClientError() || status.is5xxServerError();
-    }
 }

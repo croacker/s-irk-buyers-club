@@ -3,8 +3,8 @@ package com.croacker.buyersclub.service;
 import com.croacker.buyersclub.repo.TelegramUserRepo;
 import com.croacker.buyersclub.service.dto.telegramuser.AddTelegramUserDto;
 import com.croacker.buyersclub.service.dto.telegramuser.TelegramUserDto;
-import com.croacker.buyersclub.service.mapper.telegramuser.AddDtoToTelegramUserMapper;
-import com.croacker.buyersclub.service.mapper.telegramuser.TelegramUserToDtoMapper;
+import com.croacker.buyersclub.service.mapper.telegramuser.AddDtoToTelegramUser;
+import com.croacker.buyersclub.service.mapper.telegramuser.TelegramUserToDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -22,9 +22,9 @@ public class TelegramUserServiceImpl implements TelegramUserService {
 
     private final TelegramUserRepo repo;
 
-    private final TelegramUserToDtoMapper toDtoMapper;
+    private final TelegramUserToDto toDtoMapper;
 
-    private final AddDtoToTelegramUserMapper addToEntityMapper;
+    private final AddDtoToTelegramUser addToEntityMapper;
 
     @Override
     public List<TelegramUserDto> findAll(Pageable pageable) {

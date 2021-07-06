@@ -4,15 +4,14 @@ import com.croacker.buyersclub.repo.CashierRepo;
 import com.croacker.buyersclub.repo.ShopRepo;
 import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
-import com.croacker.buyersclub.service.mapper.cashier.AddDtoToCashierMapper;
-import com.croacker.buyersclub.service.mapper.cashier.CashierToDtoMapper;
-import com.croacker.buyersclub.service.mapper.cashier.DtoToCashierMapper;
+import com.croacker.buyersclub.service.mapper.cashier.AddDtoToCashier;
+import com.croacker.buyersclub.service.mapper.cashier.CashierToDto;
+import com.croacker.buyersclub.service.mapper.cashier.DtoToCashier;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,11 +27,11 @@ public class CashierServiceImpl implements CashierService {
 
     private final ShopRepo shopRepo;
 
-    private final CashierToDtoMapper toDtoMapper;
+    private final CashierToDto toDtoMapper;
 
-    private final DtoToCashierMapper toEntityMapper;
+    private final DtoToCashier toEntityMapper;
 
-    private final AddDtoToCashierMapper addToEntityMapper;
+    private final AddDtoToCashier addToEntityMapper;
 
     @Override
     public List<CashierDto> findAll(Pageable pageable) {
@@ -54,8 +53,6 @@ public class CashierServiceImpl implements CashierService {
         var shop = shopRepo.findById(dto.getShopId()).get();
         var cashier = addToEntityMapper.map(dto)
                 .setShop(shop)
-//                .setCreatedAt(LocalDateTime.now())
-//                .setUpdatedAt(LocalDateTime.now())
                 .setDeleted(false);
         cashier = repo.save(cashier);
         return toDtoMapper.map(cashier);
@@ -63,9 +60,8 @@ public class CashierServiceImpl implements CashierService {
 
     @Override
     public CashierDto update(CashierDto dto) {
-        var cashier = toEntityMapper.map(dto)
-//                .setUpdatedAt(LocalDateTime.now())
-                ;
+        var shop = shopRepo.findById(dto.getShopId()).get();
+        var cashier = toEntityMapper.map(dto).setShop(shop);
         cashier = repo.save(cashier);
         return toDtoMapper.map(cashier);
     }
@@ -73,9 +69,7 @@ public class CashierServiceImpl implements CashierService {
     @Override
     public CashierDto delete(Long id) {
         return repo.findById(id).map(cashier -> {
-            cashier
-//                    .setUpdatedAt(LocalDateTime.now())
-                    .setDeleted(true);
+            cashier.setDeleted(true);
             cashier = repo.save(cashier);
             return toDtoMapper.map(cashier);
         }).orElse(null);

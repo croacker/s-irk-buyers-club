@@ -16,5 +16,5 @@ public interface OrganizationRepo extends CrudRepository<Organization, Long> {
 
     Optional<Organization> findByInn(String inn);
 
-    List<Organization> findByNameContainingIgnoreCase(String expression);
+    List<Organization> findByNameContainingIgnoreCase(String expression, Pageable pageable);
 }

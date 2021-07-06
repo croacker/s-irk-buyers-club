@@ -5,11 +5,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OfdCheckExcerpt {
     @JsonProperty("user")
@@ -84,9 +86,6 @@ public class OfdCheckExcerpt {
     @JsonProperty("markupSum")
     private String markupSum;
 
-    @JsonProperty("name")
-    private String modifiers;
-
     @JsonProperty("nds0")
     private String nds0;
 
@@ -99,6 +98,4 @@ public class OfdCheckExcerpt {
     @JsonProperty("ndsNo")
     private String ndsNo;
 
-    @JsonProperty("stornoItems")
-    private String stornoItems;
 }

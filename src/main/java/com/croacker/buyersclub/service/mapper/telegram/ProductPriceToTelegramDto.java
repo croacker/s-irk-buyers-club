@@ -11,7 +11,7 @@ public class ProductPriceToTelegramDto implements Mapper<ProductPrice, TelegramP
     @Override
     public TelegramProductPriceDto map(ProductPrice input) {
         return new TelegramProductPriceDto()
-                .setShop(input.getShop().getName())
+                .setProductId(input.getProduct().getId())
                 .setName(input.getProduct().getName())
                 .setPrice(priceToString(input));
     }

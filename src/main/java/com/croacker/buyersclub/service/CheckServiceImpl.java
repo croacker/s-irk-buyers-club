@@ -1,6 +1,5 @@
 package com.croacker.buyersclub.service;
 
-import com.croacker.buyersclub.domain.TelegramUser;
 import com.croacker.buyersclub.repo.CashierRepo;
 import com.croacker.buyersclub.repo.CheckRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
@@ -8,17 +7,16 @@ import com.croacker.buyersclub.repo.TelegramUserRepo;
 import com.croacker.buyersclub.service.dto.check.AddCashCheckDto;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.check.CashCheckInfoDto;
-import com.croacker.buyersclub.service.mapper.check.AddDtoToCashCheckMapper;
-import com.croacker.buyersclub.service.mapper.check.CashCheckToDtoMapper;
-import com.croacker.buyersclub.service.mapper.check.CashCheckToInfoDtoMapper;
-import com.croacker.buyersclub.service.mapper.check.DtoToCashCheckMapper;
+import com.croacker.buyersclub.service.mapper.check.AddDtoToCashCheck;
+import com.croacker.buyersclub.service.mapper.check.CashCheckToDto;
+import com.croacker.buyersclub.service.mapper.check.CashCheckToInfoDto;
+import com.croacker.buyersclub.service.mapper.check.DtoToCashCheck;
 import com.croacker.buyersclub.service.mapper.checkline.AddDtoToCashCheckLine;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,13 +36,13 @@ public class CheckServiceImpl implements CheckService{
 
     private final TelegramUserRepo telegramUserRepo;
 
-    private final CashCheckToDtoMapper toDtoMapper;
+    private final CashCheckToDto toDtoMapper;
 
-    private final CashCheckToInfoDtoMapper toInfoDtoMapper;
+    private final CashCheckToInfoDto toInfoDtoMapper;
 
-    private final DtoToCashCheckMapper toEntityMapper;
+    private final DtoToCashCheck toEntityMapper;
 
-    private final AddDtoToCashCheckMapper addToEntityMapper;
+    private final AddDtoToCashCheck addToEntityMapper;
 
     private final AddDtoToCashCheckLine addLineToEntityMapper;
 
@@ -80,14 +78,20 @@ public class CheckServiceImpl implements CheckService{
     @Override
     public CashCheckDto update(CashCheckDto dto) {
         var cashier = cashierRepo.findById(dto.getCashierId()).get();
+        var telegramUser = telegramUserRepo.findById(dto.getTelegramUserId()).orElse(null);
         var check = toEntityMapper.map(dto)
-                .setCashier(cashier);
+                .setCashier(cashier)
+                .setTelegramUser(telegramUser);
         check = repo.save(check);
         return toDtoMapper.map(check);
     }
 
     @Override
     public CashCheckDto delete(Long id) {
-        return null;
+        return repo.findById(id).map(check -> {
+            check.setDeleted(true);
+            check = repo.save(check);
+            return toDtoMapper.map(check);
+        }).orElse(null);
     }
 }

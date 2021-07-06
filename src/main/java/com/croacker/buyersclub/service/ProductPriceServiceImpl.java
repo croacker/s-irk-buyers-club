@@ -1,5 +1,6 @@
 package com.croacker.buyersclub.service;
 
+import com.croacker.buyersclub.domain.ProductPrice;
 import com.croacker.buyersclub.repo.ProductPriceRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
 import com.croacker.buyersclub.repo.ShopRepo;
@@ -20,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -47,7 +50,7 @@ public class ProductPriceServiceImpl implements ProductPriceService{
 
     @Override
     public List<ProductPriceInfoDto> findAll(Pageable pageable) {
-        return StreamSupport.stream(repo.findAll().spliterator(), false).map(toInfoDtoMapper).collect(Collectors.toList());
+        return repo.findByDeletedIsFalse(pageable).stream().map(toInfoDtoMapper).collect(Collectors.toList());
     }
 
     @Override
@@ -100,10 +103,16 @@ public class ProductPriceServiceImpl implements ProductPriceService{
     }
 
     @Override
-    public List<TelegramProductPriceDto> getProductsPrices(String expression) {
-        return productRepo.findByNameContainingIgnoreCase(expression)
+    public List<TelegramProductPriceDto> getProductsPrices(String expression, Pageable pageable) {
+        // TODO to sql
+        return productRepo.findByNameContainingIgnoreCase(expression, pageable)
                 .stream().map(product -> repo.findByProduct(product))
                 .flatMap(List::stream)
+                .collect(Collectors.groupingBy(
+                        pp -> pp.getProduct().getName() + pp.getShop().getName(),
+                        Collectors.toSet()))
+                .values().stream().map(pp ->
+                        Collections.max(pp, Comparator.comparing(ProductPrice::getPriceDate)))
                 .map(toTelegramDtoMapper).collect(Collectors.toList());
     }
 }

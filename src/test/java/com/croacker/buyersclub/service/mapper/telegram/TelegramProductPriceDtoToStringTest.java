@@ -20,7 +20,7 @@ class TelegramProductPriceDtoToStringTest {
     private TelegramProductPriceDtoToString mapper;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         mapper = new TelegramProductPriceDtoToString();
     }
 
@@ -28,7 +28,7 @@ class TelegramProductPriceDtoToStringTest {
     void shouldMapEntity() {
         //given
         var given = createDto();
-        var expected = "[test_shop, test_product - 150.17 руб.]";
+        var expected = createString();
 
         // when
         var actual = mapper.map(given);
@@ -38,9 +38,13 @@ class TelegramProductPriceDtoToStringTest {
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
+    private String createString() {
+        return "150.17 руб. - test_product";
+    }
+
     private TelegramProductPriceDto createDto() {
         return new TelegramProductPriceDto()
-                .setShop("test_shop")
+                .setProductId(0L)
                 .setName("test_product")
                 .setPrice("150.17");
     }

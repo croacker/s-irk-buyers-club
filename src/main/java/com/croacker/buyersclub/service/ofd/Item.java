@@ -3,8 +3,10 @@ package com.croacker.buyersclub.service.ofd;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Item {
     @JsonProperty("name")
@@ -30,9 +32,6 @@ public class Item {
 
     @JsonProperty("nds18")
     private int nds18;
-
-    @JsonProperty("modifiers")
-    private String modifiers;
 
     @JsonProperty("ndsCalculated10")
     private String ndsCalculated10;

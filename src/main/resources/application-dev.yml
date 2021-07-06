@@ -2,7 +2,6 @@ server:
   port: ${APP_PORT:8080}
 
 spring:
-  profiles: dev
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     generate-ddl: false

@@ -4,9 +4,9 @@ import com.croacker.buyersclub.repo.OrganizationRepo;
 import com.croacker.buyersclub.repo.ShopRepo;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
-import com.croacker.buyersclub.service.mapper.shop.AddDtoToShopMapper;
-import com.croacker.buyersclub.service.mapper.shop.DtoToShopMapper;
-import com.croacker.buyersclub.service.mapper.shop.ShopToDtoMapper;
+import com.croacker.buyersclub.service.mapper.shop.AddDtoToShop;
+import com.croacker.buyersclub.service.mapper.shop.DtoToShop;
+import com.croacker.buyersclub.service.mapper.shop.ShopToDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @AllArgsConstructor
@@ -25,15 +24,16 @@ public class ShopServiceImpl implements ShopService{
 
     private final OrganizationRepo organizationRepo;
 
-    private final ShopToDtoMapper toDtoMapper;
+    private final ShopToDto toDtoMapper;
 
-    private final DtoToShopMapper toShopMapper;
+    private final DtoToShop toShopMapper;
 
-    private final AddDtoToShopMapper addToEntityMapper;
+    private final AddDtoToShop addToEntityMapper;
 
     @Override
     public List<ShopDto> findAll(Pageable pageable) {
-        return StreamSupport.stream(repo.findAll().spliterator(), false).map(toDtoMapper).collect(Collectors.toList());
+        return repo.findByDeletedIsFalse(pageable)
+                .stream().map(toDtoMapper).collect(Collectors.toList());
     }
 
     @Override
@@ -43,12 +43,12 @@ public class ShopServiceImpl implements ShopService{
 
     @Override
     public ShopDto findByName(String name) {
-        return repo.findByName(name).map(toDtoMapper).orElse(null);
+        return repo.findFirstByName(name).map(toDtoMapper).orElse(null);
     }
 
     @Override
     public ShopDto findByAddress(String address) {
-        return repo.findByAddress(address).map(toDtoMapper).orElse(null);
+        return repo.findFirstByAddress(address).map(toDtoMapper).orElse(null);
     }
 
     @Override
@@ -79,8 +79,8 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public List<ShopDto> getShops(String expression) {
-        return repo.findByNameContainingIgnoreCase(expression)
+    public List<ShopDto> getShops(String expression, Pageable pageable) {
+        return repo.findByNameContainingIgnoreCase(expression, pageable)
                 .stream().map(toDtoMapper).collect(Collectors.toList());
     }
 }
