@@ -17,7 +17,6 @@ import com.croacker.buyersclub.service.mapper.check.CashCheckToInfoDto;
 import com.croacker.buyersclub.service.mapper.check.DtoToCashCheck;
 import com.croacker.buyersclub.service.mapper.checkline.AddDtoToCashCheckLine;
 import com.croacker.buyersclub.service.mapper.checkline.CashCheckLineToInfoDto;
-import org.apache.commons.compress.archivers.dump.DumpArchiveEntry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -86,9 +85,9 @@ class CheckServiceTest {
     void shouldFindAll() {
         // given
         var given = PageRequest.of(0, 20, Sort.Direction.ASC, "createdAt");
-        var checks = createChecksList();
+        var checks = createEntitiesList();
         when(repo.findByDeletedIsFalse(given)).thenReturn(checks);
-        var expected = createCheckInfoDtosList();
+        var expected = createInfoDtosList();
 
         // when
         var actual = service.findAll(given);
@@ -102,9 +101,9 @@ class CheckServiceTest {
     void shouldFindOne() {
         // given
         var given = 1L;
-        var check = createCheck(1L);
+        var check = createEntity(1L);
         when(repo.findById(given)).thenReturn(Optional.of(check));
-        var expected = createCheckInfoDto(1L);
+        var expected = createInfoDto(1L);
 
         // when
         var actual = service.findOne(given);
@@ -117,14 +116,14 @@ class CheckServiceTest {
     @Test
     void shouldSave() {
         // given
-        var given = createAddCheckDto(1L);
-        var check = createCheck(1L);
+        var given = createAddDto(1L);
+        var check = createEntity(1L);
         var cashier = createCashier(1L);
         var telegramUser = createTelegramUser(1L);
         when(repo.save(any())).thenReturn(check);
         when(cashierRepo.findById(1L)).thenReturn(Optional.of(cashier));
         when(telegramUserRepo.findById(1L)).thenReturn(Optional.of(telegramUser));
-        var expected = createCheckDto(1L);
+        var expected = createDto(1L);
 
         // when
         var actual = service.save(given);
@@ -137,14 +136,14 @@ class CheckServiceTest {
     @Test
     void shouldUpdate() {
         // given
-        var given = createCheckDto(1L);
-        var check = createCheck(1L);
+        var given = createDto(1L);
+        var check = createEntity(1L);
         var cashier = createCashier(1L);
         var telegramUser = createTelegramUser(1L);
         when(repo.save(any())).thenReturn(check);
         when(cashierRepo.findById(1L)).thenReturn(Optional.of(cashier));
         when(telegramUserRepo.findById(1L)).thenReturn(Optional.of(telegramUser));
-        var expected = createCheckDto(1L);
+        var expected = createDto(1L);
 
         // when
         var actual = service.update(given);
@@ -157,11 +156,11 @@ class CheckServiceTest {
     @Test
     void shouldDelete() {
         // given
-        var check = createCheck(1L);
-        var deletedCheck = createCheck(1L).setDeleted(true);
+        var check = createEntity(1L);
+        var deletedCheck = createEntity(1L).setDeleted(true);
         when(repo.findById(1L)).thenReturn(Optional.of(check));
         when(repo.save(any())).thenReturn(deletedCheck);
-        var expected = createCheckDto(1L).setDeleted(true);
+        var expected = createDto(1L).setDeleted(true);
 
         // when
         var actual = service.delete(1L);
@@ -171,27 +170,27 @@ class CheckServiceTest {
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
-    private List<CashCheck> createChecksList() {
+    private List<CashCheck> createEntitiesList() {
         return Arrays.asList(
-                createCheck(1L),
-                createCheck(2L),
-                createCheck(3L),
-                createCheck(4L),
-                createCheck(5L)
+                createEntity(1L),
+                createEntity(2L),
+                createEntity(3L),
+                createEntity(4L),
+                createEntity(5L)
         );
     }
 
-    private List<CashCheckInfoDto> createCheckInfoDtosList() {
+    private List<CashCheckInfoDto> createInfoDtosList() {
         return Arrays.asList(
-                createCheckInfoDto(1L),
-                createCheckInfoDto(2L),
-                createCheckInfoDto(3L),
-                createCheckInfoDto(4L),
-                createCheckInfoDto(5L)
+                createInfoDto(1L),
+                createInfoDto(2L),
+                createInfoDto(3L),
+                createInfoDto(4L),
+                createInfoDto(5L)
         );
     }
 
-    private CashCheck createCheck(long id) {
+    private CashCheck createEntity(long id) {
         return new CashCheck()
                 .setId(id)
                 .setCashier(createCashier(1l))
@@ -208,7 +207,7 @@ class CheckServiceTest {
                 .setDeleted(false);
     }
 
-    private CashCheckInfoDto createCheckInfoDto(long id) {
+    private CashCheckInfoDto createInfoDto(long id) {
         return new CashCheckInfoDto()
                 .setId(id)
                 .setCashierId(1L)
@@ -225,7 +224,7 @@ class CheckServiceTest {
                 .setDeleted(false);
     }
 
-    private CashCheckDto createCheckDto(long id) {
+    private CashCheckDto createDto(long id) {
         return new CashCheckDto()
                 .setId(id)
                 .setCashierId(1L)
@@ -241,7 +240,7 @@ class CheckServiceTest {
                 .setDeleted(false);
     }
 
-    private AddCashCheckDto createAddCheckDto(long id) {
+    private AddCashCheckDto createAddDto(long id) {
         return new AddCashCheckDto()
                 .setCashierId(1L)
                 .setRequestNumber("test_request_number")
