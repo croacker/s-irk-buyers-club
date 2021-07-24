@@ -10,6 +10,7 @@ import com.croacker.buyersclub.service.dto.product.ProductDto;
 import com.croacker.buyersclub.service.mapper.product.AddDtoToProduct;
 import com.croacker.buyersclub.service.mapper.product.DtoToProduct;
 import com.croacker.buyersclub.service.mapper.product.ProductToDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,6 +45,8 @@ class ProductServiceTest {
     private DtoToProduct toEntityMapper;
 
     private AddDtoToProduct addToEntityMapper;
+
+    private TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @BeforeEach
     void setup(){
@@ -141,11 +144,7 @@ class ProductServiceTest {
     }
 
     private Product createEntity(long id) {
-        return new Product()
-                .setId(id)
-                .setProductGroup(createProductGroup(id))
-                .setName("test_product_group_" + id)
-                .setDeleted(false);
+        return testEntitiesProducer.createProduct(id);
     }
 
     private List<ProductDto> createDtosList() {
@@ -159,23 +158,14 @@ class ProductServiceTest {
     }
 
     private ProductDto createDto(long id) {
-        return new ProductDto()
-                .setId(id)
-                .setProductGroupId(id)
-                .setName("test_product_group_" + id)
-                .setDeleted(false);
+        return testEntitiesProducer.createProductDto(id);
     }
 
     private AddProductDto createAddDto(long id) {
-        return new AddProductDto()
-                .setName("test_product_group_" + id)
-                .setProductGroupId(id);
+        return testEntitiesProducer.createAddProductDto(id);
     }
 
     private ProductGroup createProductGroup(long id) {
-        return new ProductGroup()
-                .setId(id)
-                .setName("test_product_group_" + id)
-                .setDeleted(false);
+        return testEntitiesProducer.createProductGroup(id);
     }
 }

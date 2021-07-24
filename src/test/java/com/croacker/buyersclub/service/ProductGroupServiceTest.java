@@ -8,6 +8,7 @@ import com.croacker.buyersclub.service.dto.productgroup.ProductGroupDto;
 import com.croacker.buyersclub.service.mapper.productgroup.AddDtoToProductGroup;
 import com.croacker.buyersclub.service.mapper.productgroup.DtoToProductGroup;
 import com.croacker.buyersclub.service.mapper.productgroup.ProductGroupToDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,6 +40,8 @@ class ProductGroupServiceTest {
     private DtoToProductGroup toEntityMapper;
 
     private AddDtoToProductGroup addToEntityMapper;
+
+    private TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @BeforeEach
     void setup(){
@@ -134,10 +137,7 @@ class ProductGroupServiceTest {
     }
 
     private ProductGroup createEntitiy(long id) {
-        return new ProductGroup()
-                .setId(id)
-                .setName("test_product_group_" + id)
-                .setDeleted(false);
+        return testEntitiesProducer.createProductGroup(id);
     }
 
     private List<ProductGroupDto> createDtosList() {
@@ -151,14 +151,10 @@ class ProductGroupServiceTest {
     }
 
     private ProductGroupDto createDto(long id) {
-        return new ProductGroupDto()
-                .setId(id)
-                .setName("test_product_group_" + id)
-                .setDeleted(false);
+        return testEntitiesProducer.createProductGroupDto(id);
     }
 
     private AddProductGroupDto createAddProductGroupDto(long id) {
-        return new AddProductGroupDto()
-                .setName("test_product_group_" + id);
+        return testEntitiesProducer.createAddProductGroupDto(id);
     }
 }

@@ -12,6 +12,7 @@ import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.mapper.shop.AddDtoToShop;
 import com.croacker.buyersclub.service.mapper.shop.DtoToShop;
 import com.croacker.buyersclub.service.mapper.shop.ShopToDto;
+import com.croacker.tests.TestEntitiesProducer;
 import liquibase.pro.packaged.N;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,10 +34,6 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {TestConfiguration.class})
 class ShopServiceImplTest {
 
-    private final static LocalDateTime NOW = LocalDateTime.now();
-
-    private final static long ORGANIZATION_ID = 0L;
-
     private ShopService service;
 
     @MockBean
@@ -50,6 +47,8 @@ class ShopServiceImplTest {
     private DtoToShop toShopMapper;
 
     private AddDtoToShop addToEntityMapper;
+
+    private TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @BeforeEach
     void setup(){
@@ -113,12 +112,7 @@ class ShopServiceImplTest {
     }
 
     private Shop createEntity(long id) {
-        return new Shop()
-                .setId(id)
-                .setName("test_product_group_" + id)
-                .setAddress("test_product_address_" + id)
-                .setOrganization(createOrganization(ORGANIZATION_ID))
-                .setDeleted(false);
+        return testEntitiesProducer.createShop(id);
     }
 
     private List<ShopDto> createDtosList() {
@@ -132,21 +126,7 @@ class ShopServiceImplTest {
     }
 
     private ShopDto createDto(long id) {
-        return new ShopDto()
-                .setId(id)
-                .setName("test_product_group_" + id)
-                .setAddress("test_product_address_" + id)
-                .setOrganizationId(ORGANIZATION_ID)
-                .setCreatedAt(NOW)
-                .setUpdatedAt(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createShopDto(id);
     }
 
-    private Organization createOrganization(long id) {
-        return new Organization()
-                .setId(id)
-                .setName("test_organization_" + id)
-                .setInn("test_inn_" + id)
-                .setDeleted(false);
-    }
 }

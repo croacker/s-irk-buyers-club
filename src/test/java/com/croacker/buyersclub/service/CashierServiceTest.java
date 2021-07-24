@@ -10,6 +10,7 @@ import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.mapper.cashier.AddDtoToCashier;
 import com.croacker.buyersclub.service.mapper.cashier.CashierToDto;
 import com.croacker.buyersclub.service.mapper.cashier.DtoToCashier;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,6 +45,8 @@ class CashierServiceTest {
     private DtoToCashier toEntityMapper;
 
     private AddDtoToCashier addToEntityMapper;
+
+    private TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @BeforeEach
     void setup(){
@@ -175,21 +178,18 @@ class CashierServiceTest {
     }
 
     private Cashier createEntity(long id){
-        return new Cashier()
-                .setId(id)
-                .setName("test_cashier_" + id)
-                .setShop(new Shop().setId(2L));
+        return testEntitiesProducer.createCashier(id);
     }
 
     private CashierDto createDto(long id){
-        return new CashierDto().setId(id).setName("test_cashier_" + id).setShopId(2L);
+        return testEntitiesProducer.createCashierDto(id);
     }
 
     private AddCashierDto createAddDto(long id){
-        return new AddCashierDto().setName("test_cashier_" + id).setShopId(2L);
+        return testEntitiesProducer.createAddCashierDto(id);
     }
 
     private Shop createShop(long id){
-        return new Shop().setId(id).setName("test_shop_" + id);
+        return testEntitiesProducer.createShop(id);
     }
 }

@@ -8,6 +8,7 @@ import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
 import com.croacker.buyersclub.service.mapper.organization.AddDtoToOrganization;
 import com.croacker.buyersclub.service.mapper.organization.DtoToOrganization;
 import com.croacker.buyersclub.service.mapper.organization.OrganizationToDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,6 +40,8 @@ class OrganizationServiceTest {
     private DtoToOrganization toEntityMapper;
 
     private AddDtoToOrganization addToEntityMapper;
+
+    private TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @BeforeEach
     void setup() {
@@ -173,22 +176,14 @@ class OrganizationServiceTest {
     }
 
     private Organization createEntity(long id) {
-        return new Organization()
-                .setId(id)
-                .setName("test_name_" + id)
-                .setInn("test_inn_" + id);
+        return testEntitiesProducer.createOrganization(id);
     }
 
     private OrganizationDto createDto(long id) {
-        return new OrganizationDto()
-                .setId(id)
-                .setName("test_name_" + id)
-                .setInn("test_inn_" + id);
+        return testEntitiesProducer.createOrganizationDto(id);
     }
 
     private AddOrganizationDto createAddOrganizationDto(long id) {
-        return new AddOrganizationDto()
-                .setName("test_name_" + id)
-                .setInn("test_inn_" + id);
+        return testEntitiesProducer.createAddOrganizationDto(id);
     }
 }
