@@ -107,12 +107,12 @@ class CashierServiceTest {
     @Test
     void shouldSave(){
         // given
-        var given = createAddDto(1L);
-        var cashier = createEntity(1L);
-        var shop = createShop(1L);
+        var given = createAddDto(0L);
+        var cashier = createEntity(0L);
+        var shop = createShop(0L);
         when(repo.save(any())).thenReturn(cashier);
-        when(shopRepo.findById(2L)).thenReturn(Optional.of(shop));
-        var expected = createDto(1L);
+        when(shopRepo.findById(0L)).thenReturn(Optional.of(shop));
+        var expected = createDto(0L);
 
         // when
         var actual = service.save(given);
@@ -125,12 +125,12 @@ class CashierServiceTest {
     @Test
     void shouldUpdate(){
         // given
-        var given = createDto(1L);
-        var cashier = createEntity(1L);
-        var shop = createShop(1L);
+        var given = createDto(0L);
+        var cashier = createEntity(0L);
+        var shop = createShop(0L);
         when(repo.save(any())).thenReturn(cashier);
-        when(shopRepo.findById(2L)).thenReturn(Optional.of(shop));
-        var expected = createDto(1L);
+        when(shopRepo.findById(0L)).thenReturn(Optional.of(shop));
+        var expected = createDto(0L);
 
         // when
         var actual = service.update(given);

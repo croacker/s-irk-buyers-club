@@ -15,6 +15,7 @@ import com.croacker.buyersclub.service.dto.product.ProductDto;
 import com.croacker.buyersclub.service.dto.productgroup.AddProductGroupDto;
 import com.croacker.buyersclub.service.dto.productgroup.ProductGroupDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
+import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 
 import java.time.LocalDateTime;
@@ -143,6 +144,7 @@ public class TestEntitiesProducer {
         return new CashCheckInfoDto()
                 .setId(id)
                 .setCashierId(0L)
+                .setCashierName("test_cashier_" + 0L)
                 .setRequestNumber("test_request_number_" + id)
                 .setShiftNumber("test_shift_number_" + id)
                 .setKktRegId("test_kkt_reg_id_" + id)
@@ -258,11 +260,16 @@ public class TestEntitiesProducer {
     public ProductPrice createProductPrice(long id) {
         return new ProductPrice()
                 .setId(id)
-                .setShop(createShop())
-                .setProduct(createProduct())
+                .setShop(createShop(0L))
+                .setProduct(createProduct(0L))
                 .setPrice((int) id)
                 .setPriceDate(NOW)
                 .setDeleted(false);
+    }
+
+    public TelegramFileProcessResult createTelegramFileProcessResult(long id) {
+        return new TelegramFileProcessResult()
+                .setCheckInfo(dateTimeService.localDateTimeToString(NOW) + " test_fiscal_document_number_" + id);
     }
 
     private LocalDateTime stringToLocalDateTime(String str){

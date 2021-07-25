@@ -74,13 +74,13 @@ class OfdCheckServiceTest {
     void shouldProcess(){
         // given
         var given = createOfdCheck();
-        var telegramUserId = 1L;
+        var telegramUserId = 0L;
         when(organizationService.findByInn("test_user_inn")).thenReturn(createOrganization());
         when(shopService.findByName("test_shop")).thenReturn(createShop());
         when(cashierService.findByName(any())).thenReturn(createCashier());
         when(checkService.save(any())).thenReturn(createCashCheckDto());
 
-        var expected = createTelegramFileProcessResult();
+        var expected = createTelegramFileProcessResult(0L);
 
         // when
         var actual = service.process(given, telegramUserId);
@@ -94,9 +94,8 @@ class OfdCheckServiceTest {
         return testEntitiesProducer.createOfdCheck(0L);
     }
 
-    private TelegramFileProcessResult createTelegramFileProcessResult() {
-        return new TelegramFileProcessResult()
-                .setCheckInfo(localDateTimeToString(NOW) + " test_fiscal_document_number");
+    private TelegramFileProcessResult createTelegramFileProcessResult(long id) {
+        return testEntitiesProducer.createTelegramFileProcessResult(id);
     }
 
     private OrganizationDto createOrganization() {

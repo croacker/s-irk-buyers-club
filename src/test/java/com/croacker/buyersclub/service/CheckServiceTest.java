@@ -118,14 +118,14 @@ class CheckServiceTest {
     @Test
     void shouldSave() {
         // given
-        var given = createAddDto(1L);
-        var check = createEntity(1L);
-        var cashier = createCashier(1L);
-        var telegramUser = createTelegramUser(1L);
+        var given = createAddDto(0L);
+        var check = createEntity(0L);
+        var cashier = createCashier(0L);
+        var telegramUser = createTelegramUser(0L);
         when(repo.save(any())).thenReturn(check);
-        when(cashierRepo.findById(1L)).thenReturn(Optional.of(cashier));
-        when(telegramUserRepo.findById(1L)).thenReturn(Optional.of(telegramUser));
-        var expected = createDto(1L);
+        when(cashierRepo.findById(0L)).thenReturn(Optional.of(cashier));
+        when(telegramUserRepo.findById(0L)).thenReturn(Optional.of(telegramUser));
+        var expected = createDto(0L);
 
         // when
         var actual = service.save(given);
@@ -138,14 +138,14 @@ class CheckServiceTest {
     @Test
     void shouldUpdate() {
         // given
-        var given = createDto(1L);
-        var check = createEntity(1L);
-        var cashier = createCashier(1L);
-        var telegramUser = createTelegramUser(1L);
+        var given = createDto(0L);
+        var check = createEntity(0L);
+        var cashier = createCashier(0L);
+        var telegramUser = createTelegramUser(0L);
         when(repo.save(any())).thenReturn(check);
-        when(cashierRepo.findById(1L)).thenReturn(Optional.of(cashier));
-        when(telegramUserRepo.findById(1L)).thenReturn(Optional.of(telegramUser));
-        var expected = createDto(1L);
+        when(cashierRepo.findById(0L)).thenReturn(Optional.of(cashier));
+        when(telegramUserRepo.findById(0L)).thenReturn(Optional.of(telegramUser));
+        var expected = createDto(0L);
 
         // when
         var actual = service.update(given);
