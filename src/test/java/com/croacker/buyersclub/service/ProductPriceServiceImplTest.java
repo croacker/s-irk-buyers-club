@@ -1,12 +1,12 @@
 package com.croacker.buyersclub.service;
 
 import com.croacker.buyersclub.TestConfiguration;
-import com.croacker.buyersclub.domain.Product;
 import com.croacker.buyersclub.domain.ProductPrice;
-import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.repo.ProductPriceRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
 import com.croacker.buyersclub.repo.ShopRepo;
+import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
+import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import com.croacker.buyersclub.service.mapper.productprice.AddDtoToProductPrice;
 import com.croacker.buyersclub.service.mapper.productprice.DtoToProductPrice;
 import com.croacker.buyersclub.service.mapper.productprice.ProductPriceToDto;
@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -73,11 +74,14 @@ class ProductPriceServiceImplTest {
         // given
         var given = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
         when(repo.findByDeletedIsFalse(given)).thenReturn(createEntitiesList());
+        var expected = createInfoDtosList();
 
         // when
         var actual = service.findAll(given);
 
-
+        // then
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     @Test
@@ -120,6 +124,35 @@ class ProductPriceServiceImplTest {
 
     private ProductPrice createEntity(long id) {
         return testEntitiesProducer.createProductPrice(id);
+    }
+
+    private List<ProductPriceDto> createDtosList() {
+        return Arrays.asList(
+                createDto(1L),
+                createDto(2L),
+                createDto(3L),
+                createDto(4L),
+                createDto(5L)
+        );
+    }
+
+    private ProductPriceDto createDto(long id) {
+        return testEntitiesProducer.createProductPriceDto(id);
+    }
+
+
+    private List<ProductPriceInfoDto> createInfoDtosList() {
+        return Arrays.asList(
+                createInfoDto(1L),
+                createInfoDto(2L),
+                createInfoDto(3L),
+                createInfoDto(4L),
+                createInfoDto(5L)
+        );
+    }
+
+    private ProductPriceInfoDto createInfoDto(long id) {
+        return testEntitiesProducer.createProductPriceInfoDto(id);
     }
 
 }

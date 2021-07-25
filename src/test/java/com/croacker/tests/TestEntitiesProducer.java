@@ -14,6 +14,8 @@ import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
 import com.croacker.buyersclub.service.dto.productgroup.AddProductGroupDto;
 import com.croacker.buyersclub.service.dto.productgroup.ProductGroupDto;
+import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
+import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
@@ -262,6 +264,28 @@ public class TestEntitiesProducer {
                 .setId(id)
                 .setShop(createShop(0L))
                 .setProduct(createProduct(0L))
+                .setPrice((int) id)
+                .setPriceDate(NOW)
+                .setDeleted(false);
+    }
+
+    public ProductPriceDto createProductPriceDto(long id) {
+        return new ProductPriceDto()
+                .setId(id)
+                .setShopId(0L)
+                .setProductId(0L)
+                .setPrice((int) id)
+                .setPriceDate(NOW)
+                .setDeleted(false);
+    }
+
+    public ProductPriceInfoDto createProductPriceInfoDto(long id) {
+        return new ProductPriceInfoDto()
+                .setId(id)
+                .setShopId(0L)
+                .setShopName("test_shop_" + 0L)
+                .setProductId(0L)
+                .setProductName("test_product_" + 0L)
                 .setPrice((int) id)
                 .setPriceDate(NOW)
                 .setDeleted(false);
