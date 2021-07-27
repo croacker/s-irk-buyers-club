@@ -2,18 +2,15 @@ package com.croacker.buyersclub.service;
 
 import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Organization;
-import com.croacker.buyersclub.domain.Product;
 import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.repo.OrganizationRepo;
 import com.croacker.buyersclub.repo.ShopRepo;
-import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
-import com.croacker.buyersclub.service.dto.product.ProductDto;
+import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.mapper.shop.AddDtoToShop;
 import com.croacker.buyersclub.service.mapper.shop.DtoToShop;
 import com.croacker.buyersclub.service.mapper.shop.ShopToDto;
 import com.croacker.tests.TestEntitiesProducer;
-import liquibase.pro.packaged.N;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,11 +20,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -75,30 +73,108 @@ class ShopServiceImplTest {
 
     @Test
     void findOne() {
+        // given
+        when(repo.findById(0L)).thenReturn(Optional.of(createEntity(0L)));
+        var expected = createDto(0L);
+
+        // when
+        var actual = service.findOne(0L);
+
+        // then
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     @Test
     void findByName() {
+        // given
+        when(repo.findFirstByName("test_shop_0")).thenReturn(Optional.of(createEntity(0L)));
+        var expected = createDto(0L);
+
+        // when
+        var actual = service.findByName("test_shop_0");
+
+        // then
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
+
     }
 
     @Test
     void findByAddress() {
+        // given
+        when(repo.findFirstByAddress("test_address_0")).thenReturn(Optional.of(createEntity(0L)));
+        var expected = createDto(0L);
+
+        // when
+        var actual = service.findByAddress("test_address_0");
+
+        // then
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     @Test
     void save() {
+        // given
+        var given = createAddDto(0L);
+        when(repo.save(any())).thenReturn(createEntity(0L));
+        when(organizationRepo.findById(0L)).thenReturn(Optional.of(createOrganization(0L)));
+        var expected = createDto(0L);
+
+        // when
+        var actual = service.save(given);
+
+        // then
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     @Test
     void update() {
+        // given
+        var given = createDto(0L);
+        when(repo.save(any())).thenReturn(createEntity(0L));
+        when(organizationRepo.findById(0L)).thenReturn(Optional.of(createOrganization(0L)));
+        var expected = createDto(0L);
+
+        // when
+        var actual = service.update(given);
+
+        // then
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     @Test
     void delete() {
+        // given
+        var given = createDto(0L);
+        when(repo.findById(any())).thenReturn(Optional.of(createEntity(0L)));
+        when(repo.save(any())).thenReturn(createEntity(0L).setDeleted(true));
+        var expected = createDto(0L).setDeleted(true);
+
+        // when
+        var actual = service.delete(0L);
+
+        // then
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     @Test
     void getShops() {
+        // given
+        var pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
+        when(repo.findByNameContainingIgnoreCase("test_expression", pageable)).thenReturn(createEntitiesList());
+        var expected = createDtosList();
+
+        // when
+        var actual = service.getShops("test_expression", pageable);
+
+        // then
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     private List<Shop> createEntitiesList() {
@@ -127,6 +203,14 @@ class ShopServiceImplTest {
 
     private ShopDto createDto(long id) {
         return testEntitiesProducer.createShopDto(id);
+    }
+
+    private AddShopDto createAddDto(long id) {
+        return testEntitiesProducer.createAddShopDto(id);
+    }
+
+    private Organization createOrganization(long id) {
+        return testEntitiesProducer.createOrganization(id);
     }
 
 }

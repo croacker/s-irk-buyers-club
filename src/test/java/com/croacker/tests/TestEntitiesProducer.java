@@ -16,6 +16,7 @@ import com.croacker.buyersclub.service.dto.productgroup.AddProductGroupDto;
 import com.croacker.buyersclub.service.dto.productgroup.ProductGroupDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
+import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
@@ -77,6 +78,13 @@ public class TestEntitiesProducer {
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
+    }
+
+    public AddShopDto createAddShopDto(long id) {
+        return new AddShopDto()
+                .setName("test_shop_" + id)
+                .setAddress("test_address_" + id)
+                .setOrganizationId(0L);
     }
 
     public Organization createOrganization(long id) {

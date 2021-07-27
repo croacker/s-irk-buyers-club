@@ -1,6 +1,7 @@
 package com.croacker.buyersclub.service;
 
 import com.croacker.buyersclub.TestConfiguration;
+import com.croacker.buyersclub.domain.Product;
 import com.croacker.buyersclub.domain.ProductPrice;
 import com.croacker.buyersclub.repo.ProductPriceRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
@@ -25,6 +26,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -86,10 +88,25 @@ class ProductPriceServiceImplTest {
 
     @Test
     void findOne() {
+        // given
+        when(repo.findById(0L)).thenReturn(Optional.of(createEntity(0L)));
+        var expected = createDto(0L);
+
+        // when
+        var actual = service.findOne(0L);
+
+        // then
+//        assertEquals(expected, actual,
+//                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     @Test
     void findByProduct() {
+        // given
+        var product = createProduct(0L);
+
+        // when
+//        var actual = service.findByProduct(0L);
     }
 
     @Test
@@ -153,6 +170,10 @@ class ProductPriceServiceImplTest {
 
     private ProductPriceInfoDto createInfoDto(long id) {
         return testEntitiesProducer.createProductPriceInfoDto(id);
+    }
+
+    private Product createProduct(long id) {
+        return testEntitiesProducer.createProduct(id);
     }
 
 }
