@@ -6,8 +6,10 @@ import com.croacker.buyersclub.domain.ProductPrice;
 import com.croacker.buyersclub.repo.ProductPriceRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
 import com.croacker.buyersclub.repo.ShopRepo;
+import com.croacker.buyersclub.service.dto.product.ProductDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
+import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.mapper.productprice.AddDtoToProductPrice;
 import com.croacker.buyersclub.service.mapper.productprice.DtoToProductPrice;
 import com.croacker.buyersclub.service.mapper.productprice.ProductPriceToDto;
@@ -35,7 +37,7 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {TestConfiguration.class})
 class ProductPriceServiceImplTest {
 
-    public static final LocalDateTime NOW = LocalDateTime.now();
+    public static final LocalDateTime NOW = TestEntitiesProducer.NOW;
 
     private ProductPriceServiceImpl service;
 
@@ -90,27 +92,40 @@ class ProductPriceServiceImplTest {
     void findOne() {
         // given
         when(repo.findById(0L)).thenReturn(Optional.of(createEntity(0L)));
-        var expected = createDto(0L);
+        var expected = createInfoDto(0L);
 
         // when
         var actual = service.findOne(0L);
 
         // then
-//        assertEquals(expected, actual,
-//                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     @Test
     void findByProduct() {
         // given
         var product = createProduct(0L);
+        when(productRepo.findById(0L)).thenReturn(Optional.of(product));
+        when(repo.findByProduct(product)).thenReturn(createEntitiesList());
+        var expected = createInfoDtosList();
 
         // when
-//        var actual = service.findByProduct(0L);
+        var actual = service.findByProduct(0L);
+
+        // then
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     @Test
     void findPrice() {
+        // given
+        var productDto = createProductDto(0L);
+        var shopDto = createShopDto(0L);
+
+        // when
+        var actual = service.findPrice(productDto, shopDto, NOW);
     }
 
     @Test
@@ -174,6 +189,14 @@ class ProductPriceServiceImplTest {
 
     private Product createProduct(long id) {
         return testEntitiesProducer.createProduct(id);
+    }
+
+    private ProductDto createProductDto(long id) {
+        testEntitiesProducer.createProductDto(id);
+    }
+
+    private ShopDto createShopDto(long id) {
+        testEntitiesProducer.createShopDto(id);
     }
 
 }

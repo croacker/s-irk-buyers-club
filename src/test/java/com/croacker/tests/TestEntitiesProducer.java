@@ -26,7 +26,7 @@ import java.util.Collections;
 
 public class TestEntitiesProducer {
 
-    private static final LocalDateTime NOW = LocalDateTime.now();
+    public static final LocalDateTime NOW = LocalDateTime.now();
 
     private final static String STRING_DATE_TIME = "2020-11-22T23:34:41";
 
