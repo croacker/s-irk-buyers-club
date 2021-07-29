@@ -14,6 +14,7 @@ import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
 import com.croacker.buyersclub.service.dto.productgroup.AddProductGroupDto;
 import com.croacker.buyersclub.service.dto.productgroup.ProductGroupDto;
+import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
@@ -285,6 +286,14 @@ public class TestEntitiesProducer {
                 .setPrice((int) id)
                 .setPriceDate(NOW)
                 .setDeleted(false);
+    }
+
+    public AddProductPriceDto createAddProductPriceDto(long id) {
+        return new AddProductPriceDto()
+                .setShopId(0L)
+                .setProductId(0L)
+                .setPrice((int) id)
+                .setPriceDate(NOW);
     }
 
     public ProductPriceInfoDto createProductPriceInfoDto(long id) {

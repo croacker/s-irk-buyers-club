@@ -88,9 +88,9 @@ public class ProductPriceServiceImpl implements ProductPriceService{
 
     @Override
     public ProductPriceDto update(ProductPriceDto dto) {
-        var cashier = toEntityMapper.map(dto);
-        cashier = repo.save(cashier);
-        return toDtoMapper.map(cashier);
+        var entity = toEntityMapper.map(dto);
+        entity = repo.save(entity);
+        return toDtoMapper.map(entity);
     }
 
     @Override

@@ -3,10 +3,12 @@ package com.croacker.buyersclub.service;
 import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Product;
 import com.croacker.buyersclub.domain.ProductPrice;
+import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.repo.ProductPriceRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
 import com.croacker.buyersclub.repo.ShopRepo;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
+import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -67,6 +70,7 @@ class ProductPriceServiceImplTest {
         toDtoMapper = new ProductPriceToDto();
         toInfoDtoMapper = new ProductPriceToInfoDto();
         toEntityMapper = new DtoToProductPrice();
+        addToEntityMapper = new AddDtoToProductPrice();
         toTelegramDtoMapper = new ProductPriceToTelegramDto();
         service = new ProductPriceServiceImpl(repo, productRepo, shopRepo, toDtoMapper, toInfoDtoMapper,
                 toEntityMapper, addToEntityMapper, toTelegramDtoMapper);
@@ -122,26 +126,85 @@ class ProductPriceServiceImplTest {
     void findPrice() {
         // given
         var productDto = createProductDto(0L);
+        var product = createProduct(0L);
         var shopDto = createShopDto(0L);
+        var shop = createShop(0L);
+        when(productRepo.findById(0L)).thenReturn(Optional.of(product));
+        when(shopRepo.findById(0L)).thenReturn(Optional.of(shop));
+        when(repo.findByProductAndShopAndPriceDate(product, shop, NOW)).thenReturn(Optional.of(createEntity(0L)));
+        var expected = createDto(0L);
 
         // when
         var actual = service.findPrice(productDto, shopDto, NOW);
+
+        // then
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     @Test
     void save() {
+        // given
+        var given = createAddDto(0L);
+        var shop = createShop(0L);
+        var product = createProduct(0L);
+        when(shopRepo.findById(0L)).thenReturn(Optional.of(shop));
+        when(productRepo.findById(0L)).thenReturn(Optional.of(product));
+        when(repo.save(any())).thenReturn(createEntity(0L));
+        var expected = createDto(0L);
+
+        // when
+        var actual = service.save(given);
+
+        // then
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     @Test
     void update() {
+        // given
+        var given = createDto(0L);
+        when(repo.save(any())).thenReturn(createEntity(0L));
+        var expected = createDto(0L);
+
+        // when
+        var actual = service.update(given);
+
+        // then
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     @Test
     void delete() {
+        // given
+        var expected = createDto(0L).setDeleted(true);
+
+        // when
+        var actual = service.delete(0L);
+
+        // then
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     @Test
     void getProductsPrices() {
+        // given
+        var productName = "test_product_";
+        var pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
+        when(productRepo.findByNameContainingIgnoreCase(productName, pageable)).thenReturn(createProductsList());
+        when(repo.findByProduct(any())).thenReturn()
+
+        var expected = createDtosList();
+
+        // when
+        var actual = service.getProductsPrices(productName, pageable);
+
+        // then
+        assertEquals(expected, actual,
+                () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     private List<ProductPrice> createEntitiesList() {
@@ -172,6 +235,9 @@ class ProductPriceServiceImplTest {
         return testEntitiesProducer.createProductPriceDto(id);
     }
 
+    private AddProductPriceDto createAddDto(long id) {
+        return testEntitiesProducer.createAddProductPriceDto(id);
+    }
 
     private List<ProductPriceInfoDto> createInfoDtosList() {
         return Arrays.asList(
@@ -191,12 +257,28 @@ class ProductPriceServiceImplTest {
         return testEntitiesProducer.createProduct(id);
     }
 
+    private List<Product> createProductsList() {
+        return Arrays.asList(
+                createProduct(0L),
+                createProduct(1L),
+                createProduct(2L),
+                createProduct(3L),
+                createProduct(4L),
+                createProduct(5L)
+        );
+    }
+
+
     private ProductDto createProductDto(long id) {
-        testEntitiesProducer.createProductDto(id);
+        return testEntitiesProducer.createProductDto(id);
+    }
+
+    private Shop createShop(long id) {
+        return testEntitiesProducer.createShop(id);
     }
 
     private ShopDto createShopDto(long id) {
-        testEntitiesProducer.createShopDto(id);
+        return testEntitiesProducer.createShopDto(id);
     }
 
 }
