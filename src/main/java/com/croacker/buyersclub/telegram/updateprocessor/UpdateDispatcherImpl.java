@@ -2,6 +2,7 @@ package com.croacker.buyersclub.telegram.updateprocessor;
 
 import com.croacker.buyersclub.service.locale.LocaleService;
 import com.croacker.buyersclub.service.telegram.TelegramFileService;
+import com.croacker.buyersclub.service.telegram.TelegramMessageService;
 import com.croacker.buyersclub.telegram.chat.ChatPool;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,8 @@ public class UpdateDispatcherImpl implements UpdateDispatcher {
 
     private final LocaleService localeService;
 
+    private final TelegramMessageService telegramMessageService;
+
     @Override
     public UpdateProcessor getProcessor(Update update) {
         var type = getMessageType(update);
@@ -31,16 +34,8 @@ public class UpdateDispatcherImpl implements UpdateDispatcher {
     }
 
     @Override
-    public MessageType getMessageType(Update update){
-        var result = MessageType.QUERY;
-        if(isStart(update)){
-            result = MessageType.COMMAND;
-        }else if(isFile(update)) {
-            result = MessageType.FILE;
-        } else if (isCallback(update)){
-            result = MessageType.CALLBACK;
-        }
-        return result;
+    public MessageType getMessageType(Update update) {
+        return telegramMessageService.getMessageType(update);
     }
 
     private UpdateProcessor createFileProcessor(Update update) {
@@ -57,35 +52,6 @@ public class UpdateDispatcherImpl implements UpdateDispatcher {
 
     private UpdateProcessor createQueryProcessor(Update update) {
         return new QueryProcessor(update.getMessage(), chatPool, localeService);
-    }
-
-    /**
-     * Получена команда start.
-     * @param update
-     * @return
-     */
-    private boolean isStart(Update update){
-        return update.getMessage() != null
-                && update.getMessage().hasText()
-                && update.getMessage().getText().equals("/start");
-    }
-
-    /**
-     * Получен файл.
-     * @param update
-     * @return
-     */
-    private boolean isFile(Update update) {
-        return telegramFileService.getFileId(update.getMessage()).isPresent();
-    }
-
-    /**
-     * Получен запрос, например товара.
-     * @param update
-     * @return
-     */
-    private boolean isCallback(Update update) {
-        return update.getCallbackQuery() != null && update.getCallbackQuery().getMessage() != null;
     }
 
 }
