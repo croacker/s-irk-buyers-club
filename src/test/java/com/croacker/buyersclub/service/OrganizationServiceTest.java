@@ -8,6 +8,7 @@ import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
 import com.croacker.buyersclub.service.mapper.organization.AddDtoToOrganization;
 import com.croacker.buyersclub.service.mapper.organization.DtoToOrganization;
 import com.croacker.buyersclub.service.mapper.organization.OrganizationToDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +41,8 @@ class OrganizationServiceTest {
 
     private AddDtoToOrganization addToEntityMapper;
 
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
+
     @BeforeEach
     void setup() {
         toDtoMapper = new OrganizationToDto();
@@ -49,11 +52,11 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void shouldFindAll() {
+    void findAll() {
         // given
         var given = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
-        when(repo.findByDeletedIsFalse(given)).thenReturn(createOrganizations());
-        var expected = createOrganizationDtos();
+        when(repo.findByDeletedIsFalse(given)).thenReturn(createEntitiesList());
+        var expected = createDtosList();
 
         // when
         var actual = service.findAll(given);
@@ -64,10 +67,10 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void shouldFindOne() {
+    void findOne() {
         // given
-        when(repo.findById(1L)).thenReturn(Optional.of(createOrganization(1L)));
-        var expected = createOrganizationDto(1L);
+        when(repo.findById(1L)).thenReturn(Optional.of(createEntity(1L)));
+        var expected = createDto(1L);
 
         // when
         var actual = service.findOne(1L);
@@ -78,10 +81,10 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void shouldFindByInn() {
+    void findByInn() {
         // given
-        when(repo.findByInn("test_inn_1")).thenReturn(Optional.of(createOrganization(1L)));
-        var expected = createOrganizationDto(1L);
+        when(repo.findByInn("test_inn_1")).thenReturn(Optional.of(createEntity(1L)));
+        var expected = createDto(1L);
 
         // when
         var actual = service.findByInn("test_inn_1");
@@ -92,11 +95,11 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void shouldGetOrganizations() {
+    void getOrganizations() {
         // given
         var given = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
-        when(repo.findByNameContainingIgnoreCase("name", given)).thenReturn(createOrganizations());
-        var expected = createOrganizationDtos();
+        when(repo.findByNameContainingIgnoreCase("name", given)).thenReturn(createEntitiesList());
+        var expected = createDtosList();
 
         // when
         var actual = service.getOrganizations("name", given);
@@ -107,11 +110,11 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void shouldSave() {
+    void save() {
         // given
         var given = createAddOrganizationDto(1L);
-        when(repo.save(any())).thenReturn(createOrganization(1L));
-        var expected = createOrganizationDto(1L);
+        when(repo.save(any())).thenReturn(createEntity(1L));
+        var expected = createDto(1L);
 
         // when
         var actual = service.save(given);
@@ -122,11 +125,11 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void shouldUpdate() {
+    void update() {
         // given
-        var given = createOrganizationDto(1L);
-        when(repo.save(any())).thenReturn(createOrganization(1L));
-        var expected = createOrganizationDto(1L);
+        var given = createDto(1L);
+        when(repo.save(any())).thenReturn(createEntity(1L));
+        var expected = createDto(1L);
 
         // when
         var actual = service.update(given);
@@ -137,12 +140,12 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void shouldDelete() {
+    void delete() {
         // given
-        var given = createOrganizationDto(1L);
-        when(repo.findById(any())).thenReturn(Optional.of(createOrganization(1L)));
-        when(repo.save(any())).thenReturn(createOrganization(1L).setDeleted(true));
-        var expected = createOrganizationDto(1L).setDeleted(true);
+        var given = createDto(1L);
+        when(repo.findById(any())).thenReturn(Optional.of(createEntity(1L)));
+        when(repo.save(any())).thenReturn(createEntity(1L).setDeleted(true));
+        var expected = createDto(1L).setDeleted(true);
 
         // when
         var actual = service.delete(1L);
@@ -152,43 +155,35 @@ class OrganizationServiceTest {
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
-    private List<Organization> createOrganizations() {
+    private List<Organization> createEntitiesList() {
         return Arrays.asList(
-                createOrganization(1L),
-                createOrganization(2L),
-                createOrganization(3L),
-                createOrganization(4L),
-                createOrganization(5L)
+                createEntity(1L),
+                createEntity(2L),
+                createEntity(3L),
+                createEntity(4L),
+                createEntity(5L)
         );
     }
 
-    private List<OrganizationDto> createOrganizationDtos() {
+    private List<OrganizationDto> createDtosList() {
         return Arrays.asList(
-                createOrganizationDto(1L),
-                createOrganizationDto(2L),
-                createOrganizationDto(3L),
-                createOrganizationDto(4L),
-                createOrganizationDto(5L)
+                createDto(1L),
+                createDto(2L),
+                createDto(3L),
+                createDto(4L),
+                createDto(5L)
         );
     }
 
-    private Organization createOrganization(long id) {
-        return new Organization()
-                .setId(id)
-                .setName("test_name_" + id)
-                .setInn("test_inn_" + id);
+    private Organization createEntity(long id) {
+        return testEntitiesProducer.createOrganization(id);
     }
 
-    private OrganizationDto createOrganizationDto(long id) {
-        return new OrganizationDto()
-                .setId(id)
-                .setName("test_name_" + id)
-                .setInn("test_inn_" + id);
+    private OrganizationDto createDto(long id) {
+        return testEntitiesProducer.createOrganizationDto(id);
     }
 
     private AddOrganizationDto createAddOrganizationDto(long id) {
-        return new AddOrganizationDto()
-                .setName("test_name_" + id)
-                .setInn("test_inn_" + id);
+        return testEntitiesProducer.createAddOrganizationDto(id);
     }
 }

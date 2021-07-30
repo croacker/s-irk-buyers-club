@@ -51,6 +51,6 @@ public class ShopChat implements Chat {
 
     private List<ShopDto> getShops(String expression){
         var pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
-        return shopService.getShops(expression,pageable);
+        return shopService.getShops(expression, pageable);
     }
 }

@@ -23,7 +23,7 @@ class DateTimeServiceTest {
     }
 
     @Test
-    void shouldDateTimeToEpoch() {
+    void dateTimeToEpoch() {
         //given
         var given = LocalDateTime.of(2020, 11, 22, 23, 34, 41);
         var expected = 1606059281;
@@ -38,7 +38,7 @@ class DateTimeServiceTest {
     }
 
     @Test
-    void shouldFromEpoch() {
+    void fromEpoch() {
         //given
         var given = 1606059281;
         var expected = LocalDateTime.of(2020, 11, 22, 23, 34, 41);
@@ -53,7 +53,7 @@ class DateTimeServiceTest {
     }
 
     @Test
-    void shouldStringToLocalDateTime() {
+    void stringToLocalDateTime() {
         //given
         var given = "2020-11-22T23:34:41";
         var expected = LocalDateTime.of(2020, 11, 22, 23, 34, 41);
@@ -67,7 +67,7 @@ class DateTimeServiceTest {
     }
 
     @Test
-    void shouldLocalDateTimeToString() {
+    void localDateTimeToString() {
         //given
         var given = LocalDateTime.of(2020, 11, 22, 23, 34, 41);
         var expected = "22-11-2020 23:34:41";
