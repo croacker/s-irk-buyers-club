@@ -57,7 +57,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void shouldFindAll() {
+    void findAll() {
         // given
         var given = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
         when(repo.findByDeletedIsFalse(given)).thenReturn(createEntitiesList());
@@ -72,7 +72,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void shouldFindOne() {
+    void findOne() {
         // given
         when(repo.findById(1L)).thenReturn(Optional.of(createEntity(1L)));
         var expected = createDto(1L);
@@ -86,7 +86,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void shouldSave() {
+    void save() {
         // given
         var given = createAddDto(1L);
         when(repo.save(any())).thenReturn(createEntity(1L));
@@ -102,7 +102,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void shouldUpdate() {
+    void update() {
         // given
         var given = createDto(1L);
         when(repo.save(any())).thenReturn(createEntity(1L));
@@ -118,7 +118,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void shouldDelete() {
+    void delete() {
         // given
         var given = createDto(1L);
         when(repo.findById(any())).thenReturn(Optional.of(createEntity(1L)));

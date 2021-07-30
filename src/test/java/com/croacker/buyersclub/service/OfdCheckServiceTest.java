@@ -71,7 +71,7 @@ class OfdCheckServiceTest {
     }
 
     @Test
-    void shouldProcess(){
+    void process(){
         // given
         var given = createOfdCheck();
         var telegramUserId = 0L;

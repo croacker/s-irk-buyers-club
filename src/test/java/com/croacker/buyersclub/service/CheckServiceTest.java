@@ -84,7 +84,7 @@ class CheckServiceTest {
     }
 
     @Test
-    void shouldFindAll() {
+    void findAll() {
         // given
         var given = PageRequest.of(0, 20, Sort.Direction.ASC, "createdAt");
         var checks = createEntitiesList();
@@ -100,7 +100,7 @@ class CheckServiceTest {
     }
 
     @Test
-    void shouldFindOne() {
+    void findOne() {
         // given
         var given = 1L;
         var check = createEntity(1L);
@@ -116,7 +116,7 @@ class CheckServiceTest {
     }
 
     @Test
-    void shouldSave() {
+    void save() {
         // given
         var given = createAddDto(0L);
         var check = createEntity(0L);
@@ -136,7 +136,7 @@ class CheckServiceTest {
     }
 
     @Test
-    void shouldUpdate() {
+    void update() {
         // given
         var given = createDto(0L);
         var check = createEntity(0L);
@@ -156,7 +156,7 @@ class CheckServiceTest {
     }
 
     @Test
-    void shouldDelete() {
+    void delete() {
         // given
         var check = createEntity(1L);
         var deletedCheck = createEntity(1L).setDeleted(true);

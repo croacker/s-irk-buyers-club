@@ -52,7 +52,7 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void shouldFindAll() {
+    void findAll() {
         // given
         var given = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
         when(repo.findByDeletedIsFalse(given)).thenReturn(createEntitiesList());
@@ -67,7 +67,7 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void shouldFindOne() {
+    void findOne() {
         // given
         when(repo.findById(1L)).thenReturn(Optional.of(createEntity(1L)));
         var expected = createDto(1L);
@@ -81,7 +81,7 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void shouldFindByInn() {
+    void findByInn() {
         // given
         when(repo.findByInn("test_inn_1")).thenReturn(Optional.of(createEntity(1L)));
         var expected = createDto(1L);
@@ -95,7 +95,7 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void shouldGetOrganizations() {
+    void getOrganizations() {
         // given
         var given = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
         when(repo.findByNameContainingIgnoreCase("name", given)).thenReturn(createEntitiesList());
@@ -110,7 +110,7 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void shouldSave() {
+    void save() {
         // given
         var given = createAddOrganizationDto(1L);
         when(repo.save(any())).thenReturn(createEntity(1L));
@@ -125,7 +125,7 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void shouldUpdate() {
+    void update() {
         // given
         var given = createDto(1L);
         when(repo.save(any())).thenReturn(createEntity(1L));
@@ -140,7 +140,7 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void shouldDelete() {
+    void delete() {
         // given
         var given = createDto(1L);
         when(repo.findById(any())).thenReturn(Optional.of(createEntity(1L)));

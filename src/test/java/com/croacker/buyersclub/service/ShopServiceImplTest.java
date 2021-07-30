@@ -57,7 +57,7 @@ class ShopServiceImplTest {
     }
 
     @Test
-    void shouldFindAll() {
+    void findAll() {
         // given
         var given = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
         when(repo.findByDeletedIsFalse(given)).thenReturn(createEntitiesList());

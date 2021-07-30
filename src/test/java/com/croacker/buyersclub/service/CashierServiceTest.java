@@ -57,7 +57,7 @@ class CashierServiceTest {
     }
 
     @Test
-    void shouldFindAll(){
+    void findAll(){
         // given
         var given = PageRequest.of(0, 20, Sort.Direction.ASC, "createdAt");
         var cashiers = createEntitiesList();
@@ -73,7 +73,7 @@ class CashierServiceTest {
     }
 
     @Test
-    void shouldFindOne(){
+    void findOne(){
         // given
         var given = 1L;
         var cashier = createEntity(1L);
@@ -89,7 +89,7 @@ class CashierServiceTest {
     }
 
     @Test
-    void shouldFindByName(){
+    void findByName(){
         // given
         var given = "test_cashier_1";
         var cashier = createEntity(1L);
@@ -105,7 +105,7 @@ class CashierServiceTest {
     }
 
     @Test
-    void shouldSave(){
+    void save(){
         // given
         var given = createAddDto(0L);
         var cashier = createEntity(0L);
@@ -123,7 +123,7 @@ class CashierServiceTest {
     }
 
     @Test
-    void shouldUpdate(){
+    void update(){
         // given
         var given = createDto(0L);
         var cashier = createEntity(0L);
@@ -141,7 +141,7 @@ class CashierServiceTest {
     }
 
     @Test
-    void shouldDelete(){
+    void delete(){
         // given
         var cashier = createEntity(1L);
         var deletedCashier = createEntity(1L).setDeleted(true);

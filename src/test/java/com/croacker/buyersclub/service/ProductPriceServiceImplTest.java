@@ -195,7 +195,7 @@ class ProductPriceServiceImplTest {
         var productName = "test_product_";
         var pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
         when(productRepo.findByNameContainingIgnoreCase(productName, pageable)).thenReturn(createProductsList());
-        when(repo.findByProduct(any())).thenReturn()
+//        when(repo.findByProduct(any())).thenReturn()
 
         var expected = createDtosList();
 

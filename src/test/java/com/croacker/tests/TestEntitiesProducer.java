@@ -20,6 +20,7 @@ import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
+import com.croacker.buyersclub.service.dto.telegramuser.TelegramUserDto;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 
 import java.time.LocalDateTime;
@@ -319,5 +320,21 @@ public class TestEntitiesProducer {
 
     private int dateTimeToEpoch(LocalDateTime date){
         return dateTimeService.dateTimeToEpoch(date);
+    }
+
+    public TelegramUser createTelegramUser(long id) {
+        return new TelegramUser()
+                .setId(id)
+                .setUserName("test_user_name_" + id)
+                .setFirstName("test_first_name_" + id)
+                .setLastName("test_last_name_" + id);
+    }
+
+    public TelegramUserDto createTelegramUserDto(long id) {
+        return new TelegramUserDto()
+                .setId(id)
+                .setUserName("test_user_name_" + id)
+                .setFirstName("test_first_name_" + id)
+                .setLastName("test_last_name_" + id);
     }
 }
