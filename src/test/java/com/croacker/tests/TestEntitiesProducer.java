@@ -20,6 +20,7 @@ import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
+import com.croacker.buyersclub.service.dto.telegramuser.AddTelegramUserDto;
 import com.croacker.buyersclub.service.dto.telegramuser.TelegramUserDto;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 
@@ -332,6 +333,14 @@ public class TestEntitiesProducer {
 
     public TelegramUserDto createTelegramUserDto(long id) {
         return new TelegramUserDto()
+                .setId(id)
+                .setUserName("test_user_name_" + id)
+                .setFirstName("test_first_name_" + id)
+                .setLastName("test_last_name_" + id);
+    }
+
+    public AddTelegramUserDto createAddTelegramUserDto(long id) {
+        return new AddTelegramUserDto()
                 .setId(id)
                 .setUserName("test_user_name_" + id)
                 .setFirstName("test_first_name_" + id)
