@@ -14,4 +14,5 @@
     <include file="changelog/08-create-table-check-line.xml" relativeToChangelogFile="true"/>
     <include file="changelog/09-create-table-telegram-user.xml" relativeToChangelogFile="true"/>
     <include file="changelog/10-alter-table-check.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/11-alter-table-telegram-user.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

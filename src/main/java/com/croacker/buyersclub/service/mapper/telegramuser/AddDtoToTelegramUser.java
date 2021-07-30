@@ -11,8 +11,12 @@ public class AddDtoToTelegramUser implements Mapper<AddTelegramUserDto, Telegram
     public TelegramUser map(AddTelegramUserDto input) {
         return new TelegramUser()
                 .setId(input.getId())
+                .setIsBot(input.getIsBot())
                 .setUserName(input.getUserName())
                 .setFirstName(input.getFirstName())
-                .setLastName(input.getLastName());
+                .setLastName(input.getLastName())
+                .setCanJoinGroups(input.getCanJoinGroups())
+                .setCanReadAllGroupMessages(input.getCanReadAllGroupMessages())
+                .setSupportInlineQueries(input.getSupportInlineQueries());
     }
 }

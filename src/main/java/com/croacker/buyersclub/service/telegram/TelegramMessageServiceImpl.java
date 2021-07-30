@@ -27,6 +27,15 @@ public class TelegramMessageServiceImpl implements TelegramMessageService {
         return result;
     }
 
+    @Override
+    public Optional<Message> getMessage(Update update) {
+        var message = Optional.ofNullable(update.getMessage());
+        if (!message.isPresent()){
+            message = Optional.ofNullable(update.getCallbackQuery().getMessage());
+        }
+        return message;
+    }
+
     /**
      * Получена команда start.
      *
@@ -34,7 +43,7 @@ public class TelegramMessageServiceImpl implements TelegramMessageService {
      * @return
      */
     private boolean isStart(Update update) {
-        return getMessage(update).map(message ->
+        return getUpdateMessage(update).map(message ->
                         update.getMessage().hasText()
                                 && update.getMessage().getText().equals("/start"))
                 .orElse(false);
@@ -66,7 +75,7 @@ public class TelegramMessageServiceImpl implements TelegramMessageService {
      * @param update сообщение
      * @return тело сообщения
      */
-    private Optional<Message> getMessage(Update update) {
+    private Optional<Message> getUpdateMessage(Update update) {
         return Optional.ofNullable(update.getMessage());
     }
 
@@ -81,6 +90,6 @@ public class TelegramMessageServiceImpl implements TelegramMessageService {
      * @return документ
      */
     private Optional<Document> getDocument(Update update) {
-        return getMessage(update).map(Message::getDocument);
+        return getUpdateMessage(update).map(Message::getDocument);
     }
 }
