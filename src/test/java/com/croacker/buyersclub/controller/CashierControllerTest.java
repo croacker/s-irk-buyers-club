@@ -28,15 +28,15 @@ class CashierControllerTest {
     @MockBean
     private CashierService service;
 
-    private TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     public static final LocalDateTime NOW = LocalDateTime.now();
 
     @Test
     public void shouldReturnAllCashiers() {
         // given
-        var given1 = testEntitiesProducer.createCashierDto(0L);//new CashierDto().setId(1L).setName("test_cashier_1").setShopId(1L);
-        var given2 = testEntitiesProducer.createCashierDto(1L);//new CashierDto().setId(2L).setName("test_cashier_2").setShopId(1L);
+        var given1 = testEntitiesProducer.createCashierDto(0L);
+        var given2 = testEntitiesProducer.createCashierDto(1L);
         when(service.findAll(any())).thenReturn(Arrays.asList(given1, given2));
 
         // when and then
@@ -46,7 +46,7 @@ class CashierControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(List.class)
-                .value(cashiers -> cashiers.size(), equalTo(2));
+                .value(List::size, equalTo(2));
     }
 
     @Test

@@ -38,7 +38,7 @@ class TelegramUserServiceImplTest {
 
     private AddDtoToTelegramUser addToEntityMapper;
 
-    private TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @BeforeEach
     void setup(){

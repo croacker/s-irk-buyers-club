@@ -46,7 +46,7 @@ class CashierServiceTest {
 
     private AddDtoToCashier addToEntityMapper;
 
-    private TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @BeforeEach
     void setup(){

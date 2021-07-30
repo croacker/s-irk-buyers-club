@@ -58,7 +58,7 @@ class OfdCheckServiceTest {
 
     private CashCheckDtoToTelegramFileProcessResult cashCheckDtoToTelegramFileProcessResultMapper;
 
-    private TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @BeforeEach
     void setup() {

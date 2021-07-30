@@ -41,7 +41,7 @@ class OrganizationServiceTest {
 
     private AddDtoToOrganization addToEntityMapper;
 
-    private TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @BeforeEach
     void setup() {
