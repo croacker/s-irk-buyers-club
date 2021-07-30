@@ -8,6 +8,7 @@ import com.croacker.buyersclub.service.dto.productgroup.ProductGroupDto;
 import com.croacker.buyersclub.service.mapper.productgroup.AddDtoToProductGroup;
 import com.croacker.buyersclub.service.mapper.productgroup.DtoToProductGroup;
 import com.croacker.buyersclub.service.mapper.productgroup.ProductGroupToDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,6 +41,8 @@ class ProductGroupServiceTest {
 
     private AddDtoToProductGroup addToEntityMapper;
 
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
+
     @BeforeEach
     void setup(){
         toDtoMapper = new ProductGroupToDto();
@@ -50,11 +52,11 @@ class ProductGroupServiceTest {
     }
 
     @Test
-    void shouldFindAll() {
+    void findAll() {
         // given
         var pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
-        when(repo.findAll()).thenReturn(createProductGroups());
-        var expected = createProductGroupDtos();
+        when(repo.findAll()).thenReturn(createEntitiesList());
+        var expected = createDtosList();
 
         // when
         var actual = service.findAll(pageable);
@@ -65,10 +67,10 @@ class ProductGroupServiceTest {
     }
 
     @Test
-    void shouldFindOne() {
+    void findOne() {
         // given
-        when(repo.findById(1L)).thenReturn(Optional.of(createProductGroup(1L)));
-        var expected = createProductGroupDto(1L);
+        when(repo.findById(1L)).thenReturn(Optional.of(createEntitiy(1L)));
+        var expected = createDto(1L);
 
         // when
         var actual = service.findOne(1L);
@@ -79,11 +81,11 @@ class ProductGroupServiceTest {
     }
 
     @Test
-    void shouldSave() {
+    void save() {
         // given
         var given = createAddProductGroupDto(1L);
-        when(repo.save(any())).thenReturn(createProductGroup(1L));
-        var expected = createProductGroupDto(1L);
+        when(repo.save(any())).thenReturn(createEntitiy(1L));
+        var expected = createDto(1L);
 
         // when
         var actual = service.save(given);
@@ -94,11 +96,11 @@ class ProductGroupServiceTest {
     }
 
     @Test
-    void shouldUpdate() {
+    void update() {
         // given
-        var given = createProductGroupDto(1L);
-        when(repo.save(any())).thenReturn(createProductGroup(1L));
-        var expected = createProductGroupDto(1L);
+        var given = createDto(1L);
+        when(repo.save(any())).thenReturn(createEntitiy(1L));
+        var expected = createDto(1L);
 
         // when
         var actual = service.update(given);
@@ -109,12 +111,12 @@ class ProductGroupServiceTest {
     }
 
     @Test
-    void shouldDelete() {
+    void delete() {
         // given
-        var given = createProductGroupDto(1L);
-        when(repo.findById(any())).thenReturn(Optional.of(createProductGroup(1L)));
-        when(repo.save(any())).thenReturn(createProductGroup(1L).setDeleted(true));
-        var expected = createProductGroupDto(1L).setDeleted(true);
+        var given = createDto(1L);
+        when(repo.findById(any())).thenReturn(Optional.of(createEntitiy(1L)));
+        when(repo.save(any())).thenReturn(createEntitiy(1L).setDeleted(true));
+        var expected = createDto(1L).setDeleted(true);
 
         // when
         var actual = service.delete(1L);
@@ -124,42 +126,35 @@ class ProductGroupServiceTest {
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
-    private List<ProductGroup> createProductGroups() {
+    private List<ProductGroup> createEntitiesList() {
         return Arrays.asList(
-                createProductGroup(1L),
-                createProductGroup(2L),
-                createProductGroup(3L),
-                createProductGroup(4L),
-                createProductGroup(5L)
+                createEntitiy(1L),
+                createEntitiy(2L),
+                createEntitiy(3L),
+                createEntitiy(4L),
+                createEntitiy(5L)
         );
     }
 
-    private ProductGroup createProductGroup(long id) {
-        return new ProductGroup()
-                .setId(id)
-                .setName("test_product_group_" + id)
-                .setDeleted(false);
+    private ProductGroup createEntitiy(long id) {
+        return testEntitiesProducer.createProductGroup(id);
     }
 
-    private List<ProductGroupDto> createProductGroupDtos() {
+    private List<ProductGroupDto> createDtosList() {
         return Arrays.asList(
-                createProductGroupDto(1L),
-                createProductGroupDto(2L),
-                createProductGroupDto(3L),
-                createProductGroupDto(4L),
-                createProductGroupDto(5L)
+                createDto(1L),
+                createDto(2L),
+                createDto(3L),
+                createDto(4L),
+                createDto(5L)
         );
     }
 
-    private ProductGroupDto createProductGroupDto(long id) {
-        return new ProductGroupDto()
-                .setId(id)
-                .setName("test_product_group_" + id)
-                .setDeleted(false);
+    private ProductGroupDto createDto(long id) {
+        return testEntitiesProducer.createProductGroupDto(id);
     }
 
     private AddProductGroupDto createAddProductGroupDto(long id) {
-        return new AddProductGroupDto()
-                .setName("test_product_group_" + id);
+        return testEntitiesProducer.createAddProductGroupDto(id);
     }
 }

@@ -16,7 +16,8 @@ public class ProductPriceToDto implements Mapper<ProductPrice, ProductPriceDto> 
                 .setShopId(input.getShop().getId())
                 .setProductId(input.getProduct().getId())
                 .setPrice(input.getPrice())
-                .setPriceDate(input.getPriceDate());
+                .setPriceDate(input.getPriceDate())
+                .setDeleted(input.getDeleted());
     }
 
 }

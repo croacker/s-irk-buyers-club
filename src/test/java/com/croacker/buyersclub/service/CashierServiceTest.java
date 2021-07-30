@@ -10,6 +10,7 @@ import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.mapper.cashier.AddDtoToCashier;
 import com.croacker.buyersclub.service.mapper.cashier.CashierToDto;
 import com.croacker.buyersclub.service.mapper.cashier.DtoToCashier;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,6 +46,8 @@ class CashierServiceTest {
 
     private AddDtoToCashier addToEntityMapper;
 
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
+
     @BeforeEach
     void setup(){
         toDtoMapper = new CashierToDto();
@@ -54,12 +57,12 @@ class CashierServiceTest {
     }
 
     @Test
-    void shouldFindAll(){
+    void findAll(){
         // given
         var given = PageRequest.of(0, 20, Sort.Direction.ASC, "createdAt");
-        var cashiers = createCahiersList();
+        var cashiers = createEntitiesList();
         when(repo.findByDeletedIsFalse(given)).thenReturn(cashiers);
-        var expected = createCahierDtosList();
+        var expected = createDtosList();
 
         // when
         var actual = service.findAll(given);
@@ -70,12 +73,12 @@ class CashierServiceTest {
     }
 
     @Test
-    void shouldFindOne(){
+    void findOne(){
         // given
         var given = 1L;
-        var cashier = createCashier(1L);
+        var cashier = createEntity(1L);
         when(repo.findById(given)).thenReturn(Optional.of(cashier));
-        var expected = createCashierDto(1L);
+        var expected = createDto(1L);
 
         // when
         var actual = service.findOne(given);
@@ -86,12 +89,12 @@ class CashierServiceTest {
     }
 
     @Test
-    void shouldFindByName(){
+    void findByName(){
         // given
         var given = "test_cashier_1";
-        var cashier = createCashier(1L);
+        var cashier = createEntity(1L);
         when(repo.findByName(given)).thenReturn(Optional.of(cashier));
-        var expected = createCashierDto(1L);
+        var expected = createDto(1L);
 
         // when
         var actual = service.findByName(given);
@@ -102,14 +105,14 @@ class CashierServiceTest {
     }
 
     @Test
-    void shouldSave(){
+    void save(){
         // given
-        var given = createAddCashierDto(1L);
-        var cashier = createCashier(1L);
-        var shop = createShop(1L);
+        var given = createAddDto(0L);
+        var cashier = createEntity(0L);
+        var shop = createShop(0L);
         when(repo.save(any())).thenReturn(cashier);
-        when(shopRepo.findById(2L)).thenReturn(Optional.of(shop));
-        var expected = createCashierDto(1L);
+        when(shopRepo.findById(0L)).thenReturn(Optional.of(shop));
+        var expected = createDto(0L);
 
         // when
         var actual = service.save(given);
@@ -120,14 +123,14 @@ class CashierServiceTest {
     }
 
     @Test
-    void shouldUpdate(){
+    void update(){
         // given
-        var given = createCashierDto(1L);
-        var cashier = createCashier(1L);
-        var shop = createShop(1L);
+        var given = createDto(0L);
+        var cashier = createEntity(0L);
+        var shop = createShop(0L);
         when(repo.save(any())).thenReturn(cashier);
-        when(shopRepo.findById(2L)).thenReturn(Optional.of(shop));
-        var expected = createCashierDto(1L);
+        when(shopRepo.findById(0L)).thenReturn(Optional.of(shop));
+        var expected = createDto(0L);
 
         // when
         var actual = service.update(given);
@@ -138,13 +141,13 @@ class CashierServiceTest {
     }
 
     @Test
-    void shouldDelete(){
+    void delete(){
         // given
-        var cashier = createCashier(1L);
-        var deletedCashier = createCashier(1L).setDeleted(true);
+        var cashier = createEntity(1L);
+        var deletedCashier = createEntity(1L).setDeleted(true);
         when(repo.findById(1L)).thenReturn(Optional.of(cashier));
         when(repo.save(any())).thenReturn(deletedCashier);
-        var expected = createCashierDto(1L).setDeleted(true);
+        var expected = createDto(1L).setDeleted(true);
 
         // when
         var actual = service.delete(1L);
@@ -154,42 +157,39 @@ class CashierServiceTest {
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
-    private List<Cashier> createCahiersList() {
+    private List<Cashier> createEntitiesList() {
         return Arrays.asList(
-                createCashier(1L),
-                createCashier(2L),
-                createCashier(3L),
-                createCashier(4L),
-                createCashier(5L)
+                createEntity(1L),
+                createEntity(2L),
+                createEntity(3L),
+                createEntity(4L),
+                createEntity(5L)
         );
     }
 
-    private List<CashierDto> createCahierDtosList() {
+    private List<CashierDto> createDtosList() {
         return Arrays.asList(
-                createCashierDto(1L),
-                createCashierDto(2L),
-                createCashierDto(3L),
-                createCashierDto(4L),
-                createCashierDto(5L)
+                createDto(1L),
+                createDto(2L),
+                createDto(3L),
+                createDto(4L),
+                createDto(5L)
         );
     }
 
-    private Cashier createCashier(long id){
-        return new Cashier()
-                .setId(id)
-                .setName("test_cashier_" + id)
-                .setShop(new Shop().setId(2L));
+    private Cashier createEntity(long id){
+        return testEntitiesProducer.createCashier(id);
     }
 
-    private CashierDto createCashierDto(long id){
-        return new CashierDto().setId(id).setName("test_cashier_" + id).setShopId(2L);
+    private CashierDto createDto(long id){
+        return testEntitiesProducer.createCashierDto(id);
     }
 
-    private AddCashierDto createAddCashierDto(long id){
-        return new AddCashierDto().setName("test_cashier_" + id).setShopId(2L);
+    private AddCashierDto createAddDto(long id){
+        return testEntitiesProducer.createAddCashierDto(id);
     }
 
     private Shop createShop(long id){
-        return new Shop().setId(id).setName("test_shop_" + id);
+        return testEntitiesProducer.createShop(id);
     }
 }
