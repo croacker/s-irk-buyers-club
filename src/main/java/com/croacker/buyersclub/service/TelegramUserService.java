@@ -19,4 +19,5 @@ public interface TelegramUserService {
     Optional<TelegramUserDto> findByName(String name);
 
     TelegramUserDto save(AddTelegramUserDto dto);
+
 }

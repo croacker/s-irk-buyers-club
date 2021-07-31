@@ -40,12 +40,12 @@ public class CashierServiceImpl implements CashierService {
 
     @Override
     public CashierDto findOne(Long id) {
-        return repo.findById(id).map(toDtoMapper).orElse(null);
+        return repo.findById(id).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
     public CashierDto findByName(String name) {
-        return repo.findByName(name).map(toDtoMapper).orElse(null);
+        return repo.findByName(name).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
