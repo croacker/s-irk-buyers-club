@@ -35,7 +35,7 @@ public class ProductGroupServiceImpl implements ProductGroupService{
 
     @Override
     public ProductGroupDto findOne(Long id) {
-        return repo.findById(id).map(toDtoMapper).orElse(null);
+        return repo.findById(id).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override

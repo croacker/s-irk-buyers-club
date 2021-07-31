@@ -55,7 +55,7 @@ public class ProductPriceServiceImpl implements ProductPriceService{
 
     @Override
     public ProductPriceInfoDto findOne(Long id) {
-        return repo.findById(id).map(toInfoDtoMapper).orElse(null);
+        return repo.findById(id).map(toInfoDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override

@@ -53,7 +53,7 @@ public class CheckServiceImpl implements CheckService{
 
     @Override
     public CashCheckInfoDto findOne(Long id) {
-        return repo.findById(id).map(toInfoDtoMapper).orElse(null);
+        return repo.findById(id).map(toInfoDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override

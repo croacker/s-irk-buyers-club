@@ -42,12 +42,12 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDto findOne(Long id) {
-        return repo.findById(id).map(toDtoMapper).orElse(null);
+        return repo.findById(id).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
     public ProductDto findByName(String name) {
-        return repo.findByName(name).map(toDtoMapper).orElse(null);
+        return repo.findByName(name).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override

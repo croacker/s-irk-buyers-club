@@ -34,12 +34,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public OrganizationDto findOne(Long id) {
-        return repo.findById(id).map(toDtoMapper).orElse(null);
+        return repo.findById(id).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
     public OrganizationDto findByInn(String inn) {
-        return repo.findByInn(inn).map(toDtoMapper).orElse(null);
+        return repo.findByInn(inn).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
