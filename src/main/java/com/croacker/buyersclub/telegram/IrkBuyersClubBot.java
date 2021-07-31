@@ -2,6 +2,7 @@ package com.croacker.buyersclub.telegram;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
 import com.croacker.buyersclub.service.locale.LocaleService;
+import com.croacker.buyersclub.service.telegram.TelegramMessageServiceImpl;
 import com.croacker.buyersclub.telegram.updateprocessor.MessageType;
 import com.croacker.buyersclub.telegram.updateprocessor.UpdateDispatcher;
 import com.croacker.buyersclub.telegram.updateprocessor.UpdateProcessor;
@@ -13,6 +14,7 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import reactor.core.publisher.Mono;
@@ -35,6 +37,8 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     private final UpdateDispatcher updateDispatcher;
 
+    private final TelegramMessageServiceImpl telegramMessageService;
+
     @Override
     public String getBotUsername() {
         return configuration.getUsername();
@@ -56,6 +60,11 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         Mono.just(update).flatMap(this::process).subscribe(this::sendResponse);
     }
 
+    /**
+     * Сообщение о том что запрос обрабатывается.
+     * @param update сообщение от пользователя
+     * @return ответ
+     */
     private Optional<SendMessage> getInprocessMessage(Update update) {
         var chatId = getChatId(update);
         var languageCode = getLanguageCode(update);
@@ -66,6 +75,10 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
         };
     }
 
+    /**
+     * Отправить сообщение.
+     * @param response сообщение
+     */
     private void sendResponse(SendMessage response) {
         try {
             execute(response);
@@ -101,7 +114,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     }
 
     private MessageType getMessageType(Update update){
-        return updateDispatcher.getMessageType(update);
+        return telegramMessageService.getMessageType(update);
     }
 
     private SendMessage fileInprocess(String chatId, String languageCode){
@@ -123,7 +136,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
     }
 
     private String getChatId(Update update) {
-        return String.valueOf(getMessage(update).getChatId());
+        return getMessage(update).map(Message::getChatId).map(Object::toString).orElse("");
     }
 
     /**
@@ -131,16 +144,16 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
      * @param update
      * @return
      */
-    private Message getMessage(Update update){
-        var message = update.getMessage();
-        if (message == null){
-            message = update.getCallbackQuery().getMessage();
+    private Optional<Message> getMessage(Update update){
+        var message = Optional.ofNullable(update.getMessage());
+        if (!message.isPresent()){
+            message = Optional.ofNullable(update.getCallbackQuery().getMessage());
         }
         return message;
     }
 
     private String getLanguageCode(Update update){
-        return getMessage(update).getFrom().getLanguageCode();
+        return getMessage(update).map(Message::getFrom).map(User::getLanguageCode).orElse("");
     }
 
     private String getString(String key, String languageCode){

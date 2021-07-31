@@ -2,6 +2,8 @@ package com.croacker.buyersclub.telegram.updateprocessor;
 
 import com.croacker.buyersclub.service.locale.LocaleService;
 import com.croacker.buyersclub.service.telegram.TelegramFileService;
+import com.croacker.buyersclub.service.telegram.TelegramTelegramUserService;
+import com.croacker.buyersclub.service.telegram.TelegramTelegramUserServiceImpl;
 import com.croacker.buyersclub.telegram.chat.Chat;
 import com.croacker.buyersclub.telegram.chat.ChatPool;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,8 @@ public class FileProcessor implements UpdateProcessor{
     private final ChatPool chatPool;
 
     private final LocaleService localeService;
+
+    private final TelegramTelegramUserService telegramTelegramUserService;
 
     @Override
     public Mono<SendMessage> process() {

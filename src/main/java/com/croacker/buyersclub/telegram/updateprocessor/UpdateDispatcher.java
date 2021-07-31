@@ -6,7 +6,4 @@ public interface UpdateDispatcher {
 
     UpdateProcessor getProcessor(Update update);
 
-    // TODO to another service
-    MessageType getMessageType(Update update);
-
 }

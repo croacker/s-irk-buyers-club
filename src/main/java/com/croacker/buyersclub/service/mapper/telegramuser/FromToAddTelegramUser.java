@@ -11,8 +11,12 @@ public class FromToAddTelegramUser implements Mapper<User, AddTelegramUserDto> {
     public AddTelegramUserDto map(User input) {
         return new AddTelegramUserDto()
                 .setId(input.getId().longValue())
+                .setIsBot(input.getIsBot())
                 .setUserName(input.getUserName())
                 .setFirstName(input.getFirstName())
-                .setLastName(input.getLastName());
+                .setLastName(input.getLastName())
+                .setCanJoinGroups(input.getCanJoinGroups())
+                .setCanReadAllGroupMessages(input.getCanReadAllGroupMessages())
+                .setSupportInlineQueries(input.getSupportInlineQueries());
     }
 }

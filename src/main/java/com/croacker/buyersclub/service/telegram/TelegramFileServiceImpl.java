@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.User;
 import reactor.core.publisher.Mono;
 
 import java.util.Collections;
@@ -34,13 +35,14 @@ public class TelegramFileServiceImpl implements TelegramFileService {
 
     private final OfdCheckServiceImpl ofdCheckService;
 
-    private final TelegramTelegramUserServiceImpl telegramTelegramUserService;
+    private final TelegramTelegramUserService telegramTelegramUserService;
 
     private final OfdCheckExcerptToOfdCheck mapper;
 
     @Override
     public Mono<String> processFile(Message message) {
-        var userId = telegramTelegramUserService.saveUser(message);
+        var userId = telegramTelegramUserService.getUser(message)
+                .map(user -> user.getId().longValue()).orElse(-1L);
         return getFileId(message).map(fileId -> client.getFileContent(fileId)
                 .map(this::toOfdChecks)
                 .map(ofdChecks -> processChecks(ofdChecks, userId))

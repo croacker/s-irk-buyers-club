@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="11" author="croacker">
+        <addColumn tableName="telegram_user">
+            <column name="is_bot" type="bool" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="telegram_user">
+            <column name="can_join_groups" type="bool">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="telegram_user">
+            <column name="can_read_all_group_messages" type="bool">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="telegram_user">
+            <column name="support_inline_queries" type="bool">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

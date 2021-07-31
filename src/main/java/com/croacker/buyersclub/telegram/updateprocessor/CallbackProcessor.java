@@ -48,7 +48,7 @@ public class CallbackProcessor implements UpdateProcessor{
     }
 
     private String getLanguageCode(){
-        return getMessage().getFrom().getLanguageCode();
+        return callbackQuery.getFrom().getLanguageCode();
     }
 
     private String getString(String key){

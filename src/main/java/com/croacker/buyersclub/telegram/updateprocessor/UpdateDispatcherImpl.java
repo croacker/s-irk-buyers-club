@@ -2,10 +2,13 @@ package com.croacker.buyersclub.telegram.updateprocessor;
 
 import com.croacker.buyersclub.service.locale.LocaleService;
 import com.croacker.buyersclub.service.telegram.TelegramFileService;
+import com.croacker.buyersclub.service.telegram.TelegramMessageService;
+import com.croacker.buyersclub.service.telegram.TelegramTelegramUserService;
 import com.croacker.buyersclub.telegram.chat.ChatPool;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Service
@@ -19,8 +22,13 @@ public class UpdateDispatcherImpl implements UpdateDispatcher {
 
     private final LocaleService localeService;
 
+    private final TelegramMessageService telegramMessageService;
+
+    private final TelegramTelegramUserService telegramTelegramUserService;
+
     @Override
     public UpdateProcessor getProcessor(Update update) {
+        saveUser(update);
         var type = getMessageType(update);
         return switch (type) {
             case FILE -> createFileProcessor(update);
@@ -30,21 +38,12 @@ public class UpdateDispatcherImpl implements UpdateDispatcher {
         };
     }
 
-    @Override
-    public MessageType getMessageType(Update update){
-        var result = MessageType.QUERY;
-        if(isStart(update)){
-            result = MessageType.COMMAND;
-        }else if(isFile(update)) {
-            result = MessageType.FILE;
-        } else if (isCallback(update)){
-            result = MessageType.CALLBACK;
-        }
-        return result;
+    private MessageType getMessageType(Update update) {
+        return telegramMessageService.getMessageType(update);
     }
 
     private UpdateProcessor createFileProcessor(Update update) {
-        return new FileProcessor(update.getMessage(), telegramFileService, chatPool, localeService);
+        return new FileProcessor(update.getMessage(), telegramFileService, chatPool, localeService, telegramTelegramUserService);
     }
 
     private UpdateProcessor createCallbackProcessor(Update update) {
@@ -59,33 +58,12 @@ public class UpdateDispatcherImpl implements UpdateDispatcher {
         return new QueryProcessor(update.getMessage(), chatPool, localeService);
     }
 
-    /**
-     * Получена команда start.
-     * @param update
-     * @return
-     */
-    private boolean isStart(Update update){
-        return update.getMessage() != null
-                && update.getMessage().hasText()
-                && update.getMessage().getText().equals("/start");
+    private void saveUser(Update update) {
+        var type = getMessageType(update);
+        var from = switch (type) {
+            case CALLBACK -> update.getCallbackQuery().getFrom();
+            default -> telegramMessageService.getMessage(update).map(Message::getFrom).get();
+        };
+        telegramTelegramUserService.saveUser(from);
     }
-
-    /**
-     * Получен файл.
-     * @param update
-     * @return
-     */
-    private boolean isFile(Update update) {
-        return telegramFileService.getFileId(update.getMessage()).isPresent();
-    }
-
-    /**
-     * Получен запрос, например товара.
-     * @param update
-     * @return
-     */
-    private boolean isCallback(Update update) {
-        return update.getCallbackQuery() != null && update.getCallbackQuery().getMessage() != null;
-    }
-
 }
