@@ -4,6 +4,7 @@ import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.CashCheck;
 import com.croacker.buyersclub.domain.Cashier;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +22,7 @@ class CashCheckToDtoTest {
 
     private CashCheckToDto mapper;
 
-    private final static LocalDateTime NOW = LocalDateTime.now();
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @BeforeEach
     void setup() {
@@ -43,31 +44,11 @@ class CashCheckToDtoTest {
     }
 
     private CashCheck createEntity() {
-        var cashier = new Cashier().setId(0L);
-        return new CashCheck()
-                .setCashier(cashier)
-                .setKktRegId("test_kkt_reg_id")
-                .setFiscalDriveNumber("test_fiscal_drive_number")
-                .setFiscalDocumentNumber("test_fiscal_document_number")
-                .setTotalSum(5)
-                .setCashSum(3)
-                .setEcashSum(2)
-                .setCheckDate(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createCashCheck(0L);
     }
 
     private CashCheckDto createDto() {
-        return new CashCheckDto()
-                .setCashierId(0L)
-                .setKktRegId("test_kkt_reg_id")
-                .setFiscalDriveNumber("test_fiscal_drive_number")
-                .setFiscalDocumentNumber("test_fiscal_document_number")
-                .setTotalSum(5)
-                .setCashSum(3)
-                .setEcashSum(2)
-                .setCheckDate(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createCashCheckDto(0L);
     }
-
 
 }

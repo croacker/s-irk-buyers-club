@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -57,7 +58,6 @@ public class TelegramMessageServiceImpl implements TelegramMessageService {
      * @return
      */
     private boolean isCommand(Update update) {
-
         return getUpdateMessage(update).map(message ->
                         update.getMessage().hasText()
                                 && update.getMessage().getText().startsWith("/"))
@@ -107,4 +107,5 @@ public class TelegramMessageServiceImpl implements TelegramMessageService {
     private Optional<Document> getDocument(Update update) {
         return getUpdateMessage(update).map(Message::getDocument);
     }
+
 }

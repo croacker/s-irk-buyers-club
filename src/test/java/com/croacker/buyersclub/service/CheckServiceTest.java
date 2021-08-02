@@ -106,10 +106,10 @@ class CheckServiceTest {
     @Test
     void findOne() {
         // given
-        var given = 1L;
-        var check = createEntity(1L);
+        var given = 0L;
+        var check = createEntity(0L);
         when(repo.findById(given)).thenReturn(Optional.of(check));
-        var expected = createInfoDto(1L);
+        var expected = createInfoDto(0L);
 
         // when
         var actual = service.findOne(given);
@@ -162,14 +162,14 @@ class CheckServiceTest {
     @Test
     void delete() {
         // given
-        var check = createEntity(1L);
-        var deletedCheck = createEntity(1L).setDeleted(true);
-        when(repo.findById(1L)).thenReturn(Optional.of(check));
+        var check = createEntity(0L);
+        var deletedCheck = createEntity(0L).setDeleted(true);
+        when(repo.findById(0L)).thenReturn(Optional.of(check));
         when(repo.save(any())).thenReturn(deletedCheck);
-        var expected = createDto(1L).setDeleted(true);
+        var expected = createDto(0L).setDeleted(true);
 
         // when
-        var actual = service.delete(1L);
+        var actual = service.delete(0L);
 
         // then
         assertEquals(expected, actual,
