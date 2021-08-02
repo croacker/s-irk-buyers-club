@@ -1,22 +1,17 @@
 package com.croacker.buyersclub.telegram.updateprocessor;
 
 import com.croacker.buyersclub.service.locale.LocaleService;
-import com.croacker.buyersclub.telegram.chat.Chat;
-import com.croacker.buyersclub.telegram.chat.ChatPool;
+import com.croacker.buyersclub.service.telegram.request.TelegramMessage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import reactor.core.publisher.Mono;
 
 @Slf4j
 @AllArgsConstructor
-public class CallbackProcessor implements UpdateProcessor{
+public class CallbackProcessor implements MessageProcessor {
 
-    private final CallbackQuery callbackQuery;
-
-    private final ChatPool chatPool;
+    private final TelegramMessage message;
 
     private final LocaleService localeService;
 
@@ -26,33 +21,16 @@ public class CallbackProcessor implements UpdateProcessor{
     }
 
     private Mono<SendMessage> createResponse(){
-        var chat = getChat();
-        var text = getString("chat." + chat.getChatType().toString().toLowerCase() + ".welcome");
+        var text = getString("chat...welcome");
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(getChatId().toString());
+        sendMessage.setChatId(message.getChatId());
         sendMessage.enableMarkdown(true);
         sendMessage.setText(text);
         return Mono.just(sendMessage);
     }
 
-    private Chat getChat() {
-        return chatPool.getChat(getChatId());
-    }
-
-    private Message getMessage(){
-        return callbackQuery.getMessage();
-    }
-
-    private Long getChatId(){
-        return getMessage().getChatId();
-    }
-
-    private String getLanguageCode(){
-        return callbackQuery.getFrom().getLanguageCode();
-    }
-
     private String getString(String key){
-        var languageCode = getLanguageCode();
+        var languageCode = message.getLanguageCode();
         return localeService.getString(key, languageCode);
     }
 }

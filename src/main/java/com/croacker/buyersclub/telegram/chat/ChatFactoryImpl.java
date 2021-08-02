@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @AllArgsConstructor
+@Deprecated
 public class ChatFactoryImpl implements ChatFactory {
 
     private final ProductPriceService productPriceService;
@@ -28,7 +29,7 @@ public class ChatFactoryImpl implements ChatFactory {
     private final TelegramProductPriceDtoToString productPriceToStringMapper;
 
     @Override
-    public Chat createChat(Long id, ChatType type) {
+    public Chat createChat(String id, ChatType type) {
         return switch (type){
             case SHOP -> createShopChat(id);
             case ORGANIZATION -> createOrganizationChat(id);
@@ -41,7 +42,7 @@ public class ChatFactoryImpl implements ChatFactory {
      * @param id идентификатор чата
      * @return
      */
-    private Chat createProductChat(Long id) {
+    private Chat createProductChat(String id) {
         return new ProductChat(id, productPriceService, productPriceToStringMapper);
     }
 
@@ -50,7 +51,7 @@ public class ChatFactoryImpl implements ChatFactory {
      * @param id идентификатор чата
      * @return
      */
-    private Chat createShopChat(Long id) {
+    private Chat createShopChat(String id) {
         return new ShopChat(id, shopService, shopToStringMapper);
     }
 
@@ -59,7 +60,7 @@ public class ChatFactoryImpl implements ChatFactory {
      * @param id идентификатор чата
      * @return
      */
-    private Chat createOrganizationChat(Long id) {
+    private Chat createOrganizationChat(String id) {
         return new OrganizationChat(id, organizationService, organizationToStringMapper);
     }
 

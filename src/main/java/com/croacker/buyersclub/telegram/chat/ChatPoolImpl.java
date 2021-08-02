@@ -10,19 +10,20 @@ import java.util.Optional;
 @Service
 @Slf4j
 @AllArgsConstructor
+@Deprecated
 public class ChatPoolImpl implements ChatPool{
 
     private final ChatFactory chatFactory;
 
-    private Map<Long, Chat> pool;
+    private Map<String, Chat> pool;
 
     @Override
-    public Chat getChat(Long id) {
+    public Chat getChat(String id) {
         return getFromPool(id).orElseGet(() -> createChat(id, ChatType.PRODUCT));
     }
 
     @Override
-    public Chat createChat(Long id, ChatType type) {
+    public Chat createChat(String id, ChatType type) {
         getFromPool(id).ifPresent(this::remove);
         var chat = chatFactory.createChat(id, type);
         pool.put(id, chat);
@@ -33,7 +34,7 @@ public class ChatPoolImpl implements ChatPool{
         pool.remove(chat.getChatId());
     }
 
-    private Optional<Chat> getFromPool(Long id){
+    private Optional<Chat> getFromPool(String id){
         return Optional.ofNullable(pool.get(id));
     }
 

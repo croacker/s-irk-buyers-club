@@ -2,6 +2,7 @@ package com.croacker.buyersclub.telegram.chat;
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
+@Deprecated
 public interface Chat {
 
     /**
@@ -15,13 +16,6 @@ public interface Chat {
      * @return identifier
      */
     String getChatId();
-
-    /**
-     * Chat type.
-     *
-     * @return type
-     */
-    ChatType getChatType();
 
     /**
      * Find entity by expression(use LIKE)

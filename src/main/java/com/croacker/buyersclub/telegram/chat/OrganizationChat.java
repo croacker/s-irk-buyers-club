@@ -2,7 +2,6 @@ package com.croacker.buyersclub.telegram.chat;
 
 import com.croacker.buyersclub.service.OrganizationService;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
-import com.croacker.buyersclub.service.dto.telegram.TelegramProductPriceDto;
 import com.croacker.buyersclub.service.mapper.telegram.TelegramOrganizationDtoToString;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class OrganizationChat implements Chat{
 
-    private final Long chatId;
+    private final String chatId;
 
     private final OrganizationService organizationService;
 
@@ -27,11 +26,6 @@ public class OrganizationChat implements Chat{
     @Override
     public String getChatId() {
         return String.valueOf(chatId);
-    }
-
-    @Override
-    public ChatType getChatType() {
-        return ChatType.ORGANIZATION;
     }
 
     @Override

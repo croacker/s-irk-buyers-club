@@ -18,5 +18,4 @@ public class LocaleServiceImpl implements LocaleService{
             return messageSource.getMessage(key, null, locale);
     }
 
-
 }

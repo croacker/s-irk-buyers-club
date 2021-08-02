@@ -3,6 +3,7 @@ package com.croacker.buyersclub.telegram.chat;
 /**
  * Фабрика чатов.
  */
+@Deprecated
 public interface ChatFactory {
 
     /**
@@ -11,6 +12,6 @@ public interface ChatFactory {
      * @param type тип
      * @return чат
      */
-    Chat createChat(Long id, ChatType type);
+    Chat createChat(String id, ChatType type);
 
 }
