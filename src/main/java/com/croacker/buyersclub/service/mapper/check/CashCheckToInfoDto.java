@@ -2,10 +2,13 @@ package com.croacker.buyersclub.service.mapper.check;
 
 import com.croacker.buyersclub.domain.CashCheck;
 import com.croacker.buyersclub.domain.CashCheckLine;
+import com.croacker.buyersclub.domain.TelegramUser;
 import com.croacker.buyersclub.service.dto.check.CashCheckInfoDto;
 import com.croacker.buyersclub.service.dto.checkline.CashCheckLineInfoDto;
+import com.croacker.buyersclub.service.dto.telegramuser.TelegramUserDto;
 import com.croacker.buyersclub.service.mapper.Mapper;
 import com.croacker.buyersclub.service.mapper.checkline.CashCheckLineToInfoDto;
+import com.croacker.buyersclub.service.mapper.telegramuser.TelegramUserToDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,8 @@ import java.util.stream.Collectors;
 public class CashCheckToInfoDto implements Mapper<CashCheck, CashCheckInfoDto> {
 
     private final CashCheckLineToInfoDto lineMapper;
+
+    private final TelegramUserToDto telegramUserToDto;
 
     @Override
     public CashCheckInfoDto map(CashCheck input) {
@@ -34,6 +39,7 @@ public class CashCheckToInfoDto implements Mapper<CashCheck, CashCheckInfoDto> {
                 .setCashSum(input.getCashSum())
                 .setEcashSum(input.getEcashSum())
                 .setCheckDate(input.getCheckDate())
+                .setTelegramUser(telegramUserDto(input.getTelegramUser()))
                 .setCreatedAt(input.getCreatedAt())
                 .setUpdatedAt(input.getUpdatedAt())
                 .setDeleted(input.getDeleted());
@@ -41,6 +47,10 @@ public class CashCheckToInfoDto implements Mapper<CashCheck, CashCheckInfoDto> {
 
     private List<CashCheckLineInfoDto> toCheckLines(List<CashCheckLine> checkLines) {
         return checkLines.stream().map(lineMapper).collect(Collectors.toList());
+    }
+
+    private TelegramUserDto telegramUserDto(TelegramUser telegramUser){
+        return telegramUserToDto.map(telegramUser);
     }
 
 }

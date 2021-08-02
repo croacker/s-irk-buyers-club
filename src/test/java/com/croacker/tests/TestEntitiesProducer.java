@@ -130,6 +130,7 @@ public class TestEntitiesProducer {
                 .setEcashSum(2)
                 .setCheckDate(NOW)
                 .setCheckLines(Collections.emptyList())
+                .setTelegramUser(createTelegramUser(0L))
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
@@ -148,6 +149,7 @@ public class TestEntitiesProducer {
                 .setCashSum(3)
                 .setEcashSum(2)
                 .setCheckDate(NOW)
+                .setTelegramUserId(0L)
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
@@ -168,6 +170,7 @@ public class TestEntitiesProducer {
                 .setEcashSum(2)
                 .setCheckDate(NOW)
                 .setCheckLines(Collections.emptyList())
+                .setTelegramUser(createTelegramUserDto(0L))
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);

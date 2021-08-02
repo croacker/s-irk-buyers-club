@@ -4,11 +4,9 @@ import com.croacker.buyersclub.service.ProductPriceService;
 import com.croacker.buyersclub.service.dto.telegram.TelegramProductPriceDto;
 import com.croacker.buyersclub.service.mapper.telegram.TelegramProductPriceDtoToString;
 import com.croacker.buyersclub.telegram.keyboard.ChatKeyboardBuilder;
-import com.croacker.buyersclub.telegram.keyboard.MenuKeyboardBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 import java.util.List;

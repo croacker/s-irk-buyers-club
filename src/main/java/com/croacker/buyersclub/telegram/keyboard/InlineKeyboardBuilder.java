@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatKeyboardBuilder implements KeyboardBuilder {
+public class InlineKeyboardBuilder implements KeyboardBuilder {
 
     @Getter
     private List<ChatButton> buttons = new ArrayList<>();
@@ -28,14 +28,14 @@ public class ChatKeyboardBuilder implements KeyboardBuilder {
     public ReplyKeyboard build() {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        List<InlineKeyboardButton> row = new ArrayList<>();
         buttons.forEach(define -> {
             var button = new InlineKeyboardButton();
             button.setText(define.getText());
             button.setCallbackData(define.getData());
-            List<InlineKeyboardButton> row = new ArrayList<>();
             row.add(button);
-            rowList.add(row);
         });
+        rowList.add(row);
         keyboard.setKeyboard(rowList);
         return keyboard;
     }

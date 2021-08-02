@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 @AllArgsConstructor
@@ -59,11 +61,11 @@ public class UpdateDispatcherImpl implements UpdateDispatcher {
     }
 
     private void saveUser(Update update) {
-        var type = getMessageType(update);
-        var from = switch (type) {
-            case CALLBACK -> update.getCallbackQuery().getFrom();
-            default -> telegramMessageService.getMessage(update).map(Message::getFrom).get();
-        };
-        telegramTelegramUserService.saveUser(from);
+        telegramMessageService.getFrom(update)
+                .ifPresentOrElse(telegramTelegramUserService::saveUser, this::saveUserError);
+    }
+
+    private void saveUserError() {
+        log.error("Error saveUser, User is empty");
     }
 }

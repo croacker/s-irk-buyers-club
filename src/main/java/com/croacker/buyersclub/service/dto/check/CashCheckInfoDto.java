@@ -3,6 +3,7 @@ package com.croacker.buyersclub.service.dto.check;
 import com.croacker.buyersclub.domain.CashCheckLine;
 import com.croacker.buyersclub.service.dto.checkline.CashCheckLineDto;
 import com.croacker.buyersclub.service.dto.checkline.CashCheckLineInfoDto;
+import com.croacker.buyersclub.service.dto.telegramuser.TelegramUserDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -98,6 +99,12 @@ public class CashCheckInfoDto {
      */
     @Schema(description = "Сумма безналичные")
     private LocalDateTime checkDate;
+
+    /**
+     * Идентификатор telegram-пользователя добавивишего чек.
+     */
+    @Schema(description = "telegram-пользователь добавивиший чек", example = "1")
+    private TelegramUserDto telegramUser;
 
     /**
      * Создан.

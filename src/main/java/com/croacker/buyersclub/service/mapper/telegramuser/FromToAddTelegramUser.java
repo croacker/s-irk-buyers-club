@@ -10,7 +10,7 @@ public class FromToAddTelegramUser implements Mapper<User, AddTelegramUserDto> {
     @Override
     public AddTelegramUserDto map(User input) {
         return new AddTelegramUserDto()
-                .setId(input.getId().longValue())
+                .setId(input.getId())
                 .setIsBot(input.getIsBot())
                 .setUserName(input.getUserName())
                 .setFirstName(input.getFirstName())

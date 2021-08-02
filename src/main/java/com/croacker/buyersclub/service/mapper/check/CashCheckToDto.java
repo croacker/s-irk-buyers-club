@@ -22,6 +22,7 @@ public class CashCheckToDto implements Mapper<CashCheck, CashCheckDto> {
                 .setCashSum(input.getCashSum())
                 .setEcashSum(input.getEcashSum())
                 .setCheckDate(input.getCheckDate())
+                .setTelegramUserId(input.getTelegramUser().getId())
                 .setCreatedAt(input.getCreatedAt())
                 .setUpdatedAt(input.getUpdatedAt())
                 .setDeleted(input.getDeleted());

@@ -7,7 +7,9 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,7 +19,7 @@ public class TelegramMessageServiceImpl implements TelegramMessageService {
     @Override
     public MessageType getMessageType(Update update) {
         var result = MessageType.QUERY;
-        if (isStart(update)) {
+        if (isCommand(update)) {
             result = MessageType.COMMAND;
         } else if (isFile(update)) {
             result = MessageType.FILE;
@@ -36,16 +38,29 @@ public class TelegramMessageServiceImpl implements TelegramMessageService {
         return message;
     }
 
+    @Override
+    public Optional<User> getFrom(Update update) {
+        var type = getMessageType(update);
+        return switch (type) {
+            case CALLBACK -> getCallbackQuery(update).map(CallbackQuery::getFrom);
+            default -> getMessage(update).map(Message::getFrom);
+        };
+    }
+
+    private Optional<CallbackQuery> getCallbackQuery(Update update){
+        return Optional.ofNullable(update.getCallbackQuery());
+    }
+
     /**
      * Получена команда start.
      *
      * @param update
      * @return
      */
-    private boolean isStart(Update update) {
+    private boolean isCommand(Update update) {
         return getUpdateMessage(update).map(message ->
                         update.getMessage().hasText()
-                                && update.getMessage().getText().equals("/start"))
+                                && update.getMessage().getText().startsWith("/"))
                 .orElse(false);
     }
 
@@ -92,4 +107,5 @@ public class TelegramMessageServiceImpl implements TelegramMessageService {
     private Optional<Document> getDocument(Update update) {
         return getUpdateMessage(update).map(Message::getDocument);
     }
+
 }
