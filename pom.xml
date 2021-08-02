@@ -21,7 +21,7 @@
         <springdoc-openapi-webflux-ui.version>1.5.2</springdoc-openapi-webflux-ui.version>
         <embedded-postgresql.version>1.86</embedded-postgresql.version>
         <jib-maven-plugin.version>2.7.0</jib-maven-plugin.version>
-        <telegrambots.version>5.0.1</telegrambots.version>
+        <telegrambots.version>5.3.0</telegrambots.version>
     </properties>
 
     <dependencies>

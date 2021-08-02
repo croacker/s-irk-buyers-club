@@ -3,12 +3,14 @@ package com.croacker.buyersclub.telegram.keyboard;
 import lombok.Getter;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuKeyboardBuilder implements KeyboardBuilder {
+public class ReplyKeyboardBuilder implements KeyboardBuilder {
 
     @Getter
     private List<ChatButton> buttons = new ArrayList<>();
@@ -20,15 +22,18 @@ public class MenuKeyboardBuilder implements KeyboardBuilder {
     }
 
     @Override
+    public ChatButton newButton(String text) {
+        return newButton().setText(text);
+    }
+
+    @Override
     public ReplyKeyboard build() {
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        List<InlineKeyboardButton> row = new ArrayList<>();
+        ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+        keyboard.setResizeKeyboard(true);
+        List<KeyboardRow> rowList = new ArrayList<>();
+        var row = new KeyboardRow();
         buttons.forEach(define -> {
-            var button = new InlineKeyboardButton();
-            button.setText(define.getText());
-            button.setCallbackData(define.getData());
-            row.add(button);
+            row.add(define.getText());
         });
         rowList.add(row);
         keyboard.setKeyboard(rowList);

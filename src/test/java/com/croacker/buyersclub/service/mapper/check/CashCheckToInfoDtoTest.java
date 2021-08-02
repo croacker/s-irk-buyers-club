@@ -6,6 +6,7 @@ import com.croacker.buyersclub.domain.Cashier;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.check.CashCheckInfoDto;
 import com.croacker.buyersclub.service.mapper.checkline.CashCheckLineToInfoDto;
+import com.croacker.buyersclub.service.mapper.telegramuser.TelegramUserToDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,12 +27,15 @@ public class CashCheckToInfoDtoTest {
 
     private CashCheckLineToInfoDto lineMapper;
 
+    private TelegramUserToDto telegramUserToDto;
+
     private CashCheckToInfoDto mapper;
 
     @BeforeEach
     void setup() {
         lineMapper = new CashCheckLineToInfoDto();
-        mapper = new CashCheckToInfoDto(lineMapper);
+        telegramUserToDto = new TelegramUserToDto();
+        mapper = new CashCheckToInfoDto(lineMapper, telegramUserToDto);
     }
 
     @Test

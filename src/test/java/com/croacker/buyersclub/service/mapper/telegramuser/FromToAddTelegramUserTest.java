@@ -39,7 +39,7 @@ class FromToAddTelegramUserTest {
 
     private User createEntity() {
         var user = new User();
-        user.setId(0);
+        user.setId(0L);
         user.setUserName("test_username");
         user.setFirstName("test_firstname");
         user.setLastName("test_lastname");

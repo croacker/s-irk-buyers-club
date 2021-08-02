@@ -3,7 +3,8 @@ package com.croacker.buyersclub.telegram.updateprocessor;
 import com.croacker.buyersclub.service.locale.LocaleService;
 import com.croacker.buyersclub.telegram.chat.Chat;
 import com.croacker.buyersclub.telegram.chat.ChatPool;
-import com.croacker.buyersclub.telegram.keyboard.MenuKeyboardBuilder;
+import com.croacker.buyersclub.telegram.keyboard.InlineKeyboardBuilder;
+import com.croacker.buyersclub.telegram.keyboard.ReplyKeyboardBuilder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -27,10 +28,9 @@ public class CommandProcessor implements UpdateProcessor{
     }
 
     public Mono<SendMessage> startMenu() {
-        var builder = new MenuKeyboardBuilder();
-        builder.newButton().setText(getString("menu.start.products")).setData("product");
-        builder.newButton().setText(getString("menu.start.shops")).setData("shop");
-        builder.newButton().setText(getString("menu.start.organizations")).setData("organization");
+        var builder = new ReplyKeyboardBuilder();
+        builder.newButton(getString("menu.start.data"));
+        builder.newButton(getString("menu.start.reports"));
         var sendMessage = new SendMessage();
         sendMessage.setChatId(getChatId().toString());
         sendMessage.setText(getString("message.choosetype"));

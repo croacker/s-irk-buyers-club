@@ -17,6 +17,7 @@ import com.croacker.buyersclub.service.mapper.check.CashCheckToInfoDto;
 import com.croacker.buyersclub.service.mapper.check.DtoToCashCheck;
 import com.croacker.buyersclub.service.mapper.checkline.AddDtoToCashCheckLine;
 import com.croacker.buyersclub.service.mapper.checkline.CashCheckLineToInfoDto;
+import com.croacker.buyersclub.service.mapper.telegramuser.TelegramUserToDto;
 import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,13 +69,16 @@ class CheckServiceTest {
 
     private CashCheckLineToInfoDto lineMapper;
 
+    private TelegramUserToDto telegramUserToDto;
+
     private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @BeforeEach
     void setup() {
         toDtoMapper = new CashCheckToDto();
         lineMapper = new CashCheckLineToInfoDto();
-        toInfoDtoMapper = new CashCheckToInfoDto(lineMapper);
+        telegramUserToDto = new TelegramUserToDto();
+        toInfoDtoMapper = new CashCheckToInfoDto(lineMapper, telegramUserToDto);
         toEntityMapper = new DtoToCashCheck();
         addToEntityMapper = new AddDtoToCashCheck();
         addLineToEntityMapper = new AddDtoToCashCheckLine();

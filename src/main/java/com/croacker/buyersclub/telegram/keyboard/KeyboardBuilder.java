@@ -6,5 +6,7 @@ public interface KeyboardBuilder {
 
     ChatButton newButton();
 
+    ChatButton newButton(String text);
+
     ReplyKeyboard build();
 }
