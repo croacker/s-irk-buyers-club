@@ -29,6 +29,11 @@ public class ProductPriceController implements ProductPriceOperations {
     }
 
     @Override
+    public Mono<Long> getProductPricesCount() {
+        return service.getCount();
+    }
+
+    @Override
     public Mono<ProductPriceInfoDto> getProductPrice(@PathVariable Long id){
         return Mono.just(service.findOne(id));
     }

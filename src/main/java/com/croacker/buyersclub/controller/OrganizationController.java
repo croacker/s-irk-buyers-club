@@ -26,6 +26,11 @@ public class OrganizationController implements OrganizationOperations {
     }
 
     @Override
+    public Mono<Long> getOrganizationsCount() {
+        return service.getCount();
+    }
+
+    @Override
     public Mono<OrganizationDto> getOrganization(Long id) {
         return Mono.just(service.findOne(id));
     }

@@ -3,6 +3,7 @@ package com.croacker.buyersclub.service;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import org.springframework.data.domain.Pageable;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.List;
 public interface ShopService {
 
     List<ShopDto> findAll(Pageable pageable);
+
+    Mono<Long> getCount();
 
     ShopDto findOne(Long id);
 

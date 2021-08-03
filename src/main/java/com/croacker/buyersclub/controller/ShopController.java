@@ -28,6 +28,11 @@ public class ShopController implements ShopOperations {
     }
 
     @Override
+    public Mono<Long> getShopsCount() {
+        return service.getCount();
+    }
+
+    @Override
     public Mono<ShopDto> getShop(@PathVariable Long id){
         return Mono.just(service.findOne(id));
     }

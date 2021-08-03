@@ -7,6 +7,7 @@ import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramProductPriceDto;
 import org.springframework.data.domain.Pageable;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.List;
 public interface ProductPriceService {
 
     List<ProductPriceInfoDto> findAll(Pageable pageable);
+
+    Mono<Long> getCount();
 
     ProductPriceInfoDto findOne(Long id);
 
