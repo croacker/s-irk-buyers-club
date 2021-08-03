@@ -1,15 +1,13 @@
 package com.croacker.buyersclub.service.telegram;
 
-import com.croacker.buyersclub.telegram.updateprocessor.MessageType;
+import com.croacker.buyersclub.service.telegram.request.TelegramRequestType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,38 +15,16 @@ import java.util.Optional;
 public class TelegramMessageServiceImpl implements TelegramMessageService {
 
     @Override
-    public MessageType getMessageType(Update update) {
-        var result = MessageType.QUERY;
+    public TelegramRequestType getMessageType(Update update) {
+        var result = TelegramRequestType.QUERY;
         if (isCommand(update)) {
-            result = MessageType.COMMAND;
+            result = TelegramRequestType.COMMAND;
         } else if (isFile(update)) {
-            result = MessageType.FILE;
+            result = TelegramRequestType.FILE;
         } else if (isCallback(update)) {
-            result = MessageType.CALLBACK;
+            result = TelegramRequestType.CALLBACK;
         }
         return result;
-    }
-
-    @Override
-    public Optional<Message> getMessage(Update update) {
-        var message = Optional.ofNullable(update.getMessage());
-        if (!message.isPresent()){
-            message = Optional.ofNullable(update.getCallbackQuery().getMessage());
-        }
-        return message;
-    }
-
-    @Override
-    public Optional<User> getFrom(Update update) {
-        var type = getMessageType(update);
-        return switch (type) {
-            case CALLBACK -> getCallbackQuery(update).map(CallbackQuery::getFrom);
-            default -> getMessage(update).map(Message::getFrom);
-        };
-    }
-
-    private Optional<CallbackQuery> getCallbackQuery(Update update){
-        return Optional.ofNullable(update.getCallbackQuery());
     }
 
     /**

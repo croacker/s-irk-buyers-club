@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ShopChat implements Chat {
 
-    private final Long chatId;
+    private final String chatId;
 
     private final ShopService shopService;
 
@@ -26,11 +26,6 @@ public class ShopChat implements Chat {
     @Override
     public String getChatId() {
         return String.valueOf(chatId);
-    }
-
-    @Override
-    public ChatType getChatType() {
-        return ChatType.SHOP;
     }
 
     @Override

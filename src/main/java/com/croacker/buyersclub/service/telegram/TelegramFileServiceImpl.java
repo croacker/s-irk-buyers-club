@@ -6,6 +6,7 @@ import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.mapper.ofd.OfdCheckExcerptToOfdCheck;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import com.croacker.buyersclub.service.ofd.excerpt.Excerpt;
+import com.croacker.buyersclub.service.telegram.request.TelegramMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,15 +36,12 @@ public class TelegramFileServiceImpl implements TelegramFileService {
 
     private final OfdCheckServiceImpl ofdCheckService;
 
-    private final TelegramTelegramUserService telegramTelegramUserService;
-
     private final OfdCheckExcerptToOfdCheck mapper;
 
     @Override
-    public Mono<String> processFile(Message message) {
-        var userId = telegramTelegramUserService.getUser(message)
-                .map(user -> user.getId().longValue()).orElse(-1L);
-        return getFileId(message).map(fileId -> client.getFileContent(fileId)
+    public Mono<String> processFile(TelegramMessage telegramMessage) {
+        var userId = telegramMessage.getFrom().getId();
+        return getFileId(telegramMessage.getMessage()).map(fileId -> client.getFileContent(fileId)
                 .map(this::toOfdChecks)
                 .map(ofdChecks -> processChecks(ofdChecks, userId))
         ).orElseGet(()->Mono.just("Ошибка"));
@@ -167,10 +165,20 @@ public class TelegramFileServiceImpl implements TelegramFileService {
         return result;
     }
 
+    /**
+     * Это выписка по чекам за период.
+     * @param str json-строка
+     * @return
+     */
     private boolean isExcerpt(String str){
         return StringUtils.isNotEmpty(str) && str.contains("\"claims\"");
     }
 
+    /**
+     * Это несколько чеков.
+     * @param str json-строка
+     * @return
+     */
     private boolean isMultipleChecks(String str) {
         return str.startsWith("[");
     }
