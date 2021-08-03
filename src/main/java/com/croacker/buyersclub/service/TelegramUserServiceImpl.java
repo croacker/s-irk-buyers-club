@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,11 @@ public class TelegramUserServiceImpl implements TelegramUserService {
     @Override
     public List<TelegramUserDto> findAll(Pageable pageable) {
         return StreamSupport.stream(repo.findAll().spliterator(), false).map(toDtoMapper).collect(Collectors.toList());
+    }
+
+    @Override
+    public Mono<Long> getCount() {
+        return Mono.just(repo.count());
     }
 
     @Override

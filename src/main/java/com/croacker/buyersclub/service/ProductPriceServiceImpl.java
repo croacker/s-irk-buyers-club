@@ -19,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -51,6 +52,11 @@ public class ProductPriceServiceImpl implements ProductPriceService{
     @Override
     public List<ProductPriceInfoDto> findAll(Pageable pageable) {
         return repo.findByDeletedIsFalse(pageable).stream().map(toInfoDtoMapper).collect(Collectors.toList());
+    }
+
+    @Override
+    public Mono<Long> getCount() {
+        return Mono.just(repo.count());
     }
 
     @Override

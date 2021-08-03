@@ -1,5 +1,6 @@
 package com.croacker.buyersclub.controller;
 
+import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.dto.check.AddCashCheckDto;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.check.CashCheckInfoDto;
@@ -34,6 +35,17 @@ public interface CheckOperations {
                                     @RequestParam(value = "size", defaultValue = "20") int size,
                                     @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
                                     @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction);
+
+    @Operation(operationId = "getChecksCount", summary = "Получить количество чеков в БД")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Количество",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CashierDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Ошибка авторизации", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)})
+    @GetMapping(path = "/count")
+    Mono<Long> getChecksCount();
 
     @Operation(operationId = "getCheck", summary = "Получить чек по идентификатору")
     @ApiResponses(value = {

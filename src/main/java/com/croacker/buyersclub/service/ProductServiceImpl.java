@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,6 +39,11 @@ public class ProductServiceImpl implements ProductService{
         return StreamSupport.stream(
                 repo.findByDeletedIsFalse(pageable).spliterator(), false)
                 .map(toDtoMapper).collect(Collectors.toList());
+    }
+
+    @Override
+    public Mono<Long> getCount() {
+        return Mono.just(repo.count());
     }
 
     @Override

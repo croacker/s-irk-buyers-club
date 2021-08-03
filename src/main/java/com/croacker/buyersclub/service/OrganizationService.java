@@ -17,6 +17,8 @@ public interface OrganizationService {
 
     List<OrganizationDto> findAll(Pageable pageable);
 
+    Mono<Long> getCount();
+
     OrganizationDto findOne(Long id);
 
     OrganizationDto save(AddOrganizationDto dto);

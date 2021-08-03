@@ -1,5 +1,6 @@
 package com.croacker.buyersclub.controller;
 
+import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.dto.telegramuser.TelegramUserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,9 +20,9 @@ import java.util.List;
 @Tag(name = "TelegramUser", description = "Пользователи telegram")
 public interface TelegramUserOperations {
 
-    @Operation(operationId = "listTelegramUsers", summary = "Список пользователей telegram")
+    @Operation(operationId = "listTelegramUsers", summary = "Список telegram-пользователей")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Пользователи telegram",
+            @ApiResponse(responseCode = "200", description = "Telegram-пользователи ",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = List.class))}),
             @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
@@ -34,7 +35,18 @@ public interface TelegramUserOperations {
                                       @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
                                       @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction);
 
-    @Operation(operationId = "getTelegramUser", summary = "Получить пользователя telegram по идентификатору")
+    @Operation(operationId = "getTelegramUsersCount", summary = "Получить количество telegram-пользователей в БД")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Количество",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CashierDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Ошибка авторизации", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)})
+    @GetMapping(path = "/count")
+    Mono<Long> getTelegramUsersCount();
+
+    @Operation(operationId = "getTelegramUser", summary = "Получить telegram-пользователя по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Пользователь telegram",
                     content = {@Content(mediaType = "application/json",

@@ -1,5 +1,6 @@
 package com.croacker.buyersclub.controller;
 
+import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.dto.organization.AddOrganizationDto;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +20,7 @@ import java.util.List;
 @Tag(name = "Organization", description = "Организации")
 public interface OrganizationOperations {
 
-    @Operation(operationId = "listOrganizations", summary = "Список Организаций")
+    @Operation(operationId = "listOrganizations", summary = "Список организаций")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Организации",
                     content = {@Content(mediaType = "application/json",
@@ -34,7 +35,18 @@ public interface OrganizationOperations {
                                               @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
                                               @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction);
 
-    @Operation(operationId = "getOrganization", summary = "Получить Организацию по идентификатору")
+    @Operation(operationId = "getOrganizationsCount", summary = "Получить количество организаций в БД")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Количество",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CashierDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Ошибка авторизации", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)})
+    @GetMapping(path = "/count")
+    Mono<Long> getOrganizationsCount();
+
+    @Operation(operationId = "getOrganization", summary = "Получить организацию по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Организация",
                     content = {@Content(mediaType = "application/json",
@@ -46,10 +58,10 @@ public interface OrganizationOperations {
     @GetMapping(path = "/{id}")
     Mono<OrganizationDto> getOrganization(@PathVariable Long id);
 
-    @Operation(operationId = "createOrganization", summary = "Добавить Организацию",
+    @Operation(operationId = "createOrganization", summary = "Добавить организацию",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Организация",
+            @ApiResponse(responseCode = "200", description = "организация",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = OrganizationDto.class))
                     }),
@@ -60,10 +72,10 @@ public interface OrganizationOperations {
     @PostMapping
     Mono<OrganizationDto> createOrganization(@RequestBody AddOrganizationDto dto);
 
-    @Operation(operationId = "updateOrganization", summary = "Обновить Организацию",
+    @Operation(operationId = "updateOrganization", summary = "Обновить организацию",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Организация",
+            @ApiResponse(responseCode = "200", description = "организация",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = OrganizationDto.class))
                     }),
@@ -74,9 +86,9 @@ public interface OrganizationOperations {
     @PutMapping
     Mono<OrganizationDto> updateOrganization(@RequestBody OrganizationDto dto);
 
-    @Operation(operationId = "deleteOrganization", summary = "Удалить Организацию по идентификатору")
+    @Operation(operationId = "deleteOrganization", summary = "Удалить организацию по идентификатору")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Организация",
+            @ApiResponse(responseCode = "200", description = "организация",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = OrganizationDto.class))}),
             @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),

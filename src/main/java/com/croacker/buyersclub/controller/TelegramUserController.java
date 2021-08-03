@@ -25,6 +25,11 @@ public class TelegramUserController implements TelegramUserOperations{
     }
 
     @Override
+    public Mono<Long> getTelegramUsersCount() {
+        return service.getCount();
+    }
+
+    @Override
     public Mono<TelegramUserDto> getTelegramUser(Long id) {
         return service.findOne(id).map(Mono::just).orElse(Mono.empty());
     }

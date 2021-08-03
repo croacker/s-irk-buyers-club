@@ -4,6 +4,7 @@ import com.croacker.buyersclub.service.dto.check.AddCashCheckDto;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.check.CashCheckInfoDto;
 import org.springframework.data.domain.Pageable;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -13,6 +14,8 @@ import java.util.List;
 public interface CheckService {
 
     List<CashCheckInfoDto> findAll(Pageable pageable);
+
+    Mono<Long> getCount();
 
     CashCheckInfoDto findOne(Long id);
 

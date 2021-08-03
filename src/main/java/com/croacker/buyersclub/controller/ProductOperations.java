@@ -43,6 +43,17 @@ public interface ProductOperations {
                                     @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
                                     @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction);
 
+    @Operation(operationId = "getProductsCount", summary = "Получить количество товаров в БД")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Количество",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CashierDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Ошибка авторизации", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)})
+    @GetMapping(path = "/count")
+    Mono<Long> getProductsCount();
+
     @Operation(operationId = "getProduct", summary = "Получить товар по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Товар",

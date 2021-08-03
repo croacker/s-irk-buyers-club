@@ -19,7 +19,7 @@ import java.util.List;
 @Tag(name = "Cashier", description = "Кассиры")
 public interface CashierOperations {
 
-    @Operation(operationId = "listCashiers", summary = "Список кассиров")
+    @Operation(operationId = "getAllCashiers", summary = "Список кассиров")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Кассир",
                     content = {@Content(mediaType = "application/json",
@@ -33,6 +33,17 @@ public interface CashierOperations {
                                          @RequestParam(value = "size", defaultValue = "20") int size,
                                          @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
                                          @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction);
+
+    @Operation(operationId = "getCashiersCount", summary = "Получить количество кассиров в БД")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Количество",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CashierDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Ошибка авторизации", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)})
+    @GetMapping(path = "/count")
+    Mono<Long> getCashiersCount();
 
     @Operation(operationId = "getCashier", summary = "Получить кассира по идентификатору")
     @ApiResponses(value = {
