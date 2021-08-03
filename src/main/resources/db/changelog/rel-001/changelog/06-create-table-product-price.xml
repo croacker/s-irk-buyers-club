@@ -9,10 +9,10 @@
             <column name="id" type="bigserial" autoIncrement="true">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
-            <column name="shop_id" type="bigserial">
+            <column name="shop_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="product_id" type="bigserial">
+            <column name="product_id" type="bigint">
                 <constraints nullable="true"/>
             </column>
             <column name="price" type="integer">

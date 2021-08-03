@@ -24,7 +24,7 @@ public class QueryProcessor implements MessageProcessor {
     @Override
     public Mono<SendMessage> process() {
         var chat = getChat();
-        return createResponse(chat.findByName2(getExpression()));
+        return createResponse(chat.findByName(getExpression()));
     }
 
     private Mono<SendMessage> createResponse(ReplyKeyboard keyboard) {

@@ -1,19 +1,13 @@
 package com.croacker.buyersclub.service.mapper.telegram;
 
 import com.croacker.buyersclub.TestConfiguration;
-import com.croacker.buyersclub.service.DateTimeService;
-import com.croacker.buyersclub.service.DateTimeServiceImpl;
-import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
-import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,7 +32,7 @@ class TelegramOrganizationDtoToStringTest {
         var actual = mapper.map(given);
 
         // then
-        assertTrue(new ReflectionEquals(expected).matches(actual),
+        assertEquals(expected, actual,
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 

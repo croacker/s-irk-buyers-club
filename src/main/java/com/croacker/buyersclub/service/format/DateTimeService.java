@@ -1,4 +1,4 @@
-package com.croacker.buyersclub.service;
+package com.croacker.buyersclub.service.format;
 
 import java.time.LocalDateTime;
 

@@ -1,8 +1,8 @@
 package com.croacker.tests;
 
 import com.croacker.buyersclub.domain.*;
-import com.croacker.buyersclub.service.DateTimeService;
-import com.croacker.buyersclub.service.DateTimeServiceImpl;
+import com.croacker.buyersclub.service.format.DateTimeService;
+import com.croacker.buyersclub.service.format.DateTimeServiceImpl;
 import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.dto.check.AddCashCheckDto;
@@ -20,8 +20,11 @@ import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
+import com.croacker.buyersclub.service.dto.telegram.TelegramProductPriceDto;
 import com.croacker.buyersclub.service.dto.telegramuser.AddTelegramUserDto;
 import com.croacker.buyersclub.service.dto.telegramuser.TelegramUserDto;
+import com.croacker.buyersclub.service.format.NumberService;
+import com.croacker.buyersclub.service.format.NumberServiceImpl;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 
 import java.time.LocalDateTime;
@@ -33,7 +36,9 @@ public class TestEntitiesProducer {
 
     private final static String STRING_DATE_TIME = "2020-11-22T23:34:41";
 
-    private DateTimeService dateTimeService = new DateTimeServiceImpl();
+    private final DateTimeService dateTimeService = new DateTimeServiceImpl();
+
+    private final NumberService numberService = new NumberServiceImpl();
 
     public Cashier createCashier(long id){
         return new Cashier()
@@ -313,6 +318,17 @@ public class TestEntitiesProducer {
                 .setDeleted(false);
     }
 
+    public ProductPriceView createProductPriceView(long id) {
+        return new ProductPriceView()
+                .setId(id)
+                .setProductId(0L)
+                .setProductName("test_product_" + 0L)
+                .setShopId(0L)
+                .setShopName("test_shop_" + 0L)
+                .setPrice((int) id)
+                .setPriceDate(NOW);
+    }
+
     public TelegramFileProcessResult createTelegramFileProcessResult(long id) {
         return new TelegramFileProcessResult()
                 .setCheckInfo(dateTimeService.localDateTimeToString(NOW) + " test_fiscal_document_number_" + id);
@@ -349,4 +365,19 @@ public class TestEntitiesProducer {
                 .setFirstName("test_first_name_" + id)
                 .setLastName("test_last_name_" + id);
     }
+
+    public TelegramProductPriceDto createTelegramProductPriceDto(long id) {
+        return new TelegramProductPriceDto()
+                .setPriceId(id)
+                .setProductId(0L)
+                .setProductName("test_product_" + id)
+                .setShopId(0L)
+                .setShopName("test_shop_" + 0L)
+                .setPrice(priceToString(id * 100));
+    }
+
+    private String priceToString(Long val){
+        return numberService.toCurrency(val);
+    }
+
 }

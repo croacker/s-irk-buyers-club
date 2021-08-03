@@ -15,7 +15,7 @@
             <column name="address" type="varchar(256)">
                 <constraints nullable="true"/>
             </column>
-            <column name="organization_id" type="bigserial">
+            <column name="organization_id" type="bigint">
                 <constraints nullable="true"/>
             </column>
             <column name="description" type="varchar(256)">

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="12" author="croacker">
+        <createView replaceIfExists="true"
+                     viewName="PRODUCT_PRICE_VIEW">
+            SELECT
+                PRODUCT_PRICE.ID AS ID,
+                PRODUCT.ID AS PRODUCT_ID,
+                PRODUCT.NAME AS PRODUCT_NAME,
+                SHOP.ID AS SHOP_ID,
+                SHOP.NAME AS SHOP_NAME,
+                PRODUCT_PRICE.PRICE AS PRICE,
+                PRODUCT_PRICE.PRICE_DATE AS PRICE_DATE
+            FROM PRODUCT_PRICE
+            JOIN SHOP ON PRODUCT_PRICE.SHOP_ID = SHOP.ID
+            JOIN PRODUCT ON PRODUCT_PRICE.PRODUCT_ID = PRODUCT.ID
+        </createView>
+    </changeSet>
+</databaseChangeLog>

@@ -9,7 +9,7 @@
             <column name="id" type="bigserial" autoIncrement="true">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
-            <column name="cashier_id" type="bigserial">
+            <column name="cashier_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="kkt_reg_id" type="varchar(128)">

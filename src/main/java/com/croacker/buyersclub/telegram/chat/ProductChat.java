@@ -30,18 +30,18 @@ public class ProductChat implements Chat{
     }
 
     @Override
-    public String findByName(String expression) {
-        return getProductsPrices(expression.trim())
-                .stream().map(toStringMapper).collect(Collectors.joining(LINE_DELIMITER));
-    }
-
-    @Override
-    public ReplyKeyboard findByName2(String expression) {
+    public ReplyKeyboard findByName(String expression) {
+        var count = getProductsPricesCount(expression);
         var prices = getProductsPrices(expression.trim());
         var builder = new ChatKeyboardBuilder();
         prices.forEach(price -> builder.newButton()
                 .setText(toStringMapper.map(price))
                 .setData(price.getProductId().toString()));
+        if (count > prices.size()){
+            builder.newButton()
+                    .setText("Слеудующая страница")
+                    .setData("page=1#nextPage");
+        }
         return builder.build();
     }
 
@@ -51,8 +51,11 @@ public class ProductChat implements Chat{
     }
 
     private List<TelegramProductPriceDto> getProductsPrices(String expression){
-        var pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
+        var pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "productName");
         return productPriceService.getProductsPrices(expression.trim(), pageable);
     }
 
+    private Long getProductsPricesCount(String expression){
+        return productPriceService.getProductsPricesCount(expression.trim());
+    }
 }

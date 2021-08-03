@@ -3,6 +3,7 @@ package com.croacker.buyersclub.telegram.chat;
 import com.croacker.buyersclub.service.ShopService;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.mapper.telegram.TelegramShopDtoToString;
+import com.croacker.buyersclub.telegram.keyboard.ChatKeyboardBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,14 +30,13 @@ public class ShopChat implements Chat {
     }
 
     @Override
-    public String findByName(String expression) {
-        return getShops(expression)
-                .stream().map(toStringMapper).collect(Collectors.joining(LINE_DELIMITER));
-    }
-
-    @Override
-    public ReplyKeyboard findByName2(String expression) {
-        return null;
+    public ReplyKeyboard findByName(String expression) {
+        var shops = getShops(expression);
+        var builder = new ChatKeyboardBuilder();
+        shops.forEach(shop -> builder.newButton()
+                .setText(toStringMapper.map(shop))
+                .setData(shop.getId().toString()));
+        return builder.build();
     }
 
     @Override
