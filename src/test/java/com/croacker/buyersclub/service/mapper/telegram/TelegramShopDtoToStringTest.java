@@ -33,7 +33,7 @@ class TelegramShopDtoToStringTest {
         var actual = mapper.map(given);
 
         // then
-        assertTrue(new ReflectionEquals(expected).matches(actual),
+        assertEquals(expected, actual,
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 

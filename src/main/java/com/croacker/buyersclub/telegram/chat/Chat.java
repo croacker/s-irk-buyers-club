@@ -6,35 +6,27 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 public interface Chat {
 
     /**
-     * Response line delimiter in chat.
+     * Разделитель строк.
      */
     String LINE_DELIMITER = "\n";
 
     /**
-     * Chat identifier.
+     * Идентификатор чата.
      *
      * @return identifier
      */
     String getChatId();
 
     /**
-     * Find entity by expression(use LIKE)
+     * Найти сущности по наименованию(используя LIKE)
      *
-     * @param expression
-     * @return entities representation
+     * @param expression выражение - часть наименования
+     * @return представление сущностей в виде telegram-клавиатуры
      */
-    String findByName(String expression);
+    ReplyKeyboard findByName(String expression);
 
     /**
-     * Find entity by expression(use LIKE)
-     *
-     * @param expression
-     * @return entities representation
-     */
-    ReplyKeyboard findByName2(String expression);
-
-    /**
-     * Chat description.
+     * Заголовок чата.
      *
      * @return description
      */

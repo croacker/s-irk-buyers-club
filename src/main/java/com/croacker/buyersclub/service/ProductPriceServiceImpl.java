@@ -1,7 +1,7 @@
 package com.croacker.buyersclub.service;
 
-import com.croacker.buyersclub.domain.ProductPrice;
 import com.croacker.buyersclub.repo.ProductPriceRepo;
+import com.croacker.buyersclub.repo.ProductPriceViewRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
 import com.croacker.buyersclub.repo.ShopRepo;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
@@ -22,8 +22,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -34,6 +32,8 @@ import java.util.stream.StreamSupport;
 public class ProductPriceServiceImpl implements ProductPriceService{
 
     private final ProductPriceRepo repo;
+
+    private final ProductPriceViewRepo viewRepo;
 
     private final ProductRepo productRepo;
 
@@ -73,7 +73,7 @@ public class ProductPriceServiceImpl implements ProductPriceService{
 
     @Override
     public ProductPriceDto findPrice(ProductDto productDto, ShopDto shopDto, LocalDateTime priceDate) {
-        var product = productRepo.findById(productDto.getId()).get();
+        var product = productRepo.findById(productDto.getId()).get(); //!!
         var shop = shopRepo.findById(shopDto.getId()).get();
         return repo.findByProductAndShopAndPriceDate(product, shop, priceDate).map(toDtoMapper).orElse(null);
     }
@@ -109,16 +109,13 @@ public class ProductPriceServiceImpl implements ProductPriceService{
     }
 
     @Override
+    public Long getProductsPricesCount(String expression) {
+        return viewRepo.countByProductNameContainingIgnoreCase(expression);
+    }
+
+    @Override
     public List<TelegramProductPriceDto> getProductsPrices(String expression, Pageable pageable) {
-        // TODO to sql
-        return productRepo.findByNameContainingIgnoreCase(expression, pageable)
-                .stream().map(product -> repo.findByProduct(product))
-                .flatMap(List::stream)
-                .collect(Collectors.groupingBy(
-                        pp -> pp.getProduct().getName() + pp.getShop().getName(),
-                        Collectors.toSet()))
-                .values().stream().map(pp ->
-                        Collections.max(pp, Comparator.comparing(ProductPrice::getPriceDate)))
-                .map(toTelegramDtoMapper).collect(Collectors.toList());
+        return viewRepo.findByProductNameContainingIgnoreCase(expression, pageable)
+                .stream().map(toTelegramDtoMapper).collect(Collectors.toList());
     }
 }

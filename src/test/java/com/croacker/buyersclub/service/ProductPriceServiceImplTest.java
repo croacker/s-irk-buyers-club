@@ -5,6 +5,7 @@ import com.croacker.buyersclub.domain.Product;
 import com.croacker.buyersclub.domain.ProductPrice;
 import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.repo.ProductPriceRepo;
+import com.croacker.buyersclub.repo.ProductPriceViewRepo;
 import com.croacker.buyersclub.repo.ProductRepo;
 import com.croacker.buyersclub.repo.ShopRepo;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
@@ -12,6 +13,8 @@ import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
+import com.croacker.buyersclub.service.format.NumberService;
+import com.croacker.buyersclub.service.format.NumberServiceImpl;
 import com.croacker.buyersclub.service.mapper.productprice.AddDtoToProductPrice;
 import com.croacker.buyersclub.service.mapper.productprice.DtoToProductPrice;
 import com.croacker.buyersclub.service.mapper.productprice.ProductPriceToDto;
@@ -48,10 +51,15 @@ class ProductPriceServiceImplTest {
     private ProductPriceRepo repo;
 
     @MockBean
+    private ProductPriceViewRepo viewRepo;
+
+    @MockBean
     private ProductRepo productRepo;
 
     @MockBean
     private ShopRepo shopRepo;
+
+    private NumberService numberService;
 
     private ProductPriceToDto toDtoMapper;
 
@@ -67,12 +75,13 @@ class ProductPriceServiceImplTest {
 
     @BeforeEach
     void setup(){
+        numberService = new NumberServiceImpl();
         toDtoMapper = new ProductPriceToDto();
         toInfoDtoMapper = new ProductPriceToInfoDto();
         toEntityMapper = new DtoToProductPrice();
         addToEntityMapper = new AddDtoToProductPrice();
-        toTelegramDtoMapper = new ProductPriceToTelegramDto();
-        service = new ProductPriceServiceImpl(repo, productRepo, shopRepo, toDtoMapper, toInfoDtoMapper,
+        toTelegramDtoMapper = new ProductPriceToTelegramDto(numberService);
+        service = new ProductPriceServiceImpl(repo, viewRepo, productRepo, shopRepo, toDtoMapper, toInfoDtoMapper,
                 toEntityMapper, addToEntityMapper, toTelegramDtoMapper);
     }
 

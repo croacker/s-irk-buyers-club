@@ -1,8 +1,8 @@
 package com.croacker.buyersclub.service.mapper.ofd;
 
 import com.croacker.buyersclub.TestConfiguration;
-import com.croacker.buyersclub.service.DateTimeService;
-import com.croacker.buyersclub.service.DateTimeServiceImpl;
+import com.croacker.buyersclub.service.format.DateTimeService;
+import com.croacker.buyersclub.service.format.DateTimeServiceImpl;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import com.croacker.buyersclub.service.ofd.excerpt.OfdCheckExcerpt;
 import org.junit.jupiter.api.BeforeEach;

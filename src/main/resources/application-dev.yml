@@ -3,6 +3,7 @@ server:
 
 spring:
   jpa:
+    show-sql: true
     database-platform: org.hibernate.dialect.H2Dialect
     generate-ddl: false
     hibernate:
@@ -21,3 +22,13 @@ app:
   telegram:
     token: ${TELEGRAM_BOT_TOKEN:telegramToken}
     username: ${TELEGRAM_BOT_USERNAME:telegramUsername}
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE

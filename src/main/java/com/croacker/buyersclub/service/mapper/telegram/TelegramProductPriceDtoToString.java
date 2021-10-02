@@ -9,7 +9,7 @@ public class TelegramProductPriceDtoToString implements Mapper<TelegramProductPr
 
     @Override
     public String map(TelegramProductPriceDto input) {
-        return input.getPrice() + " руб. - " + input.getName();
+        return input.getPrice() + " руб. - " + input.getProductName();
     }
 
 }
