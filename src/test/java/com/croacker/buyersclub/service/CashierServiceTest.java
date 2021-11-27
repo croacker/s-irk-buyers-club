@@ -93,11 +93,11 @@ class CashierServiceTest {
         // given
         var given = "test_cashier_1";
         var cashier = createEntity(1L);
-        when(repo.findByName(given)).thenReturn(Optional.of(cashier));
+        when(repo.findByNameAndShopId(given, 1L)).thenReturn(Optional.of(cashier));
         var expected = createDto(1L);
 
         // when
-        var actual = service.findByName(given);
+        var actual = service.findByNameAndShopId(given, 1L);
 
         // then
         assertEquals(expected, actual,

@@ -53,7 +53,7 @@ class CheckControllerTest {
     public void shouldReturnCheck() {
         // given
         var expected = createCashCheckInfoDto(1L);
-        when(service.findOne(any())).thenReturn(expected);
+        when(service.findById(any())).thenReturn(expected);
 
         // when and then
         client.get()

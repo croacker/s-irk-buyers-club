@@ -18,7 +18,7 @@ public interface CashierService {
 
     CashierDto findOne(Long id);
 
-    CashierDto findByName(String name);
+    CashierDto findByNameAndShopId(String name, Long shopId);
 
     CashierDto save(AddCashierDto dto);
 

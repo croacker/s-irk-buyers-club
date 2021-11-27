@@ -77,8 +77,8 @@ class OfdCheckServiceTest {
         var given = createOfdCheck();
         var telegramUserId = 0L;
         when(organizationService.findByInn("test_user_inn")).thenReturn(createOrganization());
-        when(shopService.findByName("test_shop")).thenReturn(createShop());
-        when(cashierService.findByName(any())).thenReturn(createCashier());
+        when(shopService.findByAddress("test_retail_place_address")).thenReturn(createShop());
+        when(cashierService.findByNameAndShopId(any(), any())).thenReturn(createCashier());
         when(checkService.save(any())).thenReturn(createCashCheckDto());
 
         var expected = createTelegramFileProcessResult(0L);

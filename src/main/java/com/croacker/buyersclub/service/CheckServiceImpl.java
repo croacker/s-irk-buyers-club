@@ -58,8 +58,14 @@ public class CheckServiceImpl implements CheckService{
     }
 
     @Override
-    public CashCheckInfoDto findOne(Long id) {
+    public CashCheckInfoDto findById(Long id) {
         return repo.findById(id).map(toInfoDtoMapper).orElse(null); // TODO return Optional
+    }
+
+    @Override
+    public CashCheckDto findCheck(String kktRegId, String fiscalDriveNumber, String fiscalDocumentNumber) {
+        return repo.findByKktRegIdAndFiscalDriveNumberAndFiscalDocumentNumber(kktRegId,
+                fiscalDriveNumber, fiscalDocumentNumber).map(toDtoMapper).orElse(null);
     }
 
     @Override
