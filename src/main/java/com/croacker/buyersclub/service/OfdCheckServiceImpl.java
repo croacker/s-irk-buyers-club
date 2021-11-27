@@ -20,6 +20,7 @@ import com.croacker.buyersclub.service.mapper.telegram.CashCheckDtoToTelegramFil
 import com.croacker.buyersclub.service.ofd.Item;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class OfdCheckServiceImpl implements OfdCheckService {
 
     private static final String UNDEFINED_CASHIER = "Не указан";
@@ -73,20 +75,29 @@ public class OfdCheckServiceImpl implements OfdCheckService {
     private CashCheckDto saveCheck(CashierDto cashier, List<AddCashCheckLineDto> checkLines,
                                    OfdCheck ofdCheck, Long telegramUserId) {
         var dateTime = fromEpoch(ofdCheck.getDateTime());
-        var checkDto = new AddCashCheckDto()// TODO в mapper
-                .setCashierId(cashier.getId())
-                .setRequestNumber(ofdCheck.getRequestNumber())
-                .setShiftNumber(ofdCheck.getShiftNumber())
-                .setKktRegId(ofdCheck.getKktRegId())
-                .setFiscalDocumentNumber(ofdCheck.getFiscalDocumentNumber())
-                .setFiscalDriveNumber(ofdCheck.getFiscalDriveNumber())
-                .setTotalSum(ofdCheck.getTotalSum())
-                .setCashSum(ofdCheck.getCashTotalSum())
-                .setEcashSum(ofdCheck.getEcashTotalSum())
-                .setCheckDate(dateTime)
-                .setCheckLines(checkLines)
-                .setTelegramUserId(telegramUserId);
-        return checkService.save(checkDto);
+        var check = findCheck(ofdCheck);
+        if (check == null) {
+            var checkDto = new AddCashCheckDto()// TODO в mapper
+                    .setCashierId(cashier.getId())
+                    .setRequestNumber(ofdCheck.getRequestNumber())
+                    .setShiftNumber(ofdCheck.getShiftNumber())
+                    .setKktRegId(ofdCheck.getKktRegId())
+                    .setFiscalDocumentNumber(ofdCheck.getFiscalDocumentNumber())
+                    .setFiscalDriveNumber(ofdCheck.getFiscalDriveNumber())
+                    .setTotalSum(ofdCheck.getTotalSum())
+                    .setCashSum(ofdCheck.getCashTotalSum())
+                    .setEcashSum(ofdCheck.getEcashTotalSum())
+                    .setCheckDate(dateTime)
+                    .setCheckLines(checkLines)
+                    .setTelegramUserId(telegramUserId);
+            check = checkService.save(checkDto);
+        }
+        return check;
+    }
+
+    private CashCheckDto findCheck(OfdCheck ofdCheck) {
+        return checkService.findCheck(ofdCheck.getKktRegId(), ofdCheck.getFiscalDriveNumber(),
+                ofdCheck.getFiscalDocumentNumber());
     }
 
     /**
@@ -118,19 +129,22 @@ public class OfdCheckServiceImpl implements OfdCheckService {
      */
     private ShopDto saveShop(OfdCheck ofdCheck, OrganizationDto organization) {
         ShopDto shop;
-        if (ofdCheck.getRetailPlaceAddress() == null) {
-            shop = shopService.findByName(ofdCheck.getUser());
-        } else {
+        var name = getShopName(ofdCheck, organization);
+        if (ofdCheck.getRetailPlaceAddress() != null) {
             shop = shopService.findByAddress(ofdCheck.getRetailPlaceAddress());
+        } else {
+            shop = shopService.findByName(name);
         }
         if (shop == null) {
-            var name = organization.getName();
             var address = ofdCheck.getRetailPlaceAddress();
             var dto = new AddShopDto()
                     .setName(name)
                     .setAddress(address)
                     .setOrganizationId(organization.getId());
+            log.info("Save new Shop: {}", dto);
             shop = shopService.save(dto);
+        } else {
+            log.info("Shop exists: {}", shop);
         }
         return shop;
     }
@@ -143,12 +157,9 @@ public class OfdCheckServiceImpl implements OfdCheckService {
      * @return кассир
      */
     private CashierDto saveCashier(OfdCheck ofdCheck, ShopDto shop) {
-        var cashier = cashierService.findByName(ofdCheck.getOperator());
+        var name = getCashierName(ofdCheck);
+        var cashier = cashierService.findByNameAndShopId(name, shop.getId());
         if (cashier == null) {
-            var name = ofdCheck.getOperator();
-            if (StringUtils.isEmpty(name)){
-                name = UNDEFINED_CASHIER;
-            }
             var dto = new AddCashierDto()
                     .setName(name)
                     .setShopId(shop.getId());
@@ -204,4 +215,19 @@ public class OfdCheckServiceImpl implements OfdCheckService {
         return dateTimeService.fromEpoch(datetime);
     }
 
+    private String getCashierName(OfdCheck ofdCheck) {
+        var name = ofdCheck.getOperator();
+        if (StringUtils.isEmpty(name)){
+            name = UNDEFINED_CASHIER;
+        }
+        return name;
+    }
+
+    private String getShopName(OfdCheck ofdCheck, OrganizationDto organization){
+        var name = ofdCheck.getUser();
+        if (name == null) {
+            name = organization.getName();
+        }
+        return name;
+    }
 }

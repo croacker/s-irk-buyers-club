@@ -17,7 +17,9 @@ public interface CheckService {
 
     Mono<Long> getCount();
 
-    CashCheckInfoDto findOne(Long id);
+    CashCheckInfoDto findById(Long id);
+
+    CashCheckDto findCheck(String kktRegId, String fiscalDriveNumber, String fiscalDocumentNumber);
 
     CashCheckDto save(AddCashCheckDto dto);
 

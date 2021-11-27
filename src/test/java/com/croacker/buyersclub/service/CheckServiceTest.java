@@ -112,7 +112,7 @@ class CheckServiceTest {
         var expected = createInfoDto(0L);
 
         // when
-        var actual = service.findOne(given);
+        var actual = service.findById(given);
 
         // then
         assertEquals(expected, actual,

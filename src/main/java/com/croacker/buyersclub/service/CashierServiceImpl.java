@@ -1,5 +1,6 @@
 package com.croacker.buyersclub.service;
 
+import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.repo.CashierRepo;
 import com.croacker.buyersclub.repo.ShopRepo;
 import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
@@ -50,8 +51,8 @@ public class CashierServiceImpl implements CashierService {
     }
 
     @Override
-    public CashierDto findByName(String name) {
-        return repo.findByName(name).map(toDtoMapper).orElse(null); // TODO return Optional
+    public CashierDto findByNameAndShopId(String name, Long shopId) {
+        return repo.findByNameAndShopId(name, shopId).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
