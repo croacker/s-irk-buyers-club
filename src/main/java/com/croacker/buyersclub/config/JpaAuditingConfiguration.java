@@ -6,12 +6,11 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.Optional;
-
 @Configuration
 @EnableJpaAuditing
 public class JpaAuditingConfiguration {
     @Bean
-    public AuditorAware<String> auditorProvider() {
-        return (AuditorAware) () -> Optional.of("user");//TODO concrete user
+    public AuditorAware auditorProvider() {
+        return () -> Optional.of("user");//TODO concrete user
     }
 }
