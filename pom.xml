@@ -22,7 +22,7 @@
         <embedded-postgresql.version>1.86</embedded-postgresql.version>
         <jib-maven-plugin.version>2.7.0</jib-maven-plugin.version>
         <lombok.version>1.18.20</lombok.version>
-        <liquibase.version>4.5.0</liquibase.version>
+        <liquibase.version>4.8.0</liquibase.version>
         <telegrambots.version>5.3.0</telegrambots.version>
     </properties>
 
