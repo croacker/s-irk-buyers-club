@@ -1,28 +1,19 @@
 package com.croacker.buyersclub.service.mapper.cashier;
 
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Cashier;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 public class DtoToCashierTest {
 
     private DtoToCashier mapper;
-
-    @BeforeEach
-    void setup() {
-        mapper = new DtoToCashier();
-    }
 
     @Test
     void shouldMapDto() {

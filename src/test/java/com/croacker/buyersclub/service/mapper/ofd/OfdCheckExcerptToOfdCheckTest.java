@@ -1,37 +1,28 @@
 package com.croacker.buyersclub.service.mapper.ofd;
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.service.format.DateTimeService;
-import com.croacker.buyersclub.service.format.DateTimeServiceImpl;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import com.croacker.buyersclub.service.ofd.excerpt.OfdCheckExcerpt;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 public class OfdCheckExcerptToOfdCheckTest {
 
     private final static String STRING_DATE_TIME = "2020-11-22T23:34:41";
 
+    @Autowired
     private DateTimeService dateTimeService;
 
+    @Autowired
     private OfdCheckExcerptToOfdCheck mapper;
-
-    @BeforeEach
-    void setup() {
-        dateTimeService = new DateTimeServiceImpl();
-        mapper = new OfdCheckExcerptToOfdCheck(dateTimeService);
-    }
 
     @Test
     void shouldMapDto() {
@@ -81,6 +72,7 @@ public class OfdCheckExcerptToOfdCheckTest {
                 .setDateTime(STRING_DATE_TIME);
     }
 
+    // TODO test data producer
     private OfdCheck createOfdCheck() {
         return new OfdCheck()
                 .setUser("test_user")
