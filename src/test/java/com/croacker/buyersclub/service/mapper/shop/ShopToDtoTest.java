@@ -1,32 +1,24 @@
 package com.croacker.buyersclub.service.mapper.shop;
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Organization;
 import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 class ShopToDtoTest {
 
+    @Autowired
     private ShopToDto mapper;
 
     private final static LocalDateTime NOW = LocalDateTime.now();
-
-    @BeforeEach
-    void setup() {
-        mapper = new ShopToDto();
-    }
 
     @Test
     void shouldMapEntity() {

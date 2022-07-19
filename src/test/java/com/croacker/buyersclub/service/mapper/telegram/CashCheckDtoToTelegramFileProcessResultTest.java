@@ -1,34 +1,21 @@
 package com.croacker.buyersclub.service.mapper.telegram;
 
-import com.croacker.buyersclub.TestConfiguration;
-import com.croacker.buyersclub.service.format.DateTimeService;
-import com.croacker.buyersclub.service.format.DateTimeServiceImpl;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 class CashCheckDtoToTelegramFileProcessResultTest {
 
+    @Autowired
     private CashCheckDtoToTelegramFileProcessResult mapper;
-
-    private DateTimeService dateTimeService;
-
-    @BeforeEach
-    void setup(){
-        dateTimeService = new DateTimeServiceImpl();
-        mapper = new CashCheckDtoToTelegramFileProcessResult(dateTimeService);
-    }
 
     @Test
     void shouldMap(){

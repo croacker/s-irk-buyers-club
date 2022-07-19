@@ -1,32 +1,24 @@
 package com.croacker.buyersclub.service.mapper.check;
 
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.CashCheck;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 public class DtoToCashCheckTest {
 
+    @Autowired
     private DtoToCashCheck mapper;
 
     private static final LocalDateTime NOW = LocalDateTime.now();
-
-    @BeforeEach
-    void setup() {
-        mapper = new DtoToCashCheck();
-    }
 
     @Test
     void shouldMapDto() {

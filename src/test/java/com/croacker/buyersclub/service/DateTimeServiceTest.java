@@ -1,20 +1,16 @@
 package com.croacker.buyersclub.service;
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.service.format.DateTimeService;
 import com.croacker.buyersclub.service.format.DateTimeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 class DateTimeServiceTest {
 
     private DateTimeService service;
