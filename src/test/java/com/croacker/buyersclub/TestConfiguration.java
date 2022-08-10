@@ -2,6 +2,6 @@ package com.croacker.buyersclub;
 
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration()
 public class TestConfiguration {
 }

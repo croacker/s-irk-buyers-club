@@ -12,6 +12,7 @@ import com.croacker.buyersclub.service.telegram.TelegramMessageServiceImpl;
 import com.croacker.buyersclub.telegram.updateprocessor.MessageDispatcher;
 import com.croacker.buyersclub.telegram.updateprocessor.MessageProcessor;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -24,9 +25,11 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
@@ -42,6 +45,8 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     private final TelegramMessageServiceImpl telegramMessageService;
 
+    ExecutorService executorService = Executors.newFixedThreadPool(1);
+
     @Override
     public String getBotUsername() {
         return configuration.getUsername();
@@ -54,7 +59,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
 
     @PostConstruct
     public void init() {
-        botConnect();
+        executorService.submit(this::botConnect);
     }
 
     @Override
@@ -98,7 +103,7 @@ public class IrkBuyersClubBot extends TelegramLongPollingBot {
             telegramBotsApi.registerBot(this);
             log.info("TelegramAPI started. Look for messages");
         } catch (TelegramApiRequestException e) {
-            log.info("Cant Connect. Pause " + RECONNECT_PAUSE / 1000 + "sec and try again. Error: " + e.getMessage());
+            log.info("Cant Connect. Pause " + RECONNECT_PAUSE / 1000 + "sec and try again. Error: {}", e.getMessage());
             try {
                 Thread.sleep(RECONNECT_PAUSE);
             } catch (InterruptedException e1) {
