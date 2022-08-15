@@ -3,6 +3,7 @@ package com.croacker.buyersclub.service.mapper.cashier;
 import com.croacker.buyersclub.domain.Cashier;
 import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ class CashierToDtoTest {
 
     private final static LocalDateTime NOW = LocalDateTime.now();
 
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
+
     @Test
     void shouldMapEntity() {
         //given
@@ -35,28 +38,11 @@ class CashierToDtoTest {
     }
 
     private Cashier createEntity() {
-        var shop = new Shop()
-                .setId(0L)
-                .setName("test_shop")
-                .setAddress("test_address")
-                .setDeleted(false);
-        return new Cashier()
-                .setId(0L)
-                .setName("test_cashier")
-                .setShop(shop)
-                .setCreatedAt(NOW)
-                .setUpdatedAt(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createCashier(0L);
     }
 
     private CashierDto createDto() {
-        return new CashierDto()
-                .setId(0L)
-                .setName("test_cashier")
-                .setShopId(0L)
-                .setCreatedAt(NOW)
-                .setUpdatedAt(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createCashierDto(0L);
     }
 
 

@@ -4,6 +4,7 @@ import com.croacker.buyersclub.service.CheckService;
 import com.croacker.buyersclub.service.dto.check.AddCashCheckDto;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.check.CashCheckInfoDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -12,9 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -24,13 +23,13 @@ import static org.mockito.Mockito.when;
 @WebFluxTest(CheckController.class)
 class CheckControllerTest {
 
-    private final static LocalDateTime NOW = LocalDateTime.now();
-
     @Autowired
     WebTestClient client;
 
     @MockBean
     private CheckService service;
+
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     public void shouldReturnAllChecks() {
@@ -117,52 +116,15 @@ class CheckControllerTest {
     }
 
     private CashCheckInfoDto createCashCheckInfoDto(long id) {
-        return new CashCheckInfoDto()
-                .setId(id)
-                .setCashierId(1L)
-                .setCashierName("test_cashier_" + id)
-                .setCheckLines(Collections.emptyList())
-                .setRequestNumber("test_request_number_" + id)
-                .setShiftNumber("test_shift_number_" + id)
-                .setKktRegId("test_kkt_reg_id_" + id)
-                .setFiscalDriveNumber("test_fiscal_drive_number_" + id)
-                .setFiscalDocumentNumber("test_fiscal_document_number_" + id)
-                .setTotalSum(5)
-                .setCashSum(3)
-                .setEcashSum(2)
-                .setCheckDate(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createCashCheckInfoDto(id);
     }
 
     private AddCashCheckDto createAddCashCheckDto(long id) {
-        return new AddCashCheckDto()
-                .setCashierId(1L)
-                .setCheckLines(Collections.emptyList())
-                .setRequestNumber("test_request_number_" + id)
-                .setShiftNumber("test_shift_number_" + id)
-                .setKktRegId("test_kkt_reg_id_" + id)
-                .setFiscalDriveNumber("test_fiscal_drive_number_" + id)
-                .setFiscalDocumentNumber("test_fiscal_document_number_" + id)
-                .setTotalSum(5)
-                .setCashSum(3)
-                .setEcashSum(2)
-                .setCheckDate(NOW);
+        return testEntitiesProducer.createAddCashCheckDto(id);
     }
 
     private CashCheckDto createCashCheckDto(long id) {
-        return new CashCheckDto()
-                .setId(id)
-                .setCashierId(1L)
-                .setRequestNumber("test_request_number_" + id)
-                .setShiftNumber("test_shift_number_" + id)
-                .setKktRegId("test_kkt_reg_id_" + id)
-                .setFiscalDriveNumber("test_fiscal_drive_number_" + id)
-                .setFiscalDocumentNumber("test_fiscal_document_number_" + id)
-                .setTotalSum(5)
-                .setCashSum(3)
-                .setEcashSum(2)
-                .setCheckDate(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createCashCheckDto(id);
     }
 
 }

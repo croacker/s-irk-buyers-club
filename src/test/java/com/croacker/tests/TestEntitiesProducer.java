@@ -1,6 +1,8 @@
 package com.croacker.tests;
 
 import com.croacker.buyersclub.domain.*;
+import com.croacker.buyersclub.service.dto.checkline.AddCashCheckLineDto;
+import com.croacker.buyersclub.service.dto.checkline.CashCheckLineInfoDto;
 import com.croacker.buyersclub.service.format.DateTimeService;
 import com.croacker.buyersclub.service.format.DateTimeServiceImpl;
 import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
@@ -25,6 +27,7 @@ import com.croacker.buyersclub.service.dto.telegramuser.AddTelegramUserDto;
 import com.croacker.buyersclub.service.dto.telegramuser.TelegramUserDto;
 import com.croacker.buyersclub.service.format.NumberService;
 import com.croacker.buyersclub.service.format.NumberServiceImpl;
+import com.croacker.buyersclub.service.ofd.Item;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 
 import java.time.LocalDateTime;
@@ -197,6 +200,33 @@ public class TestEntitiesProducer {
                 .setTelegramUserId(1L);
     }
 
+    public CashCheckLine createCashCheckLine(long id){
+        return new CashCheckLine()
+                .setId(id)
+                .setProduct(createProduct(0L))
+                .setPrice(100)
+                .setQuantity(2)
+                .setTotalSum(200);
+    }
+
+    public CashCheckLineInfoDto createCashCheckLineInfoDto(long id){
+        return new CashCheckLineInfoDto()
+                .setId(id)
+                .setProductId(0L)
+                .setProductName("test_product_0")
+                .setPrice(100)
+                .setQuantity(2)
+                .setTotalSum(200);
+    }
+
+    public AddCashCheckLineDto createAddCashCheckLineDto(){
+        return new AddCashCheckLineDto()
+                .setProductId(0L)
+                .setPrice(100)
+                .setQuantity(2)
+                .setTotalSum(200);
+    }
+
     public OfdCheck createOfdCheck(long id) {
         return new OfdCheck()
                 .setUser("test_user")
@@ -227,6 +257,13 @@ public class TestEntitiesProducer {
                 .setMarkup("test_markup")
                 .setMarkupSum("test_markup_sum")
                 .setDateTime(dateTimeToEpoch(stringToLocalDateTime(STRING_DATE_TIME)));
+    }
+
+    public Item createItem(){
+        return new Item()
+                .setPrice(100)
+                .setQuantity(2)
+                .setSum(200);
     }
 
     public ProductGroup createProductGroup(long id) {
