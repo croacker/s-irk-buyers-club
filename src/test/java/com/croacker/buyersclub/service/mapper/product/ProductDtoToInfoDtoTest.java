@@ -1,14 +1,12 @@
 package com.croacker.buyersclub.service.mapper.product;
 
 import com.croacker.buyersclub.domain.Product;
-import com.croacker.buyersclub.domain.ProductGroup;
 import com.croacker.buyersclub.service.dto.product.ProductInfoDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -18,7 +16,7 @@ class ProductDtoToInfoDtoTest {
     @Autowired
     private ProductDtoToInfoDto mapper;
 
-    private final static LocalDateTime NOW = LocalDateTime.now();
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapDto() {
@@ -35,25 +33,11 @@ class ProductDtoToInfoDtoTest {
     }
 
     private Product createEntity() {
-        var productGroup = new ProductGroup().setId(0L).setName("test_product_group");
-        return new Product()
-                .setId(0L)
-                .setName("test_product")
-                .setProductGroup(productGroup)
-                .setCreatedAt(NOW)
-                .setUpdatedAt(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createProduct(0L);
     }
 
     private ProductInfoDto createInfoDto() {
-        return new ProductInfoDto()
-                .setId(0L)
-                .setName("test_product")
-                .setProductGroupId(0L)
-                .setProductGroupName("test_product_group")
-                .setCreatedAt(NOW)
-                .setUpdatedAt(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createProductInfoDto(0L);
     }
 
 }

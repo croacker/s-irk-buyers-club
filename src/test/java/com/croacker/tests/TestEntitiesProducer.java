@@ -3,6 +3,7 @@ package com.croacker.tests;
 import com.croacker.buyersclub.domain.*;
 import com.croacker.buyersclub.service.dto.checkline.AddCashCheckLineDto;
 import com.croacker.buyersclub.service.dto.checkline.CashCheckLineInfoDto;
+import com.croacker.buyersclub.service.dto.product.ProductInfoDto;
 import com.croacker.buyersclub.service.format.DateTimeService;
 import com.croacker.buyersclub.service.format.DateTimeServiceImpl;
 import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
@@ -29,6 +30,7 @@ import com.croacker.buyersclub.service.format.NumberService;
 import com.croacker.buyersclub.service.format.NumberServiceImpl;
 import com.croacker.buyersclub.service.ofd.Item;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
+import com.croacker.buyersclub.service.ofd.excerpt.OfdCheckExcerpt;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -227,7 +229,7 @@ public class TestEntitiesProducer {
                 .setTotalSum(200);
     }
 
-    public OfdCheck createOfdCheck(long id) {
+    public OfdCheck createOfdCheck() {
         return new OfdCheck()
                 .setUser("test_user")
                 .setRetailPlaceAddress("test_retail_place_address")
@@ -264,6 +266,38 @@ public class TestEntitiesProducer {
                 .setPrice(100)
                 .setQuantity(2)
                 .setSum(200);
+    }
+
+    public OfdCheckExcerpt createOfdCheckExcerpt(){
+        return new OfdCheckExcerpt()
+                .setUser("test_user")
+                .setRetailPlaceAddress("test_retail_place_address")
+                .setUserInn("test_user_inn")
+                .setRequestNumber("test_request_number")
+                .setShiftNumber("test_shift_number")
+                .setOperator("test_operator")
+                .setOperationType(0)
+                .setTotalSum(1000)
+                .setCashTotalSum(300)
+                .setEcashTotalSum(700)
+                .setKktRegId("test_kkt_reg_id")
+                .setKktNumber("test_kkt_number")
+                .setFiscalDriveNumber("test_fiscal_drive_number")
+                .setFiscalDocumentNumber("test_fiscal_document_number")
+                .setFiscalSign("test_fiscal_sign")
+                .setNdsNo("test_nds_no")
+                .setNds0("test_nds_0")
+                .setNds10(10)
+                .setNdsCalculated10("test_nds_calculated_10")
+                .setNds18(18)
+                .setNdsCalculated18("test_nds_calculated_18")
+                .setTaxationType(0)
+                .setItems(Collections.emptyList())
+                .setDiscount("test_discount")
+                .setDiscountSum("test_discount_sum")
+                .setMarkup("test_markup")
+                .setMarkupSum("test_markup_sum")
+                .setDateTime(STRING_DATE_TIME);
     }
 
     public ProductGroup createProductGroup(long id) {
@@ -304,6 +338,17 @@ public class TestEntitiesProducer {
                 .setId(id)
                 .setProductGroupId(0L)
                 .setName("test_product_" + id)
+                .setCreatedAt(NOW)
+                .setUpdatedAt(NOW)
+                .setDeleted(false);
+    }
+
+    public ProductInfoDto createProductInfoDto(long id) {
+        return new ProductInfoDto()
+                .setId(0L)
+                .setName("test_product_" + id)
+                .setProductGroupId(0L)
+                .setProductGroupName("test_product_group_0")
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);

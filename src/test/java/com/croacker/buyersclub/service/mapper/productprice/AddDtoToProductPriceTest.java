@@ -2,6 +2,7 @@ package com.croacker.buyersclub.service.mapper.productprice;
 
 import com.croacker.buyersclub.domain.ProductPrice;
 import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ class AddDtoToProductPriceTest {
     @Autowired
     private AddDtoToProductPrice mapper;
 
-    private final static LocalDateTime NOW = LocalDateTime.now();
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapDto() {
@@ -34,15 +35,15 @@ class AddDtoToProductPriceTest {
     }
 
     private ProductPrice createEntity() {
-        return new ProductPrice()
-                .setPrice(1)
-                .setPriceDate(NOW);
+        return testEntitiesProducer.createProductPrice(0L)
+                .setId(null)
+                .setShop(null)
+                .setProduct(null)
+                .setDeleted(null);
     }
 
     private AddProductPriceDto createDto() {
-        return new AddProductPriceDto()
-                .setPrice(1)
-                .setPriceDate(NOW);
+        return testEntitiesProducer.createAddProductPriceDto(0L);
     }
 
 }

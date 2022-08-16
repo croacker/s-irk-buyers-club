@@ -3,6 +3,7 @@ package com.croacker.buyersclub.service.mapper.productgroup;
 
 import com.croacker.buyersclub.domain.ProductGroup;
 import com.croacker.buyersclub.service.dto.productgroup.AddProductGroupDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ public class AddDtoToProductGroupTest {
 
     @Autowired
     private AddDtoToProductGroup mapper;
+
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapDto() {
@@ -31,13 +34,15 @@ public class AddDtoToProductGroupTest {
     }
 
     private ProductGroup createEntity() {
-        return new ProductGroup()
-                .setName("test_product_group");
+        return testEntitiesProducer.createProductGroup(0L)
+                .setId(null)
+                .setCreatedAt(null)
+                .setUpdatedAt(null)
+                .setDeleted(null);
     }
 
     private AddProductGroupDto createDto() {
-        return new AddProductGroupDto()
-                .setName("test_product_group");
+        return testEntitiesProducer.createAddProductGroupDto(0L);
     }
 
 }

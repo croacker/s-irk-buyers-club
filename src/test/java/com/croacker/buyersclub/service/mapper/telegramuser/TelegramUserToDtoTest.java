@@ -2,6 +2,7 @@ package com.croacker.buyersclub.service.mapper.telegramuser;
 
 import com.croacker.buyersclub.domain.TelegramUser;
 import com.croacker.buyersclub.service.dto.telegramuser.TelegramUserDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ class TelegramUserToDtoTest {
 
     @Autowired
     private TelegramUserToDto mapper;
+
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMap() {
@@ -30,18 +33,10 @@ class TelegramUserToDtoTest {
     }
 
     private TelegramUser createEntity() {
-        return new TelegramUser()
-                .setId(0L)
-                .setUserName("test_username")
-                .setFirstName("test_firstname")
-                .setLastName("test_lastname");
+        return testEntitiesProducer.createTelegramUser(0L);
     }
 
     private TelegramUserDto createDto() {
-        return new TelegramUserDto()
-                .setId(0L)
-                .setUserName("test_username")
-                .setFirstName("test_firstname")
-                .setLastName("test_lastname");
+        return testEntitiesProducer.createTelegramUserDto(0L);
     }
 }

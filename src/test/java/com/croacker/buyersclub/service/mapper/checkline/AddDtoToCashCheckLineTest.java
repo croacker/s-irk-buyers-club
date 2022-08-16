@@ -34,7 +34,8 @@ class AddDtoToCashCheckLineTest {
 
     private CashCheckLine createEntity() {
         return testEntitiesProducer.createCashCheckLine(0L)
-                .setId(null);
+                .setId(null)
+                .setProduct(null);
     }
 
     private AddCashCheckLineDto createDto() {

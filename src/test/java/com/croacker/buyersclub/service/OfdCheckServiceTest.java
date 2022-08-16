@@ -16,18 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class OfdCheckServiceTest {
-
-    private final static LocalDateTime NOW = LocalDateTime.now();
-
-    private final static String STRING_DATE_TIME = "2020-11-22T23:34:41";
 
     private OfdCheckService service;
 
@@ -88,7 +82,7 @@ class OfdCheckServiceTest {
     }
 
     private OfdCheck createOfdCheck() {
-        return testEntitiesProducer.createOfdCheck(0L);
+        return testEntitiesProducer.createOfdCheck();
     }
 
     private TelegramFileProcessResult createTelegramFileProcessResult(long id) {
@@ -111,15 +105,4 @@ class OfdCheckServiceTest {
         return testEntitiesProducer.createCashCheckDto(0L);
     }
 
-    private LocalDateTime stringToLocalDateTime(String str){
-        return dateTimeService.stringToLocalDateTime(str);
-    }
-
-    private int dateTimeToEpoch(LocalDateTime date){
-        return dateTimeService.dateTimeToEpoch(date);
-    }
-
-    private String localDateTimeToString(LocalDateTime date){
-        return dateTimeService.localDateTimeToString(date);
-    }
 }

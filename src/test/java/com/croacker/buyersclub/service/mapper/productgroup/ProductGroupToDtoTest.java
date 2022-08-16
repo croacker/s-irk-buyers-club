@@ -2,12 +2,11 @@ package com.croacker.buyersclub.service.mapper.productgroup;
 
 import com.croacker.buyersclub.domain.ProductGroup;
 import com.croacker.buyersclub.service.dto.productgroup.ProductGroupDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,7 +16,7 @@ class ProductGroupToDtoTest {
     @Autowired
     private ProductGroupToDto mapper;
 
-    private final static LocalDateTime NOW = LocalDateTime.now();
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapEntity() {
@@ -34,21 +33,11 @@ class ProductGroupToDtoTest {
     }
 
     private ProductGroup createEntity() {
-        return new ProductGroup()
-                .setId(0L)
-                .setName("test_product_group")
-                .setCreatedAt(NOW)
-                .setUpdatedAt(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createProductGroup(0L);
     }
 
     private ProductGroupDto createDto() {
-        return new ProductGroupDto()
-                .setId(0L)
-                .setName("test_product_group")
-                .setCreatedAt(NOW)
-                .setUpdatedAt(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createProductGroupDto(0L);
     }
 
 

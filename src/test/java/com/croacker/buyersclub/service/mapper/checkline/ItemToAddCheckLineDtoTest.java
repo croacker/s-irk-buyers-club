@@ -39,7 +39,8 @@ public class ItemToAddCheckLineDtoTest {
 
     private AddCashCheckLineDto createDto() {
         return testEntitiesProducer.createAddCashCheckLineDto()
-                .setProductId(null);
+                .setProductId(null)
+                .setQuantity(2000);
     }
 
 }

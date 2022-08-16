@@ -38,7 +38,12 @@ public class DtoToCashCheckTest {
     }
 
     private CashCheck createEntity() {
-        return testEntitiesProducer.createCashCheck(0L);
+        return testEntitiesProducer.createCashCheck(0L)
+                .setCashier(null)
+                .setTelegramUser(null)
+                .setCheckLines(null)
+                .setCreatedAt(null)
+                .setUpdatedAt(null);
     }
 
     private CashCheckDto createDto() {

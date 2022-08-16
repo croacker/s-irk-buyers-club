@@ -3,6 +3,7 @@ package com.croacker.buyersclub.service.mapper.organization;
 
 import com.croacker.buyersclub.domain.Organization;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ public class DtoToOrganizationTest {
 
     @Autowired
     private DtoToOrganization mapper;
+
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapDto() {
@@ -31,19 +34,13 @@ public class DtoToOrganizationTest {
     }
 
     private Organization createEntity() {
-        return new Organization()
-                .setId(0L)
-                .setName("test_organization")
-                .setInn("test_inn")
-                .setDeleted(false);
+        return testEntitiesProducer.createOrganization(0L)
+                .setCreatedAt(null)
+                .setUpdatedAt(null);
     }
 
     private OrganizationDto createDto() {
-        return new OrganizationDto()
-                .setId(0L)
-                .setName("test_organization")
-                .setInn("test_inn")
-                .setDeleted(false);
+        return testEntitiesProducer.createOrganizationDto(0L);
     }
 
 }
