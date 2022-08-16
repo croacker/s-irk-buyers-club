@@ -3,15 +3,16 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST:127.0.0.1}:5432/${DB_NAME:buyers}
-    username: ${DB_USERNAME:buyers}
-    password: ${DB_PASSWORD:buyers}
+    url: jdbc:h2:file:./data/buyers
+    driverClassName: org.h2.Driver
+    username: buyers
+    password: buyers
   liquibase:
-    url: jdbc:postgresql://${DB_HOST:127.0.0.1}:5432/${DB_NAME:buyers}
-    user: ${DB_USERNAME:buyers}
-    password: ${DB_PASSWORD:buyers}
-    change-log: classpath:db/changelog/changelog-master.xml
-    enabled: true
+   url: jdbc:h2:file:./data/buyers
+   user: buyers
+   password: buyers
+   change-log: classpath:db/changelog/changelog-master.xml
+   enabled: true
 
 app:
   telegram:

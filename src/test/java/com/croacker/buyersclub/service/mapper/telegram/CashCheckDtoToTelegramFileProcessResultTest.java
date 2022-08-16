@@ -2,6 +2,7 @@ package com.croacker.buyersclub.service.mapper.telegram;
 
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ class CashCheckDtoToTelegramFileProcessResultTest {
 
     @Autowired
     private CashCheckDtoToTelegramFileProcessResult mapper;
+
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMap(){
@@ -32,13 +35,10 @@ class CashCheckDtoToTelegramFileProcessResultTest {
     }
 
     private TelegramFileProcessResult createEntity() {
-        return new TelegramFileProcessResult()
-                .setCheckInfo("22-11-2020 23:34:41 test_number");
+        return testEntitiesProducer.createTelegramFileProcessResult(0L);
     }
 
     private CashCheckDto createDto() {
-        return new CashCheckDto()
-                .setCheckDate(LocalDateTime.of(2020, 11, 22, 23, 34, 41))
-                .setFiscalDocumentNumber("test_number");
+        return testEntitiesProducer.createCashCheckDto(0L);
     }
 }

@@ -2,6 +2,7 @@ package com.croacker.buyersclub.service.mapper.checkline;
 
 import com.croacker.buyersclub.service.dto.checkline.AddCashCheckLineDto;
 import com.croacker.buyersclub.service.ofd.Item;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
@@ -15,6 +16,8 @@ public class ItemToAddCheckLineDtoTest {
 
     @Autowired
     private ItemToAddCheckLineDto mapper;
+
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapDto() {
@@ -31,18 +34,13 @@ public class ItemToAddCheckLineDtoTest {
     }
 
     private Item createEntity() {
-        return new Item()
-                .setPrice(100)
-                .setQuantity(2)
-                .setSum(200);
+        return testEntitiesProducer.createItem();
     }
 
     private AddCashCheckLineDto createDto() {
-        return new AddCashCheckLineDto()
-                .setPrice(100)
-                .setQuantity(2000)
-                .setTotalSum(200);
+        return testEntitiesProducer.createAddCashCheckLineDto()
+                .setProductId(null)
+                .setQuantity(2000);
     }
-
 
 }

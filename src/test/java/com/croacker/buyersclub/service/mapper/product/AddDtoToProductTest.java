@@ -3,6 +3,7 @@ package com.croacker.buyersclub.service.mapper.product;
 
 import com.croacker.buyersclub.domain.Product;
 import com.croacker.buyersclub.service.dto.product.AddProductDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
@@ -16,6 +17,8 @@ public class AddDtoToProductTest {
 
     @Autowired
     private AddDtoToProduct mapper;
+
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapDto() {
@@ -32,13 +35,16 @@ public class AddDtoToProductTest {
     }
 
     private Product createEntity() {
-        return new Product()
-                .setName("test_product");
+        return testEntitiesProducer.createProduct(0L)
+                .setId(null)
+                .setProductGroup(null)
+                .setCreatedAt(null)
+                .setUpdatedAt(null)
+                .setDeleted(null);
     }
 
     private AddProductDto createDto() {
-        return new AddProductDto()
-                .setName("test_product");
+        return testEntitiesProducer.createAddProductDto(0L);
     }
 
 }

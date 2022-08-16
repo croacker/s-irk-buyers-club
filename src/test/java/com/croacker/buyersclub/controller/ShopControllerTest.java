@@ -1,9 +1,9 @@
 package com.croacker.buyersclub.controller;
 
 import com.croacker.buyersclub.service.ShopService;
-import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,13 +22,13 @@ import static org.mockito.Mockito.when;
 @WebFluxTest(ShopController.class)
 class ShopControllerTest {
 
-    private final static LocalDateTime NOW = LocalDateTime.now();
-
     @Autowired
     WebTestClient client;
 
     @MockBean
     private ShopService service;
+
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     public void shouldReturnAllShops() {
@@ -115,19 +114,12 @@ class ShopControllerTest {
                 .value(shop -> shop.getDeleted(), equalTo(true));
     }
 
-    private AddShopDto createAddShopDto(long id) {
-        return new AddShopDto()
-                .setName("test_shop_name_" + id)
-                .setAddress("test_address_" + id)
-                .setOrganizationId(1L);
+    private ShopDto createShopDto(long id) {
+        return testEntitiesProducer.createShopDto(id);
     }
 
-    private ShopDto createShopDto(long id) {
-        return new ShopDto()
-                .setId(id)
-                .setName("test_shop_name_" + id)
-                .setAddress("test_address_" + id)
-                .setOrganizationId(1L)
-                .setDeleted(false);
+
+    private AddShopDto createAddShopDto(long id) {
+        return testEntitiesProducer.createAddShopDto(id);
     }
 }

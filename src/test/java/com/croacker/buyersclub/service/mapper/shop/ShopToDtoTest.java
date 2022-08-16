@@ -3,6 +3,7 @@ package com.croacker.buyersclub.service.mapper.shop;
 import com.croacker.buyersclub.domain.Organization;
 import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ class ShopToDtoTest {
     @Autowired
     private ShopToDto mapper;
 
-    private final static LocalDateTime NOW = LocalDateTime.now();
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapEntity() {
@@ -35,32 +36,11 @@ class ShopToDtoTest {
     }
 
     private Shop createEntity() {
-        var organization = new Organization()
-                .setId(0L)
-                .setName("test_organization")
-                .setInn("test_inn")
-                .setCreatedAt(NOW)
-                .setUpdatedAt(NOW)
-                .setDeleted(false);
-        return new Shop()
-                .setId(0L)
-                .setName("test_shop")
-                .setAddress("test_address")
-                .setOrganization(organization)
-                .setCreatedAt(NOW)
-                .setUpdatedAt(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createShop(0L);
     }
 
     private ShopDto createDto() {
-        return new ShopDto()
-                .setId(0L)
-                .setName("test_shop")
-                .setAddress("test_address")
-                .setOrganizationId(0L)
-                .setCreatedAt(NOW)
-                .setUpdatedAt(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createShopDto(0L);
     }
 
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ItemToAddCheckLineDto implements Mapper<Item, AddCashCheckLineDto> {
+
     @Override
     public AddCashCheckLineDto map(Item input) {
         return new AddCashCheckLineDto()

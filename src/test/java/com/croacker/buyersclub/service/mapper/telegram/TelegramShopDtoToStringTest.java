@@ -1,17 +1,22 @@
 package com.croacker.buyersclub.service.mapper.telegram;
 
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class TelegramShopDtoToStringTest {
 
     @Autowired
     private TelegramShopDtoToString mapper;
+
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapEntity() {
@@ -28,13 +33,11 @@ class TelegramShopDtoToStringTest {
     }
 
     private String createString() {
-        return "[test_name, test_address]";
+        return "[test_shop_0, test_address_0]";
     }
 
     private ShopDto createDto() {
-        return new ShopDto()
-                .setName("test_name")
-                .setAddress("test_address");
+        return testEntitiesProducer.createShopDto(0L);
     }
 
 }
