@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.croacker</groupId>
     <artifactId>irk-buyers-club</artifactId>
-    <version>0.0.21</version>
+    <version>0.0.22</version>
     <name>buyer-club</name>
     <description>Irkutsk buyer club</description>
 
@@ -20,7 +20,7 @@
         <spring-cloud-starter.version>3.0.0</spring-cloud-starter.version>
         <springdoc-openapi-webflux-ui.version>1.6.9</springdoc-openapi-webflux-ui.version>
         <embedded-postgresql.version>1.86</embedded-postgresql.version>
-        <jib-maven-plugin.version>2.7.0</jib-maven-plugin.version>
+        <jib-maven-plugin.version>3.2.1</jib-maven-plugin.version>
         <lombok.version>1.18.24</lombok.version>
         <liquibase.version>4.12.0</liquibase.version>
         <telegrambots.version>6.1.0</telegrambots.version>
@@ -228,7 +228,7 @@
                         <version>${jib-maven-plugin.version}</version>
                         <configuration>
                             <from>
-                                <image>openjdk:14.0.1-jdk</image>
+                                <image>bellsoft/liberica-openjdk-alpine:17.0.4.1-1</image>
                             </from>
                             <to>
                                 <image>${docker.image.name}</image>
