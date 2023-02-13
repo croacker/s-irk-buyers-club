@@ -42,7 +42,6 @@ public class OfdCheckExcerptToOfdCheckTest {
         return testEntitiesProducer.createOfdCheckExcerpt();
     }
 
-    // TODO test data producer
     private OfdCheck createOfdCheck() {
         return testEntitiesProducer.createOfdCheck();
     }
