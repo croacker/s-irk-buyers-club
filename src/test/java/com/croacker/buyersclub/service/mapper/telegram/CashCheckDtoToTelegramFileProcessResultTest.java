@@ -1,6 +1,7 @@
 package com.croacker.buyersclub.service.mapper.telegram;
 
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
+import com.croacker.buyersclub.service.dto.check.CashCheckInfoDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
 import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ class CashCheckDtoToTelegramFileProcessResultTest {
         return testEntitiesProducer.createTelegramFileProcessResult(0L);
     }
 
-    private CashCheckDto createDto() {
-        return testEntitiesProducer.createCashCheckDto(0L);
+    private CashCheckInfoDto createDto() {
+        return testEntitiesProducer.createCashCheckInfoDto(0L);
     }
 }

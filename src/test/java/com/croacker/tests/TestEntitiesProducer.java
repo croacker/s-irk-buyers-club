@@ -413,7 +413,11 @@ public class TestEntitiesProducer {
 
     public TelegramFileProcessResult createTelegramFileProcessResult(long id) {
         return new TelegramFileProcessResult()
-                .setCheckInfo(dateTimeService.localDateTimeToString(NOW) + " test_fiscal_document_number_" + id);
+                .setCheckInfo(
+                        "Чек:test\\_fiscal\\_document\\_number\\_" + id +
+                        " от " + dateTimeService.localDateTimeToString(NOW) +
+                        ", кассир:test\\_cashier\\_0\r\n"
+                );
     }
 
     private LocalDateTime stringToLocalDateTime(String str){
