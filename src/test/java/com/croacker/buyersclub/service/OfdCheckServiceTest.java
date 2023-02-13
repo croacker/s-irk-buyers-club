@@ -7,12 +7,15 @@ import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
 import com.croacker.buyersclub.service.format.DateTimeService;
 import com.croacker.buyersclub.service.format.DateTimeServiceImpl;
+import com.croacker.buyersclub.service.locale.LocaleService;
+import com.croacker.buyersclub.service.locale.LocaleServiceImpl;
 import com.croacker.buyersclub.service.mapper.checkline.ItemToAddCheckLineDto;
 import com.croacker.buyersclub.service.mapper.telegram.CashCheckDtoToTelegramFileProcessResult;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -45,6 +48,9 @@ class OfdCheckServiceTest {
 
     private DateTimeService dateTimeService;
 
+    @Autowired
+    private LocaleService localeService;
+
     private ItemToAddCheckLineDto itemToAddCheckLine;
 
     private CashCheckDtoToTelegramFileProcessResult cashCheckDtoToTelegramFileProcessResultMapper;
@@ -55,10 +61,10 @@ class OfdCheckServiceTest {
     void setup() {
         dateTimeService = new DateTimeServiceImpl();
         itemToAddCheckLine = new ItemToAddCheckLineDto();
-        cashCheckDtoToTelegramFileProcessResultMapper = new CashCheckDtoToTelegramFileProcessResult(dateTimeService);
+        cashCheckDtoToTelegramFileProcessResultMapper = new CashCheckDtoToTelegramFileProcessResult(dateTimeService, localeService);
         service = new OfdCheckServiceImpl(organizationService, shopService,
                 cashierService, productService, checkService, dateTimeService,
-                productPriceService, itemToAddCheckLine, cashCheckDtoToTelegramFileProcessResultMapper);
+                productPriceService, itemToAddCheckLine);
     }
 
     @Test
@@ -71,7 +77,7 @@ class OfdCheckServiceTest {
         when(cashierService.findByNameAndShopId(any(), any())).thenReturn(createCashier());
         when(checkService.save(any())).thenReturn(createCashCheckDto());
 
-        var expected = createTelegramFileProcessResult(0L);
+        var expected = createCashCheckDto();// TODO fix test
 
         // when
         var actual = service.process(given, telegramUserId);
@@ -83,10 +89,6 @@ class OfdCheckServiceTest {
 
     private OfdCheck createOfdCheck() {
         return testEntitiesProducer.createOfdCheck();
-    }
-
-    private TelegramFileProcessResult createTelegramFileProcessResult(long id) {
-        return testEntitiesProducer.createTelegramFileProcessResult(id);
     }
 
     private OrganizationDto createOrganization() {

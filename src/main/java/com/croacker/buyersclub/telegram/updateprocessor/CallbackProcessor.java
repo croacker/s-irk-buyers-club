@@ -17,7 +17,7 @@ public class CallbackProcessor implements MessageProcessor {
 
     @Override
     public Mono<SendMessage> process() {
-        return createResponse(); // TODO вернуть детали информации о товаре
+        return createResponse();
     }
 
     private Mono<SendMessage> createResponse(){
