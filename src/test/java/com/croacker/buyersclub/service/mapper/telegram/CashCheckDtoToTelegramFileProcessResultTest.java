@@ -8,8 +8,6 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest

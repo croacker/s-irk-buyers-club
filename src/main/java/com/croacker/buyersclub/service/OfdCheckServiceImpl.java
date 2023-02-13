@@ -13,10 +13,8 @@ import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
-import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
 import com.croacker.buyersclub.service.format.DateTimeService;
 import com.croacker.buyersclub.service.mapper.checkline.ItemToAddCheckLineDto;
-import com.croacker.buyersclub.service.mapper.telegram.CashCheckDtoToTelegramFileProcessResult;
 import com.croacker.buyersclub.service.ofd.Item;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import lombok.AllArgsConstructor;
@@ -51,19 +49,13 @@ public class OfdCheckServiceImpl implements OfdCheckService {
 
     private final ItemToAddCheckLineDto itemToAddCheckLine;
 
-    private final CashCheckDtoToTelegramFileProcessResult cashCheckDtoToTelegramFileProcessResultMapper;
-
     @Override
-    public TelegramFileProcessResult process(OfdCheck ofdCheck, Long telegramUserId) {
+    public CashCheckDto process(OfdCheck ofdCheck, Long telegramUserId) {
         var organization = saveOrganization(ofdCheck);
         var shop = saveShop(ofdCheck, organization);
         var cashier = saveCashier(ofdCheck, shop);
         var products = saveProducts(ofdCheck, shop);
-        return toResult(saveCheck(cashier, products, ofdCheck, telegramUserId));
-    }
-
-    private TelegramFileProcessResult toResult(CashCheckDto check) {
-        return cashCheckDtoToTelegramFileProcessResultMapper.map(check);
+        return saveCheck(cashier, products, ofdCheck, telegramUserId);
     }
 
     /**

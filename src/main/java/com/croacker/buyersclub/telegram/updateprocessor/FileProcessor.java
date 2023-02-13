@@ -20,7 +20,7 @@ public class FileProcessor implements MessageProcessor {
     private final LocaleService localeService;
 
     @Override
-    public Mono<SendMessage> process() {
+    public Mono<SendMessage> process() { // TODO return Flux
         return processFile().map(this::createResponse);
     }
 

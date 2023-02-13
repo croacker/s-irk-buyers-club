@@ -58,7 +58,7 @@ class OfdCheckServiceTest {
         cashCheckDtoToTelegramFileProcessResultMapper = new CashCheckDtoToTelegramFileProcessResult(dateTimeService);
         service = new OfdCheckServiceImpl(organizationService, shopService,
                 cashierService, productService, checkService, dateTimeService,
-                productPriceService, itemToAddCheckLine, cashCheckDtoToTelegramFileProcessResultMapper);
+                productPriceService, itemToAddCheckLine);
     }
 
     @Test
@@ -71,7 +71,7 @@ class OfdCheckServiceTest {
         when(cashierService.findByNameAndShopId(any(), any())).thenReturn(createCashier());
         when(checkService.save(any())).thenReturn(createCashCheckDto());
 
-        var expected = createTelegramFileProcessResult(0L);
+        var expected = createTelegramFileProcessResult(0L);// TODO fix test
 
         // when
         var actual = service.process(given, telegramUserId);
