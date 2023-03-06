@@ -28,6 +28,8 @@ public class CashCheckDtoToTelegramFileProcessResult implements Mapper<CashCheck
                 .append(input.getFiscalDocumentNumber())
                 .append(" ").append(getString("response.check.date")).append(" ").append(toString(input.getCheckDate()))
                 .append(", ").append(getString("response.check.cashier")).append(":").append(input.getCashierName())
+                .append(", ").append(getString("response.check.total")).append(":").append(input.getTotalSum())
+                .append(getString("response.check.currency"))
                 .append(LINE_SEPARATOR);
         for (int i = 0; i < input.getCheckLines().size(); i++) {
             var line = input.getCheckLines().get(i);

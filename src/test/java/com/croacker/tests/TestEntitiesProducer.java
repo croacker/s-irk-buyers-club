@@ -415,8 +415,9 @@ public class TestEntitiesProducer {
         return new TelegramFileProcessResult()
                 .setCheckInfo(
                         "Чек:test\\_fiscal\\_document\\_number\\_" + id +
-                        " от " + dateTimeService.localDateTimeToString(NOW) +
-                        ", кассир:test\\_cashier\\_0\r\n"
+                                " от " + dateTimeService.localDateTimeToString(NOW) +
+                                ", кассир:test\\_cashier\\_0" +
+                                ", Итого:5руб.\r\n"
                 );
     }
 
