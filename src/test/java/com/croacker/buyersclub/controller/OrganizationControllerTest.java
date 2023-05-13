@@ -1,9 +1,9 @@
 package com.croacker.buyersclub.controller;
 
 import com.croacker.buyersclub.service.OrganizationService;
-import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.organization.AddOrganizationDto;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -27,6 +27,8 @@ class OrganizationControllerTest {
 
     @MockBean
     private OrganizationService service;
+
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     public void shouldReturnAllOrganizations() {
@@ -113,16 +115,10 @@ class OrganizationControllerTest {
     }
 
     private OrganizationDto createOrganizationDto(long id) {
-        return new OrganizationDto()
-                .setId(id)
-                .setName("test_organization_" + id)
-                .setInn("test_inn_" + id)
-                .setDeleted(false);
+        return testEntitiesProducer.createOrganizationDto(id);
     }
 
     private AddOrganizationDto createAddOrganizationDto(long id) {
-        return new AddOrganizationDto()
-                .setName("test_organization_" + id)
-                .setInn("test_inn_" + id);
+        return testEntitiesProducer.createAddOrganizationDto(id);
     }
 }

@@ -5,6 +5,7 @@ import com.croacker.buyersclub.service.ProductService;
 import com.croacker.buyersclub.service.dto.product.AddProductDto;
 import com.croacker.buyersclub.service.dto.product.ProductDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -13,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,8 +24,6 @@ import static org.mockito.Mockito.when;
 @WebFluxTest(ProductController.class)
 class ProductControllerTest {
 
-    private final static LocalDateTime NOW = LocalDateTime.now();
-
     @Autowired
     WebTestClient client;
 
@@ -34,6 +32,8 @@ class ProductControllerTest {
 
     @MockBean
     private ProductPriceService productPriceService;
+
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     public void shouldReturnAllProducts() {
@@ -135,28 +135,14 @@ class ProductControllerTest {
     }
 
     private ProductDto createProductDto(long id) {
-        return new ProductDto()
-                .setId(id)
-                .setName("test_product_" + id)
-                .setProductGroupId(id)
-                .setDeleted(false);
+        return testEntitiesProducer.createProductDto(id);
     }
 
     private AddProductDto createAddProductDto(long id) {
-        return new AddProductDto()
-                .setName("test_product_" + id)
-                .setProductGroupId(id);
+        return testEntitiesProducer.createAddProductDto(id);
     }
 
     private ProductPriceInfoDto createProductPriceInfoDto(long id) {
-        return new ProductPriceInfoDto()
-                .setId(id)
-                .setShopId(1L)
-                .setShopName("test_shop_name")
-                .setProductId(id)
-                .setProductName("test_product_" + id)
-                .setPrice(100)
-                .setPriceDate(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createProductPriceInfoDto(id);
     }
 }

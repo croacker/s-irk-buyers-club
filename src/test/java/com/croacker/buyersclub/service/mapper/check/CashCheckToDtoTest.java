@@ -1,32 +1,22 @@
 package com.croacker.buyersclub.service.mapper.check;
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.CashCheck;
-import com.croacker.buyersclub.domain.Cashier;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
-import org.junit.jupiter.api.BeforeEach;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 class CashCheckToDtoTest {
 
+    @Autowired
     private CashCheckToDto mapper;
 
-    private final static LocalDateTime NOW = LocalDateTime.now();
-
-    @BeforeEach
-    void setup() {
-        mapper = new CashCheckToDto();
-    }
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapEntity() {
@@ -43,31 +33,11 @@ class CashCheckToDtoTest {
     }
 
     private CashCheck createEntity() {
-        var cashier = new Cashier().setId(0L);
-        return new CashCheck()
-                .setCashier(cashier)
-                .setKktRegId("test_kkt_reg_id")
-                .setFiscalDriveNumber("test_fiscal_drive_number")
-                .setFiscalDocumentNumber("test_fiscal_document_number")
-                .setTotalSum(5)
-                .setCashSum(3)
-                .setEcashSum(2)
-                .setCheckDate(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createCashCheck(0L);
     }
 
     private CashCheckDto createDto() {
-        return new CashCheckDto()
-                .setCashierId(0L)
-                .setKktRegId("test_kkt_reg_id")
-                .setFiscalDriveNumber("test_fiscal_drive_number")
-                .setFiscalDocumentNumber("test_fiscal_document_number")
-                .setTotalSum(5)
-                .setCashSum(3)
-                .setEcashSum(2)
-                .setCheckDate(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createCashCheckDto(0L);
     }
-
 
 }

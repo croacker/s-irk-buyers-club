@@ -1,31 +1,24 @@
 package com.croacker.buyersclub.service.mapper.productprice;
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.ProductPrice;
 import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
-import org.junit.jupiter.api.BeforeEach;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 class AddDtoToProductPriceTest {
 
+    @Autowired
     private AddDtoToProductPrice mapper;
 
-    private final static LocalDateTime NOW = LocalDateTime.now();
-
-    @BeforeEach
-    void setup() {
-        mapper = new AddDtoToProductPrice();
-    }
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapDto() {
@@ -42,15 +35,15 @@ class AddDtoToProductPriceTest {
     }
 
     private ProductPrice createEntity() {
-        return new ProductPrice()
-                .setPrice(1)
-                .setPriceDate(NOW);
+        return testEntitiesProducer.createProductPrice(0L)
+                .setId(null)
+                .setShop(null)
+                .setProduct(null)
+                .setDeleted(null);
     }
 
     private AddProductPriceDto createDto() {
-        return new AddProductPriceDto()
-                .setPrice(1)
-                .setPriceDate(NOW);
+        return testEntitiesProducer.createAddProductPriceDto(0L);
     }
 
 }

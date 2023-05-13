@@ -1,32 +1,27 @@
 package com.croacker.buyersclub.service.mapper.cashier;
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Cashier;
 import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
-import org.junit.jupiter.api.BeforeEach;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 class CashierToDtoTest {
 
+    @Autowired
     private CashierToDto mapper;
 
     private final static LocalDateTime NOW = LocalDateTime.now();
 
-    @BeforeEach
-    void setup() {
-        mapper = new CashierToDto();
-    }
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapEntity() {
@@ -43,28 +38,11 @@ class CashierToDtoTest {
     }
 
     private Cashier createEntity() {
-        var shop = new Shop()
-                .setId(0L)
-                .setName("test_shop")
-                .setAddress("test_address")
-                .setDeleted(false);
-        return new Cashier()
-                .setId(0L)
-                .setName("test_cashier")
-                .setShop(shop)
-                .setCreatedAt(NOW)
-                .setUpdatedAt(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createCashier(0L);
     }
 
     private CashierDto createDto() {
-        return new CashierDto()
-                .setId(0L)
-                .setName("test_cashier")
-                .setShopId(0L)
-                .setCreatedAt(NOW)
-                .setUpdatedAt(NOW)
-                .setDeleted(false);
+        return testEntitiesProducer.createCashierDto(0L);
     }
 
 

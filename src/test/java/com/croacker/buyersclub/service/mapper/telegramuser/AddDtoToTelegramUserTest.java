@@ -1,27 +1,22 @@
 package com.croacker.buyersclub.service.mapper.telegramuser;
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.TelegramUser;
 import com.croacker.buyersclub.service.dto.telegramuser.AddTelegramUserDto;
-import org.junit.jupiter.api.BeforeEach;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 class AddDtoToTelegramUserTest {
 
+    @Autowired
     private AddDtoToTelegramUser mapper;
 
-    @BeforeEach
-    void setup() {
-        mapper = new AddDtoToTelegramUser();
-    }
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapDto() {
@@ -38,19 +33,11 @@ class AddDtoToTelegramUserTest {
     }
 
     private TelegramUser createEntity() {
-        return new TelegramUser()
-                .setId(0L)
-                .setUserName("test_username")
-                .setFirstName("test_firstname")
-                .setLastName("test_lastname");
+        return testEntitiesProducer.createTelegramUser(0L);
     }
 
     private AddTelegramUserDto createDto() {
-        return new AddTelegramUserDto()
-                .setId(0L)
-                .setUserName("test_username")
-                .setFirstName("test_firstname")
-                .setLastName("test_lastname");
+        return testEntitiesProducer.createAddTelegramUserDto(0L);
     }
 
 }

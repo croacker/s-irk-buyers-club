@@ -1,5 +1,6 @@
 package com.croacker.buyersclub.controller;
 
+import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.dto.productprice.AddProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceDto;
 import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
@@ -26,9 +27,9 @@ import java.util.List;
 @Tag(name = "ProductPrice", description = "Товары")
 public interface ProductPriceOperations {
 
-    @Operation(operationId = "listProductPrices", summary = "Список товаров")
+    @Operation(operationId = "listProductPrices", summary = "Список цен товаров")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Товар",
+            @ApiResponse(responseCode = "200", description = "Цены товаров",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = List.class))}),
             @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
@@ -41,9 +42,20 @@ public interface ProductPriceOperations {
                                                   @RequestParam(value = "sort", defaultValue = "priceDate") String sort,
                                                   @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction);
 
-    @Operation(operationId = "getProductPrice", summary = "Получить товар по идентификатору")
+    @Operation(operationId = "getProductPricesCount", summary = "Получить количество цен товаров в БД")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Товар",
+            @ApiResponse(responseCode = "200", description = "Количество",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CashierDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Ошибка авторизации", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка", content = @Content)})
+    @GetMapping(path = "/count")
+    Mono<Long> getProductPricesCount();
+
+    @Operation(operationId = "getProductPrice", summary = "Получить цены товаров по идентификатору")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Цены товаров",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = ProductPriceDto.class))}),
             @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),
@@ -53,10 +65,10 @@ public interface ProductPriceOperations {
     @GetMapping(path = "/{id}")
     Mono<ProductPriceInfoDto> getProductPrice(@PathVariable Long id);
 
-    @Operation(operationId = "createProductPrice", summary = "Добавить товар",
+    @Operation(operationId = "createProductPrice", summary = "Добавить цену товара",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Товар",
+            @ApiResponse(responseCode = "200", description = "Цена товара",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = ProductPriceDto.class))
                     }),
@@ -67,10 +79,10 @@ public interface ProductPriceOperations {
     @PostMapping
     Mono<ProductPriceDto> createProductPrice(@RequestBody AddProductPriceDto dto);
 
-    @Operation(operationId = "updateProductPrice", summary = "Обновить товар",
+    @Operation(operationId = "updateProductPrice", summary = "Обновить цену товара",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Товар",
+            @ApiResponse(responseCode = "200", description = "Цена товара",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = ProductPriceDto.class))
                     }),
@@ -81,9 +93,9 @@ public interface ProductPriceOperations {
     @PutMapping
     Mono<ProductPriceDto> updateProductPrice(@RequestBody ProductPriceDto dto);
 
-    @Operation(operationId = "deleteProductPrice", summary = "Удалить товар по идентификатору")
+    @Operation(operationId = "deleteProductPrice", summary = "Удалить цену товара по идентификатору")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Товар",
+            @ApiResponse(responseCode = "200", description = "Цена товара",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = ProductPriceDto.class))}),
             @ApiResponse(responseCode = "400", description = "Ошибка в запросе", content = @Content),

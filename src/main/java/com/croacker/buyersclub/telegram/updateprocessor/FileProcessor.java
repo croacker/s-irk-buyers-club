@@ -1,36 +1,33 @@
 package com.croacker.buyersclub.telegram.updateprocessor;
 
 import com.croacker.buyersclub.service.locale.LocaleService;
+import com.croacker.buyersclub.service.telegram.request.TelegramMessage;
 import com.croacker.buyersclub.service.telegram.TelegramFileService;
-import com.croacker.buyersclub.telegram.chat.Chat;
-import com.croacker.buyersclub.telegram.chat.ChatPool;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import reactor.core.publisher.Mono;
 
+// TODO переделать в сервис
 @Slf4j
 @AllArgsConstructor
-public class FileProcessor implements UpdateProcessor{
+public class FileProcessor implements MessageProcessor {
 
-    private final Message message;
+    private final TelegramMessage message;
 
     private final TelegramFileService telegramFileService;
-
-    private final ChatPool chatPool;
 
     private final LocaleService localeService;
 
     @Override
-    public Mono<SendMessage> process() {
-        return processFile(message).map(this::createResponse);
+    public Mono<SendMessage> process() { // TODO return Flux
+        return processFile().map(this::createResponse);
     }
 
+    // TODO класс выполняющий обработку не должен формировать ответ
     private SendMessage createResponse(String result){
-        var chat = getChat();
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chat.getChatId());
+        sendMessage.setChatId(message.getChatId());
         sendMessage.enableMarkdown(true);
         sendMessage.setText(getString("response.file.success") + "\n" + result);
         return sendMessage;
@@ -38,26 +35,13 @@ public class FileProcessor implements UpdateProcessor{
 
     /**
      * Получить и обработать файл, если он есть.
-     * @param message
      */
-    private Mono<String> processFile(Message message) {
+    private Mono<String> processFile() {
         return telegramFileService.processFile(message);
     }
 
-    private Chat getChat() {
-        return chatPool.getChat(getChatId());
-    }
-
-    private Long getChatId(){
-        return message.getChatId();
-    }
-
-    private String getLanguageCode(){
-        return message.getFrom().getLanguageCode();
-    }
-
     private String getString(String key){
-        var languageCode = getLanguageCode();
+        var languageCode = message.getLanguageCode();
         return localeService.getString(key, languageCode);
     }
 }

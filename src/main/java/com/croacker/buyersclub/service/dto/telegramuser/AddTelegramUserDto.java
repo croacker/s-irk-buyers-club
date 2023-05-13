@@ -22,6 +22,12 @@ public class AddTelegramUserDto {
     private Long id;
 
     /**
+     * Это бот.
+     */
+    @Schema(description = "Это бот")
+    private Boolean isBot;
+
+    /**
      * Наименование.
      */
     @Schema(description = "Наименование")
@@ -38,4 +44,22 @@ public class AddTelegramUserDto {
      */
     @Schema(description = "Фамилия")
     private String lastName;
+
+    /**
+     * Может присоединится к группе. Только для бота.
+     */
+    @Schema(description = "Может присоединится к группе. Только для бота.")
+    private Boolean canJoinGroups;
+
+    /**
+     * Может присоединится к группе.
+     */
+    @Schema(description = "Может читать приватные сообщения. Только для бота.")
+    private Boolean canReadAllGroupMessages;
+
+    /**
+     * .
+     */
+    @Schema(description = "")
+    private Boolean supportInlineQueries;
 }

@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,8 +38,13 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
+    public Mono<Long> getCount() {
+        return Mono.just(repo.count());
+    }
+
+    @Override
     public ShopDto findOne(Long id) {
-        return repo.findById(id).map(toDtoMapper).orElse(null);
+        return repo.findById(id).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
@@ -71,10 +77,10 @@ public class ShopServiceImpl implements ShopService{
 
     @Override
     public ShopDto delete(Long id) {
-        return repo.findById(id).map(organization -> {
-            organization.setDeleted(true);
-            organization = repo.save(organization);
-            return toDtoMapper.map(organization);
+        return repo.findById(id).map(shop -> {
+            shop.setDeleted(true);
+            shop = repo.save(shop);
+            return toDtoMapper.map(shop);
         }).orElse(null);
     }
 

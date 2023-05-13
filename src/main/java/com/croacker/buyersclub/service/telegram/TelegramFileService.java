@@ -1,6 +1,7 @@
 package com.croacker.buyersclub.service.telegram;
 
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
+import com.croacker.buyersclub.service.telegram.request.TelegramMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import reactor.core.publisher.Mono;
 
@@ -17,7 +18,7 @@ public interface TelegramFileService {
      *
      * @param message сообщение
      */
-    Mono<String> processFile(Message message);
+    Mono<String> processFile(TelegramMessage message);
 
     /**
      * Получить идентификатор файла.

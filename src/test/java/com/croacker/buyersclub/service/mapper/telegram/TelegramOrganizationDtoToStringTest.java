@@ -1,32 +1,22 @@
 package com.croacker.buyersclub.service.mapper.telegram;
 
-import com.croacker.buyersclub.TestConfiguration;
-import com.croacker.buyersclub.service.DateTimeService;
-import com.croacker.buyersclub.service.DateTimeServiceImpl;
-import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
-import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
-import org.junit.jupiter.api.BeforeEach;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 class TelegramOrganizationDtoToStringTest {
 
+    @Autowired
     private TelegramOrganizationDtoToString mapper;
 
-    @BeforeEach
-    void setup(){
-        mapper = new TelegramOrganizationDtoToString();
-    }
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMap(){
@@ -38,17 +28,15 @@ class TelegramOrganizationDtoToStringTest {
         var actual = mapper.map(given);
 
         // then
-        assertTrue(new ReflectionEquals(expected).matches(actual),
+        assertEquals(expected, actual,
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     private String createString() {
-        return "[test_name, test_inn]";
+        return "[test_organization_0, test_inn_0]";
     }
 
     private OrganizationDto createDto() {
-        return new OrganizationDto()
-                .setName("test_name")
-                .setInn("test_inn");
+        return testEntitiesProducer.createOrganizationDto(0L);
     }
 }

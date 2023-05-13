@@ -34,6 +34,11 @@ public class CashierController implements CashierOperations {
     }
 
     @Override
+    public Mono<Long> getCashiersCount() {
+        return service.getCount();
+    }
+
+    @Override
     public Mono<CashierDto> getCashier(Long id){
         return Mono.just(service.findOne(id));
     }

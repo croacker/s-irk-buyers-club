@@ -1,5 +1,6 @@
 package com.croacker.buyersclub.service;
 
+import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.repo.CashierRepo;
 import com.croacker.buyersclub.repo.ShopRepo;
 import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,13 +41,18 @@ public class CashierServiceImpl implements CashierService {
     }
 
     @Override
-    public CashierDto findOne(Long id) {
-        return repo.findById(id).map(toDtoMapper).orElse(null);
+    public Mono<Long> getCount() {
+        return Mono.just(repo.count());
     }
 
     @Override
-    public CashierDto findByName(String name) {
-        return repo.findByName(name).map(toDtoMapper).orElse(null);
+    public CashierDto findOne(Long id) {
+        return repo.findById(id).map(toDtoMapper).orElse(null); // TODO return Optional
+    }
+
+    @Override
+    public CashierDto findByNameAndShopId(String name, Long shopId) {
+        return repo.findByNameAndShopId(name, shopId).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override

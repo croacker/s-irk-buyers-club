@@ -14,6 +14,6 @@ public interface CashierRepo extends CrudRepository<Cashier, Long> {
 
     List<Cashier> findByDeletedIsFalse(Pageable pageable);
 
-    Optional<Cashier> findByName(String name);
+    Optional<Cashier> findByNameAndShopId(String name, Long shopId);
 
 }

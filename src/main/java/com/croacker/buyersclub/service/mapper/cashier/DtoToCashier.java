@@ -14,6 +14,8 @@ public class DtoToCashier implements Mapper<CashierDto, Cashier> {
         return new Cashier()
                 .setId(input.getId())
                 .setName(input.getName())
+                .setCreatedAt(input.getCreatedAt())
+                .setUpdatedAt(input.getUpdatedAt())
                 .setDeleted(input.getDeleted());
     }
 

@@ -2,45 +2,31 @@ package com.croacker.buyersclub.telegram.chat;
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
+@Deprecated
 public interface Chat {
 
     /**
-     * Response line delimiter in chat.
+     * Разделитель строк.
      */
     String LINE_DELIMITER = "\n";
 
     /**
-     * Chat identifier.
+     * Идентификатор чата.
      *
      * @return identifier
      */
     String getChatId();
 
     /**
-     * Chat type.
+     * Найти сущности по наименованию(используя LIKE)
      *
-     * @return type
+     * @param expression выражение - часть наименования
+     * @return представление сущностей в виде telegram-клавиатуры
      */
-    ChatType getChatType();
+    ReplyKeyboard findByName(String expression);
 
     /**
-     * Find entity by expression(use LIKE)
-     *
-     * @param expression
-     * @return entities representation
-     */
-    String findByName(String expression);
-
-    /**
-     * Find entity by expression(use LIKE)
-     *
-     * @param expression
-     * @return entities representation
-     */
-    ReplyKeyboard findByName2(String expression);
-
-    /**
-     * Chat description.
+     * Заголовок чата.
      *
      * @return description
      */

@@ -1,57 +1,39 @@
 package com.croacker.buyersclub.telegram.updateprocessor;
 
 import com.croacker.buyersclub.service.locale.LocaleService;
-import com.croacker.buyersclub.telegram.chat.Chat;
-import com.croacker.buyersclub.telegram.chat.ChatPool;
-import com.croacker.buyersclub.telegram.keyboard.MenuKeyboardBuilder;
+import com.croacker.buyersclub.service.telegram.request.TelegramMessage;
+import com.croacker.buyersclub.telegram.keyboard.ReplyKeyboardBuilder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import reactor.core.publisher.Mono;
 
 @Slf4j
 @AllArgsConstructor
-public class CommandProcessor implements UpdateProcessor{
+public class CommandProcessor implements MessageProcessor {
 
-    private final Message message;
-
-    private final ChatPool chatPool;
+    private final TelegramMessage message;
 
     private final LocaleService localeService;
 
     @Override
     public Mono<SendMessage> process() {
-        var chat = getChat();
         return startMenu();
     }
 
     public Mono<SendMessage> startMenu() {
-        var builder = new MenuKeyboardBuilder();
-        builder.newButton().setText(getString("menu.start.products")).setData("product");
-        builder.newButton().setText(getString("menu.start.shops")).setData("shop");
-        builder.newButton().setText(getString("menu.start.organizations")).setData("organization");
+        var builder = new ReplyKeyboardBuilder();
+        builder.newButton(getString("menu.start.data"));
+        builder.newButton(getString("menu.start.reports"));
         var sendMessage = new SendMessage();
-        sendMessage.setChatId(getChatId().toString());
+        sendMessage.setChatId(message.getChatId());
         sendMessage.setText(getString("message.choosetype"));
         sendMessage.setReplyMarkup(builder.build());
         return Mono.just(sendMessage);
     }
 
-    private Chat getChat() {
-        return chatPool.getChat(getChatId());
-    }
-
-    private Long getChatId(){
-        return message.getChatId();
-    }
-
-    private String getLanguageCode(){
-        return message.getFrom().getLanguageCode();
-    }
-
-    private String getString(String key){
-        var languageCode = getLanguageCode();
+    private String getString(String key) {
+        var languageCode = message.getLanguageCode();
         return localeService.getString(key, languageCode);
     }
 }

@@ -1,28 +1,23 @@
 package com.croacker.buyersclub.service.mapper.shop;
 
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
-import org.junit.jupiter.api.BeforeEach;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 public class DtoToShopTest {
 
+    @Autowired
     private DtoToShop mapper;
 
-    @BeforeEach
-    void setup() {
-        mapper = new DtoToShop();
-    }
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapDto() {
@@ -39,19 +34,14 @@ public class DtoToShopTest {
     }
 
     private Shop createEntity() {
-        return new Shop()
-                .setId(0L)
-                .setName("test_shop")
-                .setAddress("test_address")
-                .setDeleted(false);
+        return testEntitiesProducer.createShop(0L)
+                .setOrganization(null)
+                .setCreatedAt(null)
+                .setUpdatedAt(null);
     }
 
     private ShopDto createDto() {
-        return new ShopDto()
-                .setId(0L)
-                .setName("test_shop")
-                .setAddress("test_address")
-                .setDeleted(false);
+        return testEntitiesProducer.createShopDto(0L);
     }
 
 }

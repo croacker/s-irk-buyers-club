@@ -10,7 +10,18 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class TelegramProductPriceDto {
+
+    private Long priceId;
+
     private Long productId;
-    private String name;
+
+    private String productName;
+
+    private Long shopId;
+
+    private String shopName;
+
     private String price;
+
+    private String priceDate;
 }

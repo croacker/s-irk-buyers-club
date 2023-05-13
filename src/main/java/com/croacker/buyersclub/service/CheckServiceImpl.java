@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,8 +53,19 @@ public class CheckServiceImpl implements CheckService{
     }
 
     @Override
-    public CashCheckInfoDto findOne(Long id) {
-        return repo.findById(id).map(toInfoDtoMapper).orElse(null);
+    public Mono<Long> getCount() {
+        return Mono.just(repo.count());
+    }
+
+    @Override
+    public CashCheckInfoDto findById(Long id) {
+        return repo.findById(id).map(toInfoDtoMapper).orElse(null); // TODO return Optional
+    }
+
+    @Override
+    public CashCheckDto findCheck(String kktRegId, String fiscalDriveNumber, String fiscalDocumentNumber) {
+        return repo.findByKktRegIdAndFiscalDriveNumberAndFiscalDocumentNumber(kktRegId,
+                fiscalDriveNumber, fiscalDocumentNumber).map(toDtoMapper).orElse(null);
     }
 
     @Override

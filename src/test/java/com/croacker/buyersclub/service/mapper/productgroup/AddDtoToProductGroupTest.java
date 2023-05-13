@@ -1,28 +1,23 @@
 package com.croacker.buyersclub.service.mapper.productgroup;
 
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.ProductGroup;
 import com.croacker.buyersclub.service.dto.productgroup.AddProductGroupDto;
-import org.junit.jupiter.api.BeforeEach;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 public class AddDtoToProductGroupTest {
 
+    @Autowired
     private AddDtoToProductGroup mapper;
 
-    @BeforeEach
-    void setup() {
-        mapper = new AddDtoToProductGroup();
-    }
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapDto() {
@@ -39,13 +34,15 @@ public class AddDtoToProductGroupTest {
     }
 
     private ProductGroup createEntity() {
-        return new ProductGroup()
-                .setName("test_product_group");
+        return testEntitiesProducer.createProductGroup(0L)
+                .setId(null)
+                .setCreatedAt(null)
+                .setUpdatedAt(null)
+                .setDeleted(null);
     }
 
     private AddProductGroupDto createDto() {
-        return new AddProductGroupDto()
-                .setName("test_product_group");
+        return testEntitiesProducer.createAddProductGroupDto(0L);
     }
 
 }

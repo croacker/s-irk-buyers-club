@@ -2,8 +2,8 @@ package com.croacker.buyersclub.telegram.chat;
 
 import com.croacker.buyersclub.service.OrganizationService;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
-import com.croacker.buyersclub.service.dto.telegram.TelegramProductPriceDto;
 import com.croacker.buyersclub.service.mapper.telegram.TelegramOrganizationDtoToString;
+import com.croacker.buyersclub.telegram.keyboard.ChatKeyboardBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class OrganizationChat implements Chat{
 
-    private final Long chatId;
+    private final String chatId;
 
     private final OrganizationService organizationService;
 
@@ -30,19 +30,13 @@ public class OrganizationChat implements Chat{
     }
 
     @Override
-    public ChatType getChatType() {
-        return ChatType.ORGANIZATION;
-    }
-
-    @Override
-    public String findByName(String expression) {
-        return getOrganizations(expression)
-                .stream().map(toStringMapper).collect(Collectors.joining(LINE_DELIMITER));
-    }
-
-    @Override
-    public ReplyKeyboard findByName2(String expression) {
-        return null;
+    public ReplyKeyboard findByName(String expression) {
+        var organizations = getOrganizations(expression);
+        var builder = new ChatKeyboardBuilder();
+        organizations.forEach(organization -> builder.newButton()
+                .setText(toStringMapper.map(organization))
+                .setData(organization.getId().toString()));
+        return builder.build();
     }
 
     @Override

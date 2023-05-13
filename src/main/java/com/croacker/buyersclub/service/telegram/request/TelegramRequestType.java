@@ -1,9 +1,9 @@
-package com.croacker.buyersclub.telegram.updateprocessor;
+package com.croacker.buyersclub.service.telegram.request;
 
 /**
  * Тип сообщения.
  */
-public enum MessageType {
+public enum TelegramRequestType {
     /**
      * Файл для загрузки
      */

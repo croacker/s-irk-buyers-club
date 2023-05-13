@@ -1,6 +1,5 @@
 package com.croacker.buyersclub.service;
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.CashCheck;
 import com.croacker.buyersclub.domain.Cashier;
 import com.croacker.buyersclub.domain.TelegramUser;
@@ -17,27 +16,25 @@ import com.croacker.buyersclub.service.mapper.check.CashCheckToInfoDto;
 import com.croacker.buyersclub.service.mapper.check.DtoToCashCheck;
 import com.croacker.buyersclub.service.mapper.checkline.AddDtoToCashCheckLine;
 import com.croacker.buyersclub.service.mapper.checkline.CashCheckLineToInfoDto;
+import com.croacker.buyersclub.service.mapper.telegramuser.TelegramUserToDto;
 import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 class CheckServiceTest {
 
     private final static LocalDateTime NOW = LocalDateTime.now();
@@ -68,13 +65,16 @@ class CheckServiceTest {
 
     private CashCheckLineToInfoDto lineMapper;
 
+    private TelegramUserToDto telegramUserToDto;
+
     private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @BeforeEach
     void setup() {
         toDtoMapper = new CashCheckToDto();
         lineMapper = new CashCheckLineToInfoDto();
-        toInfoDtoMapper = new CashCheckToInfoDto(lineMapper);
+        telegramUserToDto = new TelegramUserToDto();
+        toInfoDtoMapper = new CashCheckToInfoDto(lineMapper, telegramUserToDto);
         toEntityMapper = new DtoToCashCheck();
         addToEntityMapper = new AddDtoToCashCheck();
         addLineToEntityMapper = new AddDtoToCashCheckLine();
@@ -102,13 +102,13 @@ class CheckServiceTest {
     @Test
     void findOne() {
         // given
-        var given = 1L;
-        var check = createEntity(1L);
+        var given = 0L;
+        var check = createEntity(0L);
         when(repo.findById(given)).thenReturn(Optional.of(check));
-        var expected = createInfoDto(1L);
+        var expected = createInfoDto(0L);
 
         // when
-        var actual = service.findOne(given);
+        var actual = service.findById(given);
 
         // then
         assertEquals(expected, actual,
@@ -158,14 +158,14 @@ class CheckServiceTest {
     @Test
     void delete() {
         // given
-        var check = createEntity(1L);
-        var deletedCheck = createEntity(1L).setDeleted(true);
-        when(repo.findById(1L)).thenReturn(Optional.of(check));
+        var check = createEntity(0L);
+        var deletedCheck = createEntity(0L).setDeleted(true);
+        when(repo.findById(0L)).thenReturn(Optional.of(check));
         when(repo.save(any())).thenReturn(deletedCheck);
-        var expected = createDto(1L).setDeleted(true);
+        var expected = createDto(0L).setDeleted(true);
 
         // when
-        var actual = service.delete(1L);
+        var actual = service.delete(0L);
 
         // then
         assertEquals(expected, actual,

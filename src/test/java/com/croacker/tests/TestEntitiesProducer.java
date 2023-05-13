@@ -1,8 +1,11 @@
 package com.croacker.tests;
 
 import com.croacker.buyersclub.domain.*;
-import com.croacker.buyersclub.service.DateTimeService;
-import com.croacker.buyersclub.service.DateTimeServiceImpl;
+import com.croacker.buyersclub.service.dto.checkline.AddCashCheckLineDto;
+import com.croacker.buyersclub.service.dto.checkline.CashCheckLineInfoDto;
+import com.croacker.buyersclub.service.dto.product.ProductInfoDto;
+import com.croacker.buyersclub.service.format.DateTimeService;
+import com.croacker.buyersclub.service.format.DateTimeServiceImpl;
 import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.dto.check.AddCashCheckDto;
@@ -20,9 +23,14 @@ import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import com.croacker.buyersclub.service.dto.shop.AddShopDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
+import com.croacker.buyersclub.service.dto.telegram.TelegramProductPriceDto;
 import com.croacker.buyersclub.service.dto.telegramuser.AddTelegramUserDto;
 import com.croacker.buyersclub.service.dto.telegramuser.TelegramUserDto;
+import com.croacker.buyersclub.service.format.NumberService;
+import com.croacker.buyersclub.service.format.NumberServiceImpl;
+import com.croacker.buyersclub.service.ofd.Item;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
+import com.croacker.buyersclub.service.ofd.excerpt.OfdCheckExcerpt;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -33,7 +41,9 @@ public class TestEntitiesProducer {
 
     private final static String STRING_DATE_TIME = "2020-11-22T23:34:41";
 
-    private DateTimeService dateTimeService = new DateTimeServiceImpl();
+    private final DateTimeService dateTimeService = new DateTimeServiceImpl();
+
+    private final NumberService numberService = new NumberServiceImpl();
 
     public Cashier createCashier(long id){
         return new Cashier()
@@ -130,6 +140,7 @@ public class TestEntitiesProducer {
                 .setEcashSum(2)
                 .setCheckDate(NOW)
                 .setCheckLines(Collections.emptyList())
+                .setTelegramUser(createTelegramUser(0L))
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
@@ -148,6 +159,7 @@ public class TestEntitiesProducer {
                 .setCashSum(3)
                 .setEcashSum(2)
                 .setCheckDate(NOW)
+                .setTelegramUserId(0L)
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
@@ -168,6 +180,7 @@ public class TestEntitiesProducer {
                 .setEcashSum(2)
                 .setCheckDate(NOW)
                 .setCheckLines(Collections.emptyList())
+                .setTelegramUser(createTelegramUserDto(0L))
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
@@ -189,7 +202,34 @@ public class TestEntitiesProducer {
                 .setTelegramUserId(1L);
     }
 
-    public OfdCheck createOfdCheck(long id) {
+    public CashCheckLine createCashCheckLine(long id){
+        return new CashCheckLine()
+                .setId(id)
+                .setProduct(createProduct(0L))
+                .setPrice(100)
+                .setQuantity(2)
+                .setTotalSum(200);
+    }
+
+    public CashCheckLineInfoDto createCashCheckLineInfoDto(long id){
+        return new CashCheckLineInfoDto()
+                .setId(id)
+                .setProductId(0L)
+                .setProductName("test_product_0")
+                .setPrice(100)
+                .setQuantity(2)
+                .setTotalSum(200);
+    }
+
+    public AddCashCheckLineDto createAddCashCheckLineDto(){
+        return new AddCashCheckLineDto()
+                .setProductId(0L)
+                .setPrice(100)
+                .setQuantity(2)
+                .setTotalSum(200);
+    }
+
+    public OfdCheck createOfdCheck() {
         return new OfdCheck()
                 .setUser("test_user")
                 .setRetailPlaceAddress("test_retail_place_address")
@@ -219,6 +259,45 @@ public class TestEntitiesProducer {
                 .setMarkup("test_markup")
                 .setMarkupSum("test_markup_sum")
                 .setDateTime(dateTimeToEpoch(stringToLocalDateTime(STRING_DATE_TIME)));
+    }
+
+    public Item createItem(){
+        return new Item()
+                .setPrice(100)
+                .setQuantity(2)
+                .setSum(200);
+    }
+
+    public OfdCheckExcerpt createOfdCheckExcerpt(){
+        return new OfdCheckExcerpt()
+                .setUser("test_user")
+                .setRetailPlaceAddress("test_retail_place_address")
+                .setUserInn("test_user_inn")
+                .setRequestNumber("test_request_number")
+                .setShiftNumber("test_shift_number")
+                .setOperator("test_operator")
+                .setOperationType(0)
+                .setTotalSum(1000)
+                .setCashTotalSum(300)
+                .setEcashTotalSum(700)
+                .setKktRegId("test_kkt_reg_id")
+                .setKktNumber("test_kkt_number")
+                .setFiscalDriveNumber("test_fiscal_drive_number")
+                .setFiscalDocumentNumber("test_fiscal_document_number")
+                .setFiscalSign("test_fiscal_sign")
+                .setNdsNo("test_nds_no")
+                .setNds0("test_nds_0")
+                .setNds10(10)
+                .setNdsCalculated10("test_nds_calculated_10")
+                .setNds18(18)
+                .setNdsCalculated18("test_nds_calculated_18")
+                .setTaxationType(0)
+                .setItems(Collections.emptyList())
+                .setDiscount("test_discount")
+                .setDiscountSum("test_discount_sum")
+                .setMarkup("test_markup")
+                .setMarkupSum("test_markup_sum")
+                .setDateTime(STRING_DATE_TIME);
     }
 
     public ProductGroup createProductGroup(long id) {
@@ -259,6 +338,17 @@ public class TestEntitiesProducer {
                 .setId(id)
                 .setProductGroupId(0L)
                 .setName("test_product_" + id)
+                .setCreatedAt(NOW)
+                .setUpdatedAt(NOW)
+                .setDeleted(false);
+    }
+
+    public ProductInfoDto createProductInfoDto(long id) {
+        return new ProductInfoDto()
+                .setId(0L)
+                .setName("test_product_" + id)
+                .setProductGroupId(0L)
+                .setProductGroupName("test_product_group_0")
                 .setCreatedAt(NOW)
                 .setUpdatedAt(NOW)
                 .setDeleted(false);
@@ -310,9 +400,25 @@ public class TestEntitiesProducer {
                 .setDeleted(false);
     }
 
+    public ProductPriceView createProductPriceView(long id) {
+        return new ProductPriceView()
+                .setId(id)
+                .setProductId(0L)
+                .setProductName("test_product_" + 0L)
+                .setShopId(0L)
+                .setShopName("test_shop_" + 0L)
+                .setPrice((int) id)
+                .setPriceDate(NOW);
+    }
+
     public TelegramFileProcessResult createTelegramFileProcessResult(long id) {
         return new TelegramFileProcessResult()
-                .setCheckInfo(dateTimeService.localDateTimeToString(NOW) + " test_fiscal_document_number_" + id);
+                .setCheckInfo(
+                        "Чек:test\\_fiscal\\_document\\_number\\_" + id +
+                                " от " + dateTimeService.localDateTimeToString(NOW) +
+                                ", кассир:test\\_cashier\\_0" +
+                                ", Итого:5руб.\r\n"
+                );
     }
 
     private LocalDateTime stringToLocalDateTime(String str){
@@ -346,4 +452,19 @@ public class TestEntitiesProducer {
                 .setFirstName("test_first_name_" + id)
                 .setLastName("test_last_name_" + id);
     }
+
+    public TelegramProductPriceDto createTelegramProductPriceDto(long id) {
+        return new TelegramProductPriceDto()
+                .setPriceId(id)
+                .setProductId(0L)
+                .setProductName("test_product_" + id)
+                .setShopId(0L)
+                .setShopName("test_shop_" + 0L)
+                .setPrice(priceToString(id * 100));
+    }
+
+    private String priceToString(Long val){
+        return numberService.toCurrency(val);
+    }
+
 }

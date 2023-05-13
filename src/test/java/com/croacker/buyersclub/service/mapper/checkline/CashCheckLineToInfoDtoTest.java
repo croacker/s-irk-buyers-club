@@ -1,29 +1,23 @@
 package com.croacker.buyersclub.service.mapper.checkline;
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.CashCheckLine;
 import com.croacker.buyersclub.domain.Product;
-import com.croacker.buyersclub.service.dto.checkline.AddCashCheckLineDto;
 import com.croacker.buyersclub.service.dto.checkline.CashCheckLineInfoDto;
-import org.junit.jupiter.api.BeforeEach;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 class CashCheckLineToInfoDtoTest {
 
+    @Autowired
     private CashCheckLineToInfoDto mapper;
 
-    @BeforeEach
-    void setup() {
-        mapper = new CashCheckLineToInfoDto();
-    }
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapDto() {
@@ -40,23 +34,11 @@ class CashCheckLineToInfoDtoTest {
     }
 
     private CashCheckLine createEntity() {
-        var product = new Product().setId(1L).setName("test_product_name");
-        return new CashCheckLine()
-                .setId(0L)
-                .setProduct(product)
-                .setPrice(100)
-                .setQuantity(2)
-                .setTotalSum(200);
+        return testEntitiesProducer.createCashCheckLine(0L);
     }
 
     private CashCheckLineInfoDto createDto() {
-        return new CashCheckLineInfoDto()
-                .setId(0L)
-                .setProductId(1L)
-                .setProductName("test_product_name")
-                .setPrice(100)
-                .setQuantity(2)
-                .setTotalSum(200);
+        return testEntitiesProducer.createCashCheckLineInfoDto(0L);
     }
 
 }

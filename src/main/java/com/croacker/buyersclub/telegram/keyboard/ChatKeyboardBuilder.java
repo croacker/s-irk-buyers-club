@@ -20,6 +20,11 @@ public class ChatKeyboardBuilder implements KeyboardBuilder {
     }
 
     @Override
+    public ChatButton newButton(String text) {
+        return newButton().setText(text);
+    }
+
+    @Override
     public ReplyKeyboard build() {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();

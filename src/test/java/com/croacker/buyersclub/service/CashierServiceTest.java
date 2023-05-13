@@ -1,6 +1,5 @@
 package com.croacker.buyersclub.service;
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Cashier;
 import com.croacker.buyersclub.domain.Shop;
 import com.croacker.buyersclub.repo.CashierRepo;
@@ -13,12 +12,10 @@ import com.croacker.buyersclub.service.mapper.cashier.DtoToCashier;
 import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,8 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 class CashierServiceTest {
 
     private CashierService service;
@@ -93,11 +89,11 @@ class CashierServiceTest {
         // given
         var given = "test_cashier_1";
         var cashier = createEntity(1L);
-        when(repo.findByName(given)).thenReturn(Optional.of(cashier));
+        when(repo.findByNameAndShopId(given, 1L)).thenReturn(Optional.of(cashier));
         var expected = createDto(1L);
 
         // when
-        var actual = service.findByName(given);
+        var actual = service.findByNameAndShopId(given, 1L);
 
         // then
         assertEquals(expected, actual,

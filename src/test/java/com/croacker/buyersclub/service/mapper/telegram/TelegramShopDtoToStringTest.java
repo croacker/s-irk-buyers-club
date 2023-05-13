@@ -1,27 +1,22 @@
 package com.croacker.buyersclub.service.mapper.telegram;
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
-import com.croacker.buyersclub.service.dto.telegram.TelegramProductPriceDto;
-import org.junit.jupiter.api.BeforeEach;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 class TelegramShopDtoToStringTest {
 
+    @Autowired
     private TelegramShopDtoToString mapper;
 
-    @BeforeEach
-    void setup() {
-        mapper = new TelegramShopDtoToString();
-    }
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapEntity() {
@@ -33,18 +28,16 @@ class TelegramShopDtoToStringTest {
         var actual = mapper.map(given);
 
         // then
-        assertTrue(new ReflectionEquals(expected).matches(actual),
+        assertEquals(expected, actual,
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
     private String createString() {
-        return "[test_name, test_address]";
+        return "[test_shop_0, test_address_0]";
     }
 
     private ShopDto createDto() {
-        return new ShopDto()
-                .setName("test_name")
-                .setAddress("test_address");
+        return testEntitiesProducer.createShopDto(0L);
     }
 
 }

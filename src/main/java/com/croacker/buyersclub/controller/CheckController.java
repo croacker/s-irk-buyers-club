@@ -26,8 +26,13 @@ public class CheckController implements CheckOperations{
     }
 
     @Override
+    public Mono<Long> getChecksCount() {
+        return service.getCount();
+    }
+
+    @Override
     public Mono<CashCheckInfoDto> getCheck(Long id) {
-        return Mono.just(service.findOne(id));
+        return Mono.just(service.findById(id));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.croacker.buyersclub.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,11 @@ public class TelegramUser {
     private Long id;
 
     /**
+     * Это бот.
+     */
+    private Boolean isBot;
+
+    /**
      * Наименование.
      */
     private String userName;
@@ -40,4 +46,19 @@ public class TelegramUser {
      * Фамилия.
      */
     private String lastName;
+
+    /**
+     * Может присоединится к группе. Только для бота.
+     */
+    private Boolean canJoinGroups;
+
+    /**
+     * Может присоединится к группе.
+     */
+    private Boolean canReadAllGroupMessages;
+
+    /**
+     * .
+     */
+    private Boolean supportInlineQueries;
 }

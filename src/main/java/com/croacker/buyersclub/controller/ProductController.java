@@ -33,6 +33,11 @@ public class ProductController implements ProductOperations {
     }
 
     @Override
+    public Mono<Long> getProductsCount() {
+        return service.getCount();
+    }
+
+    @Override
     public Mono<ProductDto> getProduct(@PathVariable Long id){
         return Mono.just(service.findOne(id));
     }

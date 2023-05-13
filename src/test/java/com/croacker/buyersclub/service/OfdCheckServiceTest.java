@@ -1,36 +1,30 @@
 package com.croacker.buyersclub.service;
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.service.dto.cashier.CashierDto;
 import com.croacker.buyersclub.service.dto.check.CashCheckDto;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
+import com.croacker.buyersclub.service.format.DateTimeService;
+import com.croacker.buyersclub.service.format.DateTimeServiceImpl;
+import com.croacker.buyersclub.service.locale.LocaleService;
+import com.croacker.buyersclub.service.locale.LocaleServiceImpl;
 import com.croacker.buyersclub.service.mapper.checkline.ItemToAddCheckLineDto;
 import com.croacker.buyersclub.service.mapper.telegram.CashCheckDtoToTelegramFileProcessResult;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
 import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.time.LocalDateTime;
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 class OfdCheckServiceTest {
-
-    private final static LocalDateTime NOW = LocalDateTime.now();
-
-    private final static String STRING_DATE_TIME = "2020-11-22T23:34:41";
 
     private OfdCheckService service;
 
@@ -54,6 +48,9 @@ class OfdCheckServiceTest {
 
     private DateTimeService dateTimeService;
 
+    @Autowired
+    private LocaleService localeService;
+
     private ItemToAddCheckLineDto itemToAddCheckLine;
 
     private CashCheckDtoToTelegramFileProcessResult cashCheckDtoToTelegramFileProcessResultMapper;
@@ -64,10 +61,10 @@ class OfdCheckServiceTest {
     void setup() {
         dateTimeService = new DateTimeServiceImpl();
         itemToAddCheckLine = new ItemToAddCheckLineDto();
-        cashCheckDtoToTelegramFileProcessResultMapper = new CashCheckDtoToTelegramFileProcessResult(dateTimeService);
+        cashCheckDtoToTelegramFileProcessResultMapper = new CashCheckDtoToTelegramFileProcessResult(dateTimeService, localeService);
         service = new OfdCheckServiceImpl(organizationService, shopService,
                 cashierService, productService, checkService, dateTimeService,
-                productPriceService, itemToAddCheckLine, cashCheckDtoToTelegramFileProcessResultMapper);
+                productPriceService, itemToAddCheckLine);
     }
 
     @Test
@@ -76,11 +73,11 @@ class OfdCheckServiceTest {
         var given = createOfdCheck();
         var telegramUserId = 0L;
         when(organizationService.findByInn("test_user_inn")).thenReturn(createOrganization());
-        when(shopService.findByName("test_shop")).thenReturn(createShop());
-        when(cashierService.findByName(any())).thenReturn(createCashier());
+        when(shopService.findByAddress("test_retail_place_address")).thenReturn(createShop());
+        when(cashierService.findByNameAndShopId(any(), any())).thenReturn(createCashier());
         when(checkService.save(any())).thenReturn(createCashCheckDto());
 
-        var expected = createTelegramFileProcessResult(0L);
+        var expected = createCashCheckDto();// TODO fix test
 
         // when
         var actual = service.process(given, telegramUserId);
@@ -91,11 +88,7 @@ class OfdCheckServiceTest {
     }
 
     private OfdCheck createOfdCheck() {
-        return testEntitiesProducer.createOfdCheck(0L);
-    }
-
-    private TelegramFileProcessResult createTelegramFileProcessResult(long id) {
-        return testEntitiesProducer.createTelegramFileProcessResult(id);
+        return testEntitiesProducer.createOfdCheck();
     }
 
     private OrganizationDto createOrganization() {
@@ -114,15 +107,4 @@ class OfdCheckServiceTest {
         return testEntitiesProducer.createCashCheckDto(0L);
     }
 
-    private LocalDateTime stringToLocalDateTime(String str){
-        return dateTimeService.stringToLocalDateTime(str);
-    }
-
-    private int dateTimeToEpoch(LocalDateTime date){
-        return dateTimeService.dateTimeToEpoch(date);
-    }
-
-    private String localDateTimeToString(LocalDateTime date){
-        return dateTimeService.localDateTimeToString(date);
-    }
 }

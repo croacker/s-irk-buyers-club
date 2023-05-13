@@ -1,28 +1,23 @@
 package com.croacker.buyersclub.service.mapper.cashier;
 
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.Cashier;
 import com.croacker.buyersclub.service.dto.cashier.AddCashierDto;
-import org.junit.jupiter.api.BeforeEach;
+import com.croacker.tests.TestEntitiesProducer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 public class AddDtoToCashierTest {
 
+    @Autowired
     private AddDtoToCashier mapper;
 
-    @BeforeEach
-    void setup() {
-        mapper = new AddDtoToCashier();
-    }
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapDto() {
@@ -39,13 +34,16 @@ public class AddDtoToCashierTest {
     }
 
     private Cashier createEntity() {
-        return new Cashier()
-                .setName("test_cashier");
+        return testEntitiesProducer.createCashier(0L)
+                .setId(null)
+                .setShop(null)
+                .setCreatedAt(null)
+                .setUpdatedAt(null)
+                .setDeleted(null);
     }
 
     private AddCashierDto createDto() {
-        return new AddCashierDto()
-                .setName("test_cashier");
+        return testEntitiesProducer.createAddCashierDto(0L);
     }
 
 }

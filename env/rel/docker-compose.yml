@@ -21,7 +21,7 @@ services:
     networks:
       - irk-buyers-club
     healthcheck:
-      test: PGPASSWORD=buyers psql -d buyers -U buyers -w -c '\q'
+      test: PGPASSWORD=${POSTGRES_PASSWORD} psql -d buyers -U buyers -w -c '\q'
       interval: 20s
       timeout: 10s
 

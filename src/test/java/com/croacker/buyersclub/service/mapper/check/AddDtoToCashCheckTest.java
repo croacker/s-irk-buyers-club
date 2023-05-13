@@ -1,32 +1,28 @@
 package com.croacker.buyersclub.service.mapper.check;
 
 
-import com.croacker.buyersclub.TestConfiguration;
 import com.croacker.buyersclub.domain.CashCheck;
 import com.croacker.buyersclub.service.dto.check.AddCashCheckDto;
-import org.junit.jupiter.api.BeforeEach;
+import com.croacker.tests.TestEntitiesProducer;
+import io.netty.util.NetUtil;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestConfiguration.class})
+@SpringBootTest
 public class AddDtoToCashCheckTest {
 
+    @Autowired
     private AddDtoToCashCheck mapper;
 
     private final static LocalDateTime NOW = LocalDateTime.now();
 
-    @BeforeEach
-    void setup() {
-        mapper = new AddDtoToCashCheck();
-    }
+    private final TestEntitiesProducer testEntitiesProducer = new TestEntitiesProducer();
 
     @Test
     void shouldMapDto() {
@@ -43,25 +39,18 @@ public class AddDtoToCashCheckTest {
     }
 
     private CashCheck createEntity() {
-        return new CashCheck()
-                .setKktRegId("test_kkt_reg_id")
-                .setFiscalDriveNumber("test_fiscal_drive_number")
-                .setFiscalDocumentNumber("test_fiscal_document_number")
-                .setTotalSum(5)
-                .setCashSum(3)
-                .setEcashSum(2)
-                .setCheckDate(NOW);
+        return testEntitiesProducer.createCashCheck(0L)
+                .setId(null)
+                .setCashier(null)
+                .setTelegramUser(null)
+                .setCheckLines(null)
+                .setCreatedAt(null)
+                .setUpdatedAt(null)
+                .setDeleted(null);
     }
 
     private AddCashCheckDto createDto() {
-        return new AddCashCheckDto()
-                .setKktRegId("test_kkt_reg_id")
-                .setFiscalDriveNumber("test_fiscal_drive_number")
-                .setFiscalDocumentNumber("test_fiscal_document_number")
-                .setTotalSum(5)
-                .setCashSum(3)
-                .setEcashSum(2)
-                .setCheckDate(NOW);
+        return testEntitiesProducer.createAddCashCheckDto(0L);
     }
 
 }

@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,13 +42,18 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    public Mono<Long> getCount() {
+        return Mono.just(repo.count());
+    }
+
+    @Override
     public ProductDto findOne(Long id) {
-        return repo.findById(id).map(toDtoMapper).orElse(null);
+        return repo.findById(id).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
     public ProductDto findByName(String name) {
-        return repo.findByName(name).map(toDtoMapper).orElse(null);
+        return repo.findByName(name).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
