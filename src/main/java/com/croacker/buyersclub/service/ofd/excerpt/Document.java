@@ -8,5 +8,5 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Document {
     @JsonProperty("receipt")
-    private OfdCheckExcerpt ofdCheck;
+    private OfdCheckExcerpt receipt;
 }
