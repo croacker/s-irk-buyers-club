@@ -8,13 +8,11 @@ import com.croacker.buyersclub.service.dto.check.CashCheckInfoDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramFileProcessResult;
 import com.croacker.buyersclub.service.mapper.ofd.OfdCheckExcerptToOfdCheck;
 import com.croacker.buyersclub.service.mapper.telegram.CashCheckDtoToTelegramFileProcessResult;
+import com.croacker.buyersclub.service.marshaller.ExcerptUnmarshaller;
+import com.croacker.buyersclub.service.marshaller.OfdCheckUnmarshaller;
+import com.croacker.buyersclub.service.marshaller.OfdRootUnmarshaller;
 import com.croacker.buyersclub.service.ofd.OfdCheck;
-import com.croacker.buyersclub.service.ofd.excerpt.Excerpt;
 import com.croacker.buyersclub.service.telegram.request.TelegramMessage;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import liquibase.pro.packaged.S;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +21,6 @@ import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import reactor.core.publisher.Mono;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,6 +42,12 @@ public class TelegramFileServiceImpl implements TelegramFileService {
     private final OfdCheckExcerptToOfdCheck mapper;
 
     private final CashCheckDtoToTelegramFileProcessResult checkDtoResult;
+
+    private final OfdRootUnmarshaller ofdRootUnmarshaller;
+
+    private final ExcerptUnmarshaller excerptUnmarshaller;
+
+    private final OfdCheckUnmarshaller ofdCheckUnmarshaller;
 
     @Override
     public Mono<String> processFile(TelegramMessage telegramMessage) {
@@ -74,14 +77,13 @@ public class TelegramFileServiceImpl implements TelegramFileService {
      */
     private List<OfdCheck> toOfdChecks(String str) {
         List<OfdCheck> ofdChecks;
-        var objectMapper = new ObjectMapper();
         if (isExcerpt(str)) {
-            ofdChecks = readAsExcerpt(str, objectMapper);
+            ofdChecks = readAsExcerpt(str);
         } else {
             if (isMultipleChecks(str)) {
-                ofdChecks = readAsChecks(str, objectMapper);
+                ofdChecks = readAsChecks(str);
             } else {
-                ofdChecks = readAsCheck(str, objectMapper);
+                ofdChecks = readAsCheck(str);
             }
         }
         log.info("OfdChecks:{}", ofdChecks);
@@ -92,58 +94,36 @@ public class TelegramFileServiceImpl implements TelegramFileService {
      * Прочитать как чеки.
      *
      * @param str          строка
-     * @param objectMapper транслятор
      * @return чеки
      */
-    private List<OfdCheck> readAsChecks(String str, ObjectMapper objectMapper) {
-        List<OfdCheck> result = Collections.emptyList();
-        try {
-            result = objectMapper.readValue(str, new TypeReference<>() {});
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
-        }
-        return result;
+    private List<OfdCheck> readAsChecks(String str) {
+        return ofdRootUnmarshaller.apply(str).stream()
+                .map(excerpt -> excerpt.getTicket().getDocument().getReceipt())
+                .map(mapper)
+                .collect(Collectors.toList());
     }
 
     /**
      * Прочитать как чек.
      *
      * @param str          строка
-     * @param objectMapper транслятор
      * @return чек
      */
-    private List<OfdCheck> readAsCheck(String str, ObjectMapper objectMapper) {
-        List<OfdCheck> result = Collections.emptyList();
-        try {
-            result = List.of(objectMapper.readValue(str, OfdCheck.class));
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
-        }
-        return result;
+    private List<OfdCheck> readAsCheck(String str) {
+        return ofdCheckUnmarshaller.apply(str);
     }
 
     /**
      * Прочитать как чеки.
      *
      * @param str          строка
-     * @param objectMapper транслятор
      * @return чеки
      */
-    private List<OfdCheck> readAsExcerpt(String str, ObjectMapper objectMapper) {
-        List<OfdCheck> ofdChecks = Collections.emptyList();
-        List<Excerpt> excerpts = Collections.emptyList();
-        try {
-            excerpts = objectMapper.readValue(str, new TypeReference<>() {});
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
-        }
-        if (!excerpts.isEmpty()){
-            ofdChecks = excerpts.stream()
-                    .map(excerpt -> excerpt.getTicket().getDocument().getOfdCheck())
-                    .map(mapper)
-                    .collect(Collectors.toList());
-        }
-        return ofdChecks;
+    private List<OfdCheck> readAsExcerpt(String str) {
+        return excerptUnmarshaller.apply(str).stream()
+                .map(excerpt -> excerpt.getTicket().getDocument().getReceipt())
+                .map(mapper)
+                .collect(Collectors.toList());
     }
 
     /**
