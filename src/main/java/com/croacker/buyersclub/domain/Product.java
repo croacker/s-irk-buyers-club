@@ -47,6 +47,11 @@ public class Product {
     private ProductGroup productGroup;
 
     /**
+     * Тип товара.
+     */
+    private int productType;
+
+    /**
      * Создан.
      */
     @Column(updatable = false)

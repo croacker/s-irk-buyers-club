@@ -43,6 +43,12 @@ public class ProductInfoDto {
     private String productGroupName;
 
     /**
+     * Тип товара.
+     */
+    @Schema(description = "Тип товара", example = "1")
+    private Integer productType;
+
+    /**
      * Создан.
      */
     @Schema(description = "Создан")

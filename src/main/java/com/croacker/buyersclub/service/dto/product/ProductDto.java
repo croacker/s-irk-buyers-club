@@ -36,6 +36,12 @@ public class ProductDto {
     private Long productGroupId;
 
     /**
+     * Тип товара.
+     */
+    @Schema(description = "Тип товара", example = "1")
+    private Integer productType;
+
+    /**
      * Создан.
      */
     @Schema(description = "Создан")

@@ -28,4 +28,10 @@ public class AddProductDto {
      */
     @Schema(description = "Идентификатор группы товаров", example = "1")
     private Long productGroupId;
+
+    /**
+     * Тип товара.
+     */
+    @Schema(description = "Тип товара", example = "1")
+    private Integer productType;
 }
