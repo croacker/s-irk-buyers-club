@@ -18,6 +18,9 @@ public class Item {
     @JsonProperty("quantity")
     private float quantity;
 
+    @JsonProperty("productType")
+    private int productType;
+
     @JsonProperty("sum")
     private int sum;
 
