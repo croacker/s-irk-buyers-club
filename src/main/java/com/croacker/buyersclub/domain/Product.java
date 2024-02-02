@@ -1,5 +1,7 @@
 package com.croacker.buyersclub.domain;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -49,7 +51,8 @@ public class Product {
     /**
      * Тип товара.
      */
-    private int productType;
+    @Enumerated(EnumType.STRING)
+    private ProductType productType;
 
     /**
      * Создан.
