@@ -5,24 +5,26 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.1</version>
+        <version>3.2.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.croacker</groupId>
     <artifactId>irk-buyers-club</artifactId>
-    <version>0.0.26</version>
+    <version>0.0.27</version>
     <name>buyer-club</name>
     <description>Irkutsk buyer club</description>
 
     <properties>
         <java.version>17</java.version>
+        <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
         <docker.image.name>croacker/s-irk-buyers-club:${project.version}</docker.image.name>
         <spring-cloud-starter.version>3.0.0</spring-cloud-starter.version>
         <springdoc-openapi-webflux-ui.version>1.6.9</springdoc-openapi-webflux-ui.version>
         <embedded-postgresql.version>1.86</embedded-postgresql.version>
         <jib-maven-plugin.version>3.2.1</jib-maven-plugin.version>
         <lombok.version>1.18.24</lombok.version>
-        <liquibase.version>4.12.0</liquibase.version>
+        <liquibase.version>4.24.0</liquibase.version>
+        <h2.version>2.2.224</h2.version>
         <telegrambots.version>6.5.0</telegrambots.version>
     </properties>
 
@@ -70,6 +72,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -115,6 +118,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <skipTests>true</skipTests>
                 </configuration>
@@ -161,6 +165,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
                         <configuration>
                             <skipTests>true</skipTests>
                         </configuration>
@@ -190,6 +195,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
                         <configuration>
                             <skipTests>true</skipTests>
                         </configuration>

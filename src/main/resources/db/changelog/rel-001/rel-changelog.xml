@@ -16,5 +16,4 @@
     <include file="changelog/10-alter-table-check.xml" relativeToChangelogFile="true"/>
     <include file="changelog/11-alter-table-telegram-user.xml" relativeToChangelogFile="true"/>
     <include file="changelog/12-create-view-product-price.xml" relativeToChangelogFile="true"/>
-    <include file="changelog/14-alter-table-product.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

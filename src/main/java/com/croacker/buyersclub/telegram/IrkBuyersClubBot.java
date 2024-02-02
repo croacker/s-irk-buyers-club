@@ -2,16 +2,16 @@ package com.croacker.buyersclub.telegram;
 
 import com.croacker.buyersclub.config.TelegramConfiguration;
 import com.croacker.buyersclub.service.locale.LocaleService;
-import com.croacker.buyersclub.service.telegram.request.TelegramRequestType;
+import com.croacker.buyersclub.service.telegram.TelegramMessageServiceImpl;
 import com.croacker.buyersclub.service.telegram.request.TelegramCallback;
 import com.croacker.buyersclub.service.telegram.request.TelegramCommand;
 import com.croacker.buyersclub.service.telegram.request.TelegramFile;
 import com.croacker.buyersclub.service.telegram.request.TelegramMessage;
 import com.croacker.buyersclub.service.telegram.request.TelegramQuery;
-import com.croacker.buyersclub.service.telegram.TelegramMessageServiceImpl;
+import com.croacker.buyersclub.service.telegram.request.TelegramRequestType;
 import com.croacker.buyersclub.telegram.updateprocessor.MessageDispatcher;
 import com.croacker.buyersclub.telegram.updateprocessor.MessageProcessor;
-import lombok.AllArgsConstructor;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.PostConstruct;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
