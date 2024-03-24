@@ -7,6 +7,7 @@ import com.croacker.buyersclub.service.dto.productprice.ProductPriceInfoDto;
 import com.croacker.buyersclub.service.dto.shop.ShopDto;
 import com.croacker.buyersclub.service.dto.telegram.TelegramProductPriceDto;
 import org.springframework.data.domain.Pageable;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -17,23 +18,23 @@ import java.util.List;
  */
 public interface ProductPriceService {
 
-    List<ProductPriceInfoDto> findAll(Pageable pageable);
+    Flux<ProductPriceInfoDto> findAll(Pageable pageable);
 
     Mono<Long> getCount();
 
-    ProductPriceInfoDto findOne(Long id);
+    Mono<ProductPriceInfoDto> findOne(Long id);
 
-    List<ProductPriceInfoDto> findByProduct(Long id);
+    Flux<ProductPriceInfoDto> findByProduct(Long id);
 
-    ProductPriceDto findPrice(ProductDto product, ShopDto shop, LocalDateTime dateTime);
+    Mono<ProductPriceDto> findPrice(ProductDto product, ShopDto shop, LocalDateTime dateTime);
 
-    ProductPriceDto save(AddProductPriceDto dto);
+    Mono<ProductPriceDto> save(AddProductPriceDto dto);
 
-    ProductPriceDto update(ProductPriceDto dto);
+    Mono<ProductPriceDto> update(ProductPriceDto dto);
 
-    ProductPriceDto delete(Long id);
+    Mono<ProductPriceDto> delete(Long id);
 
-    Long getProductsPricesCount(String expression);
+    Mono<Long> getProductsPricesCount(String expression);
 
-    List<TelegramProductPriceDto> getProductsPrices(String expression, Pageable pageable);
+    Flux<TelegramProductPriceDto> getProductsPrices(String expression, Pageable pageable);
 }

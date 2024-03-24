@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -36,27 +37,27 @@ public class CashierServiceImpl implements CashierService {
     private final AddDtoToCashier addToEntityMapper;
 
     @Override
-    public List<CashierDto> findAll(Pageable pageable) {
+    public Flux<CashierDto> findAll(Pageable pageable) {
         return repo.findByDeletedIsFalse(pageable).stream().map(toDtoMapper).collect(Collectors.toList());
     }
 
     @Override
     public Mono<Long> getCount() {
-        return Mono.just(repo.count());
+        return repo.count();
     }
 
     @Override
-    public CashierDto findOne(Long id) {
+    public Mono<CashierDto> findOne(Long id) {
         return repo.findById(id).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
-    public CashierDto findByNameAndShopId(String name, Long shopId) {
+    public Mono<CashierDto> findByNameAndShopId(String name, Long shopId) {
         return repo.findByNameAndShopId(name, shopId).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
-    public CashierDto save(AddCashierDto dto) {
+    public Mono<CashierDto> save(AddCashierDto dto) {
         var shop = shopRepo.findById(dto.getShopId()).get();
         var cashier = addToEntityMapper.map(dto)
                 .setShop(shop)
@@ -66,7 +67,7 @@ public class CashierServiceImpl implements CashierService {
     }
 
     @Override
-    public CashierDto update(CashierDto dto) {
+    public Mono<CashierDto> update(CashierDto dto) {
         var shop = shopRepo.findById(dto.getShopId()).get();
         var cashier = toEntityMapper.map(dto).setShop(shop);
         cashier = repo.save(cashier);
@@ -74,7 +75,7 @@ public class CashierServiceImpl implements CashierService {
     }
 
     @Override
-    public CashierDto delete(Long id) {
+    public Mono<CashierDto> delete(Long id) {
         return repo.findById(id).map(cashier -> {
             cashier.setDeleted(true);
             cashier = repo.save(cashier);

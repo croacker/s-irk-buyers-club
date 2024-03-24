@@ -21,6 +21,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,7 +52,7 @@ public class OfdCheckServiceImpl implements OfdCheckService {
     private final ItemToAddCheckLineDto itemToAddCheckLine;
 
     @Override
-    public CashCheckDto process(OfdCheck ofdCheck, Long telegramUserId) {
+    public Mono<CashCheckDto> process(OfdCheck ofdCheck, Long telegramUserId) {
         var organization = saveOrganization(ofdCheck);
         var shop = saveShop(ofdCheck, organization);
         var cashier = saveCashier(ofdCheck, shop);
@@ -167,7 +169,7 @@ public class OfdCheckServiceImpl implements OfdCheckService {
      * @param shop     магазин
      * @return товар
      */
-    private List<AddCashCheckLineDto> saveProducts(OfdCheck ofdCheck, ShopDto shop) {
+    private Flux<AddCashCheckLineDto> saveProducts(OfdCheck ofdCheck, ShopDto shop) {
         var dateTime = fromEpoch(ofdCheck.getDateTime());
         return ofdCheck.getItems().stream().map(item -> {
             var product = productService.findByName(item.getName());

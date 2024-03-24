@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class CheckServiceImpl implements CheckService{
     private final AddDtoToCashCheckLine addLineToEntityMapper;
 
     @Override
-    public List<CashCheckInfoDto> findAll(Pageable pageable) {
+    public Flux<CashCheckInfoDto> findAll(Pageable pageable) {
         return repo.findByDeletedIsFalse(pageable).stream().map(toInfoDtoMapper).collect(Collectors.toList());
     }
 
@@ -58,18 +59,18 @@ public class CheckServiceImpl implements CheckService{
     }
 
     @Override
-    public CashCheckInfoDto findById(Long id) {
+    public Mono<CashCheckInfoDto findById(Long id) {
         return repo.findById(id).map(toInfoDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
-    public CashCheckDto findCheck(String kktRegId, String fiscalDriveNumber, String fiscalDocumentNumber) {
+    public Mono<CashCheckDto findCheck(String kktRegId, String fiscalDriveNumber, String fiscalDocumentNumber) {
         return repo.findByKktRegIdAndFiscalDriveNumberAndFiscalDocumentNumber(kktRegId,
                 fiscalDriveNumber, fiscalDocumentNumber).map(toDtoMapper).orElse(null);
     }
 
     @Override
-    public CashCheckDto save(AddCashCheckDto dto) {
+    public Mono<CashCheckDto save(AddCashCheckDto dto) {
         var cashier = cashierRepo.findById(dto.getCashierId()).get();
         var checkLines = dto.getCheckLines().stream().map(lineDto -> {
             var product = productRepo.findById(lineDto.getProductId()).get();
@@ -88,7 +89,7 @@ public class CheckServiceImpl implements CheckService{
     }
 
     @Override
-    public CashCheckDto update(CashCheckDto dto) {
+    public Mono<CashCheckDto update(CashCheckDto dto) {
         var cashier = cashierRepo.findById(dto.getCashierId()).get();
         var telegramUser = telegramUserRepo.findById(dto.getTelegramUserId()).orElse(null);
         var check = toEntityMapper.map(dto)
@@ -99,7 +100,7 @@ public class CheckServiceImpl implements CheckService{
     }
 
     @Override
-    public CashCheckDto delete(Long id) {
+    public Mono<CashCheckDto delete(Long id) {
         return repo.findById(id).map(check -> {
             check.setDeleted(true);
             check = repo.save(check);

@@ -9,9 +9,9 @@ embedded:
     password: buyers
 
 spring:
-  datasource:
+  r2dbc:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${embedded.postgresql.host}:${embedded.postgresql.port}/${embedded.postgresql.schema}
+    url: r2dbc:postgresql://${embedded.postgresql.host}:${embedded.postgresql.port}/${embedded.postgresql.schema}
     username: ${embedded.postgresql.user}
     password: ${embedded.postgresql.password}
   liquibase:

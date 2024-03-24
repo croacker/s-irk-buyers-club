@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class TelegramUserServiceImpl implements TelegramUserService {
     private final AddDtoToTelegramUser addToEntityMapper;
 
     @Override
-    public List<TelegramUserDto> findAll(Pageable pageable) {
+    public Flux<TelegramUserDto> findAll(Pageable pageable) {
         return StreamSupport.stream(repo.findAll().spliterator(), false).map(toDtoMapper).collect(Collectors.toList());
     }
 
@@ -38,17 +39,17 @@ public class TelegramUserServiceImpl implements TelegramUserService {
     }
 
     @Override
-    public Optional<TelegramUserDto> findOne(Long id) {
+    public Mono<TelegramUserDto> findOne(Long id) {
         return repo.findById(id).map(toDtoMapper);
     }
 
     @Override
-    public Optional<TelegramUserDto> findByName(String name) {
+    public Mono<TelegramUserDto> findByName(String name) {
         return repo.findByUserName(name).map(toDtoMapper);
     }
 
     @Override
-    public TelegramUserDto save(AddTelegramUserDto dto) {
+    public Mono<TelegramUserDto> save(AddTelegramUserDto dto) {
         var telegramUser = addToEntityMapper.map(dto);
         telegramUser = repo.save(telegramUser);
         return toDtoMapper.map(telegramUser);

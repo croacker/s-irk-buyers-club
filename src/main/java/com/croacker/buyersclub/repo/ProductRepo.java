@@ -2,12 +2,12 @@ package com.croacker.buyersclub.repo;
 
 import com.croacker.buyersclub.domain.Product;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductRepo extends CrudRepository<Product, Long> {
+public interface ProductRepo extends ReactiveCrudRepository<Product, Long> {
 
     Optional<Product> findByName(String name);
 

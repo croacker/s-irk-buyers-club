@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class ShopServiceImpl implements ShopService{
     private final AddDtoToShop addToEntityMapper;
 
     @Override
-    public List<ShopDto> findAll(Pageable pageable) {
+    public Flux<ShopDto> findAll(Pageable pageable) {
         return repo.findByDeletedIsFalse(pageable)
                 .stream().map(toDtoMapper).collect(Collectors.toList());
     }
@@ -43,22 +44,22 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public ShopDto findOne(Long id) {
+    public Mono<ShopDto> findOne(Long id) {
         return repo.findById(id).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
-    public ShopDto findByName(String name) {
+    public Mono<ShopDto> findByName(String name) {
         return repo.findFirstByName(name).map(toDtoMapper).orElse(null);
     }
 
     @Override
-    public ShopDto findByAddress(String address) {
+    public Mono<ShopDto> findByAddress(String address) {
         return repo.findFirstByAddress(address).map(toDtoMapper).orElse(null);
     }
 
     @Override
-    public ShopDto save(AddShopDto dto) {
+    public Mono<ShopDto> save(AddShopDto dto) {
         var organization = organizationRepo.findById(dto.getOrganizationId()).get();
         var shop = addToEntityMapper.map(dto)
                 .setOrganization(organization).setDeleted(false);
@@ -67,7 +68,7 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public ShopDto update(ShopDto dto) {
+    public Mono<ShopDto> update(ShopDto dto) {
         var organization = organizationRepo.findById(dto.getOrganizationId()).get();
         var shop = toShopMapper.map(dto)
                 .setOrganization(organization);
@@ -76,7 +77,7 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public ShopDto delete(Long id) {
+    public Mono<ShopDto> delete(Long id) {
         return repo.findById(id).map(shop -> {
             shop.setDeleted(true);
             shop = repo.save(shop);
@@ -85,7 +86,7 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public List<ShopDto> getShops(String expression, Pageable pageable) {
+    public Flux<ShopDto> getShops(String expression, Pageable pageable) {
         return repo.findByNameContainingIgnoreCase(expression, pageable)
                 .stream().map(toDtoMapper).collect(Collectors.toList());
     }

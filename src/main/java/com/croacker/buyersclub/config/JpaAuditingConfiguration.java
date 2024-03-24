@@ -3,14 +3,16 @@ package com.croacker.buyersclub.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.domain.ReactiveAuditorAware;
+import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 
 import java.util.Optional;
 @Configuration
-@EnableJpaAuditing
+@EnableR2dbcAuditing
 public class JpaAuditingConfiguration {
-    @Bean
-    public AuditorAware auditorProvider() {
-        return () -> Optional.of("user");//TODO concrete user
-    }
+    //TODO concrete user
+//    @Bean
+//    public ReactiveAuditorAware<String> auditorAware() {
+//        return new AuditorAwareImpl();
+//    }
 }

@@ -14,6 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +53,7 @@ class ProductGroupServiceTest {
     void findAll() {
         // given
         var pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
-        when(repo.findAll()).thenReturn(createEntitiesList());
+        when(repo.findAll()).thenReturn(createEntities());
         var expected = createDtosList();
 
         // when
@@ -65,7 +67,7 @@ class ProductGroupServiceTest {
     @Test
     void findOne() {
         // given
-        when(repo.findById(1L)).thenReturn(Optional.of(createEntitiy(1L)));
+        when(repo.findById(1L)).thenReturn(Mono.just((createEntity(1L))));
         var expected = createDto(1L);
 
         // when
@@ -80,7 +82,7 @@ class ProductGroupServiceTest {
     void save() {
         // given
         var given = createAddProductGroupDto(1L);
-        when(repo.save(any())).thenReturn(createEntitiy(1L));
+        when(repo.save(any())).thenReturn(Mono.just(createEntity(1L)));
         var expected = createDto(1L);
 
         // when
@@ -95,7 +97,7 @@ class ProductGroupServiceTest {
     void update() {
         // given
         var given = createDto(1L);
-        when(repo.save(any())).thenReturn(createEntitiy(1L));
+        when(repo.save(any())).thenReturn(Mono.just(createEntity(1L)));
         var expected = createDto(1L);
 
         // when
@@ -110,8 +112,8 @@ class ProductGroupServiceTest {
     void delete() {
         // given
         var given = createDto(1L);
-        when(repo.findById(any())).thenReturn(Optional.of(createEntitiy(1L)));
-        when(repo.save(any())).thenReturn(createEntitiy(1L).setDeleted(true));
+        when(repo.findById(1L)).thenReturn(Mono.just(createEntity(1L)));
+        when(repo.delete(any())).thenReturn(createEntity(1L).setDeleted(true));
         var expected = createDto(1L).setDeleted(true);
 
         // when
@@ -122,17 +124,19 @@ class ProductGroupServiceTest {
                 () -> "Not equals objects. Actual: " + actual + "; expect: " + expected);
     }
 
-    private List<ProductGroup> createEntitiesList() {
-        return Arrays.asList(
-                createEntitiy(1L),
-                createEntitiy(2L),
-                createEntitiy(3L),
-                createEntitiy(4L),
-                createEntitiy(5L)
+    private Flux<ProductGroup> createEntities() {
+        return Flux.fromIterable(
+                Arrays.asList(
+                        createEntity(1L),
+                        createEntity(2L),
+                        createEntity(3L),
+                        createEntity(4L),
+                        createEntity(5L)
+                )
         );
     }
 
-    private ProductGroup createEntitiy(long id) {
+    private ProductGroup createEntity(long id) {
         return testEntitiesProducer.createProductGroup(id);
     }
 

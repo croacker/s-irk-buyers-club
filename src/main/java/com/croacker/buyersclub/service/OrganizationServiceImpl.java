@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final AddDtoToOrganization addToEntityMapper;
 
     @Override
-    public List<OrganizationDto> findAll(Pageable pageable) {
+    public Flux<OrganizationDto> findAll(Pageable pageable) {
         return repo.findByDeletedIsFalse(pageable).stream().map(toDtoMapper).collect(Collectors.toList());
     }
 
@@ -39,37 +40,37 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public OrganizationDto findOne(Long id) {
+    public Mono<OrganizationDto> findOne(Long id) {
         return repo.findById(id).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
-    public OrganizationDto findByInn(String inn) {
+    public Mono<OrganizationDto> findByInn(String inn) {
         return repo.findByInn(inn).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
-    public List<OrganizationDto> getOrganizations(String expression, Pageable pageable) {
+    public Flux<OrganizationDto> getOrganizations(String expression, Pageable pageable) {
         return repo.findByNameContainingIgnoreCase(expression, pageable)
                 .stream().map(toDtoMapper).collect(Collectors.toList());
     }
 
     @Override
-    public OrganizationDto save(AddOrganizationDto dto) {
+    public Mono<OrganizationDto> save(AddOrganizationDto dto) {
         var organization = addToEntityMapper.map(dto).setDeleted(false);
         organization = repo.save(organization);
         return toDtoMapper.map(organization);
     }
 
     @Override
-    public OrganizationDto update(OrganizationDto dto) {
+    public Mono<OrganizationDto> update(OrganizationDto dto) {
         var organization = toEntityMapper.map(dto);
         organization = repo.save(organization);
         return toDtoMapper.map(organization);
     }
 
     @Override
-    public OrganizationDto delete(Long id) {
+    public Mono<OrganizationDto> delete(Long id) {
         return repo.findById(id).map(organization -> {
             organization.setDeleted(true);
             organization = repo.save(organization);

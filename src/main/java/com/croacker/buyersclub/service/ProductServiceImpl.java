@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -35,7 +36,7 @@ public class ProductServiceImpl implements ProductService{
     private final AddDtoToProduct addToEntityMapper;
 
     @Override
-    public List<ProductDto> findAll(Pageable pageable) {
+    public Flux<ProductDto> findAll(Pageable pageable) {
         return StreamSupport.stream(
                 repo.findByDeletedIsFalse(pageable).spliterator(), false)
                 .map(toDtoMapper).collect(Collectors.toList());
@@ -47,17 +48,17 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductDto findOne(Long id) {
+    public Mono<ProductDto> findOne(Long id) {
         return repo.findById(id).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
-    public ProductDto findByName(String name) {
+    public Mono<ProductDto> findByName(String name) {
         return repo.findByName(name).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
-    public ProductDto save(AddProductDto dto) {
+    public Mono<ProductDto> save(AddProductDto dto) {
         ProductGroup productGroup = null;
         if(dto.getProductGroupId() != null) {
             productGroup = productGroupRepo.findById(dto.getProductGroupId()).orElse(null);
@@ -69,7 +70,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductDto update(ProductDto dto) {
+    public Mono<ProductDto> update(ProductDto dto) {
         ProductGroup productGroup = null;
         if(dto.getProductGroupId() != null) {
             productGroup = productGroupRepo.findById(dto.getProductGroupId()).orElse(null);
@@ -81,7 +82,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductDto delete(Long id) {
+    public Mono<ProductDto> delete(Long id) {
         return repo.findById(id).map(organization -> {
             organization.setDeleted(true);
             organization = repo.save(organization);

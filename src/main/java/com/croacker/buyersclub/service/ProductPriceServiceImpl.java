@@ -19,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -50,7 +51,7 @@ public class ProductPriceServiceImpl implements ProductPriceService{
     private final ProductPriceToTelegramDto toTelegramDtoMapper;
 
     @Override
-    public List<ProductPriceInfoDto> findAll(Pageable pageable) {
+    public Flux<ProductPriceInfoDto> findAll(Pageable pageable) {
         return repo.findByDeletedIsFalse(pageable).stream().map(toInfoDtoMapper).collect(Collectors.toList());
     }
 
@@ -60,26 +61,26 @@ public class ProductPriceServiceImpl implements ProductPriceService{
     }
 
     @Override
-    public ProductPriceInfoDto findOne(Long id) {
+    public Mono<ProductPriceInfoDto> findOne(Long id) {
         return repo.findById(id).map(toInfoDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
-    public List<ProductPriceInfoDto> findByProduct(Long id) {
+    public Flux<ProductPriceInfoDto> findByProduct(Long id) {
         var product = productRepo.findById(id).get();
         return StreamSupport.stream(repo.findByProduct(product).spliterator(), false)
                 .map(toInfoDtoMapper).collect(Collectors.toList());
     }
 
     @Override
-    public ProductPriceDto findPrice(ProductDto productDto, ShopDto shopDto, LocalDateTime priceDate) {
+    public Mono<ProductPriceDto findPrice(ProductDto productDto, ShopDto shopDto, LocalDateTime priceDate) {
         var product = productRepo.findById(productDto.getId()).get(); //!!
         var shop = shopRepo.findById(shopDto.getId()).get();
         return repo.findByProductAndShopAndPriceDate(product, shop, priceDate).map(toDtoMapper).orElse(null);
     }
 
     @Override
-    public ProductPriceDto save(AddProductPriceDto dto) {
+    public Mono<ProductPriceDto> save(AddProductPriceDto dto) {
         var shop = shopRepo.findById(dto.getShopId()).get();
         var product = productRepo.findById(dto.getProductId()).get();
         var productPrice = addToEntityMapper.map(dto)
@@ -93,14 +94,14 @@ public class ProductPriceServiceImpl implements ProductPriceService{
     }
 
     @Override
-    public ProductPriceDto update(ProductPriceDto dto) {
+    public Mono<ProductPriceDto> update(ProductPriceDto dto) {
         var entity = toEntityMapper.map(dto);
         entity = repo.save(entity);
         return toDtoMapper.map(entity);
     }
 
     @Override
-    public ProductPriceDto delete(Long id) {
+    public Mono<ProductPriceDto> delete(Long id) {
         return repo.findById(id).map(cashier -> {
             cashier.setDeleted(true);
             cashier = repo.save(cashier);
@@ -114,7 +115,7 @@ public class ProductPriceServiceImpl implements ProductPriceService{
     }
 
     @Override
-    public List<TelegramProductPriceDto> getProductsPrices(String expression, Pageable pageable) {
+    public Flux<TelegramProductPriceDto> getProductsPrices(String expression, Pageable pageable) {
         return viewRepo.findByProductNameContainingIgnoreCase(expression, pageable)
                 .stream().map(toTelegramDtoMapper).collect(Collectors.toList());
     }

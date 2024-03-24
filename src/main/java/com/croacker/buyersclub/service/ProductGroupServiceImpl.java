@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class ProductGroupServiceImpl implements ProductGroupService{
     private final AddDtoToProductGroup addToEntityMapper;
 
     @Override
-    public List<ProductGroupDto> findAll(Pageable pageable) {
+    public Flux<ProductGroupDto> findAll(Pageable pageable) {
         return StreamSupport.stream(repo.findAll().spliterator(), false).map(toDtoMapper).collect(Collectors.toList());
     }
 
@@ -40,26 +41,26 @@ public class ProductGroupServiceImpl implements ProductGroupService{
     }
 
     @Override
-    public ProductGroupDto findOne(Long id) {
+    public Mono<ProductGroupDto> findOne(Long id) {
         return repo.findById(id).map(toDtoMapper).orElse(null); // TODO return Optional
     }
 
     @Override
-    public ProductGroupDto save(AddProductGroupDto dto) {
+    public Mono<ProductGroupDto> save(AddProductGroupDto dto) {
         var product = addToEntityMapper.map(dto).setDeleted(false);
         product = repo.save(product);
         return toDtoMapper.map(product);
     }
 
     @Override
-    public ProductGroupDto update(ProductGroupDto dto) {
+    public Mono<ProductGroupDto> update(ProductGroupDto dto) {
         var product = toEntityMapper.map(dto);
         product = repo.save(product);
         return toDtoMapper.map(product);
     }
 
     @Override
-    public ProductGroupDto delete(Long id) {
+    public Mono<ProductGroupDto> delete(Long id) {
         return repo.findById(id).map(organization -> {
             organization.setDeleted(true);
             organization = repo.save(organization);
