@@ -34,28 +34,27 @@ public class ShopServiceImpl implements ShopService{
 
     @Override
     public Flux<ShopDto> findAll(Pageable pageable) {
-        return repo.findByDeletedIsFalse(pageable)
-                .stream().map(toDtoMapper).collect(Collectors.toList());
+        return repo.findByDeletedIsFalse(pageable).map(toDtoMapper);
     }
 
     @Override
     public Mono<Long> getCount() {
-        return Mono.just(repo.count());
+        return repo.count();
     }
 
     @Override
     public Mono<ShopDto> findOne(Long id) {
-        return repo.findById(id).map(toDtoMapper).orElse(null); // TODO return Optional
+        return repo.findById(id).map(toDtoMapper); // TODO return Optional
     }
 
     @Override
     public Mono<ShopDto> findByName(String name) {
-        return repo.findFirstByName(name).map(toDtoMapper).orElse(null);
+        return repo.findFirstByName(name).map(toDtoMapper);
     }
 
     @Override
     public Mono<ShopDto> findByAddress(String address) {
-        return repo.findFirstByAddress(address).map(toDtoMapper).orElse(null);
+        return repo.findFirstByAddress(address).map(toDtoMapper);
     }
 
     @Override

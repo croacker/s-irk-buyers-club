@@ -30,12 +30,12 @@ public class TelegramUserServiceImpl implements TelegramUserService {
 
     @Override
     public Flux<TelegramUserDto> findAll(Pageable pageable) {
-        return StreamSupport.stream(repo.findAll().spliterator(), false).map(toDtoMapper).collect(Collectors.toList());
+        return repo.findAll().map(toDtoMapper); // TODO: add pagination
     }
 
     @Override
     public Mono<Long> getCount() {
-        return Mono.just(repo.count());
+        return repo.count();
     }
 
     @Override
@@ -51,8 +51,7 @@ public class TelegramUserServiceImpl implements TelegramUserService {
     @Override
     public Mono<TelegramUserDto> save(AddTelegramUserDto dto) {
         var telegramUser = addToEntityMapper.map(dto);
-        telegramUser = repo.save(telegramUser);
-        return toDtoMapper.map(telegramUser);
+        return repo.save(telegramUser).map(toDtoMapper);
     }
 
 }
