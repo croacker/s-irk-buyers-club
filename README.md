@@ -8,7 +8,7 @@ git clone https://github.com/croacker/s-irk-buyers-club
 ```
 
 ## Предварительные условия
-* JDK 17
+* JDK 21
 
 ## Сборка
 ```
