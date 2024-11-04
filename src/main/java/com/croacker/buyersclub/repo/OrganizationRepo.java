@@ -5,16 +5,18 @@ import com.croacker.buyersclub.domain.Product;
 import com.croacker.buyersclub.service.dto.organization.OrganizationDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface OrganizationRepo extends CrudRepository<Organization, Long> {
+public interface OrganizationRepo extends ReactiveCrudRepository<Organization, Long> {
 
-    List<Organization> findByDeletedIsFalse(Pageable pageable);
+    Flux<Organization> findByDeletedIsFalse(Pageable pageable);
 
-    Optional<Organization> findByInn(String inn);
+    Mono<Organization> findByInn(String inn);
 
-    List<Organization> findByNameContainingIgnoreCase(String expression, Pageable pageable);
+    Flux<Organization> findByNameContainingIgnoreCase(String expression, Pageable pageable);
 }

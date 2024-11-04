@@ -3,6 +3,9 @@ package com.croacker.buyersclub.repo;
 import com.croacker.buyersclub.domain.Cashier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,10 +13,10 @@ import java.util.Optional;
 /**
  * Кассиры.
  */
-public interface CashierRepo extends CrudRepository<Cashier, Long> {
+public interface CashierRepo extends ReactiveCrudRepository<Cashier, Long> {
 
-    List<Cashier> findByDeletedIsFalse(Pageable pageable);
+    Flux<Cashier> findByDeletedIsFalse(Pageable pageable);
 
-    Optional<Cashier> findByNameAndShopId(String name, Long shopId);
+    Mono<Cashier> findByNameAndShopId(String name, Long shopId);
 
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -19,8 +20,12 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import org.springframework.data.relational.core.mapping.MappedCollection;
+import org.springframework.data.relational.core.mapping.Table;
+
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Чек, шапка.
@@ -29,18 +34,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-@Entity
-@EntityListeners(AuditingEntityListener.class)
+@Table
 public class CashCheck {
+
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     /**
      * Кассир.
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "cashier_id")
     private Cashier cashier;
 
     /**
@@ -91,9 +93,8 @@ public class CashCheck {
     /**
      * Товары.
      */
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(nullable = false, name = "check_id")
-    private List<CashCheckLine> checkLines;
+    @MappedCollection(idColumn = "check_id")
+    private Set<CashCheckLine> checkLines;
 
     /**
      * telegram-пользователь добавивиший чек.
