@@ -5,15 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.relational.core.mapping.Table;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
 import java.time.LocalDateTime;
 
 /**
@@ -23,11 +18,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-@Entity
-@EntityListeners(AuditingEntityListener.class)
+@Table
 public class Organization {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -43,7 +36,6 @@ public class Organization {
     /**
      * Создан.
      */
-    @Column(updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 

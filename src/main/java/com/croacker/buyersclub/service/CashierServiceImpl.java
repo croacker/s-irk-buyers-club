@@ -42,12 +42,12 @@ public class CashierServiceImpl implements CashierService {
 
     @Override
     public Mono<Long> getCount() {
-        return Mono.just(repo.count());
+        return repo.count();
     }
 
     @Override
-    public CashierDto findOne(Long id) {
-        return repo.findById(id).map(toDtoMapper).orElse(null); // TODO return Optional
+    public Mono<CashierDto> findOne(Long id) {
+        return repo.findById(id).map(toDtoMapper); // TODO return Optional
     }
 
     @Override

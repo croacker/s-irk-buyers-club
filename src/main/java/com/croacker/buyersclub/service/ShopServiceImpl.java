@@ -39,7 +39,7 @@ public class ShopServiceImpl implements ShopService{
 
     @Override
     public Mono<Long> getCount() {
-        return Mono.just(repo.count());
+        return repo.count();
     }
 
     @Override

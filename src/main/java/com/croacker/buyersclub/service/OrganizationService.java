@@ -19,15 +19,15 @@ public interface OrganizationService {
 
     Mono<Long> getCount();
 
-    OrganizationDto findOne(Long id);
+    Mono<OrganizationDto> findOne(Long id);
 
-    OrganizationDto save(AddOrganizationDto dto);
+    Mono<OrganizationDto> save(AddOrganizationDto dto);
 
-    OrganizationDto update(OrganizationDto dto);
+    Mono<OrganizationDto> update(OrganizationDto dto);
 
-    OrganizationDto delete(Long id);
+    Mono<OrganizationDto> delete(Long id);
 
-    OrganizationDto findByInn(String inn);
+    Mono<OrganizationDto> findByInn(String inn);
 
     List<OrganizationDto> getOrganizations(String expression, Pageable pageable);
 }

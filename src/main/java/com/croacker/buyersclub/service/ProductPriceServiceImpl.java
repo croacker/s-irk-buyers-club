@@ -56,7 +56,7 @@ public class ProductPriceServiceImpl implements ProductPriceService{
 
     @Override
     public Mono<Long> getCount() {
-        return Mono.just(repo.count());
+        return repo.count();
     }
 
     @Override

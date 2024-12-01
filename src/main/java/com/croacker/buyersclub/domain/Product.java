@@ -1,24 +1,15 @@
 package com.croacker.buyersclub.domain;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.relational.core.mapping.MappedCollection;
+import org.springframework.data.relational.core.mapping.Table;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 /**
@@ -28,12 +19,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-@Entity
-@EntityListeners(AuditingEntityListener.class)
+@Table
 public class Product {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -44,20 +33,16 @@ public class Product {
     /**
      * Группа.
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "group_id")
-    private ProductGroup productGroup;
+    private Long productGroupId;
 
     /**
      * Тип товара.
      */
-    @Enumerated(EnumType.STRING)
     private ProductType productType;
 
     /**
      * Создан.
      */
-    @Column(updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 

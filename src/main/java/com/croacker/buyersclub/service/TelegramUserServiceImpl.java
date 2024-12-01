@@ -34,7 +34,7 @@ public class TelegramUserServiceImpl implements TelegramUserService {
 
     @Override
     public Mono<Long> getCount() {
-        return Mono.just(repo.count());
+        return repo.count();
     }
 
     @Override

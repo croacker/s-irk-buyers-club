@@ -16,14 +16,14 @@ public interface CashierService {
 
     Mono<Long> getCount();
 
-    CashierDto findOne(Long id);
+    Mono<CashierDto> findOne(Long id);
 
-    CashierDto findByNameAndShopId(String name, Long shopId);
+    Mono<CashierDto> findByNameAndShopId(String name, Long shopId);
 
-    CashierDto save(AddCashierDto dto);
+    Mono<CashierDto> save(AddCashierDto dto);
 
-    CashierDto update(CashierDto dto);
+    Mono<CashierDto> update(CashierDto dto);
 
-    CashierDto delete(Long id);
+    Mono<CashierDto> delete(Long id);
 
 }

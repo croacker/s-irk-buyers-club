@@ -35,7 +35,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Mono<Long> getCount() {
-        return Mono.just(repo.count());
+        return repo.count();
     }
 
     @Override

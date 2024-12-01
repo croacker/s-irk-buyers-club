@@ -7,24 +7,10 @@ import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -99,14 +85,11 @@ public class CashCheck {
     /**
      * telegram-пользователь добавивиший чек.
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "telegram_user_id")
-    private TelegramUser telegramUser;
+    private Long telegramUserId;
 
     /**
      * Создан.
      */
-    @Column(updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 

@@ -36,7 +36,7 @@ public class ProductGroupServiceImpl implements ProductGroupService{
 
     @Override
     public Mono<Long> getCount() {
-        return Mono.just(repo.count());
+        return repo.count();
     }
 
     @Override
